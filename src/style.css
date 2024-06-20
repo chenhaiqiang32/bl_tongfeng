@@ -1,0 +1,123 @@
+html,
+body,
+#app {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+#css2dRenderer,
+#css3dRenderer {
+    position: absolute;
+    top: 0;
+    height: 0 !important;
+    overflow: initial !important;
+    z-index: 9;
+}
+.ellipse-container {
+    position: relative;
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 8px;
+    /* 根据需要调整 padding 值 */
+    border-radius: 50%;
+    background: rgba(23, 32, 52, 0.4) linear-gradient(180deg, #3b507c 0%, rgba(0, 0, 0, 0.5) 100%);
+    color: #fff;
+    border: 1px solid #4d95ad;
+    bottom: 2px;
+}
+
+.ellipse-container::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.beilu_three_Board_text_person {
+    width: auto !important;
+    height: auto;
+    padding: 4px 16px;
+    background: rgba(23, 32, 52, 0.4) linear-gradient(180deg, #3b507c 0%, rgba(0, 0, 0, 0.5) 100%);
+    white-space: nowrap;
+    display: inline-block;
+    /* box-shadow: inset 0px 0px 5px 0px rgba(13, 10, 0, 0.7);
+		border-radius: 1px; */
+    position: absolute;
+    letter-spacing: 2px;
+    border: 1px solid #4d95ad;
+    transform: translate(-50%, -50%) scale(1);
+    /* border-image: linear-gradient(180deg, rgba(233, 255, 253, 1), rgba(47, 215, 193, 1), rgba(8, 106, 93, 1), rgba(18, 107, 105, 1), rgba(47, 211, 215, 1)) 1 1; */
+    font-size: 8px;
+    font-family: YouSheBiaoTiHei;
+    color: #ffffff;
+    line-height: 12px;
+    bottom: 24px;
+    text-shadow: 0px 0px 5px #55a7c2;
+}
+
+.beilu_three_Board_text_person_top {
+    width: 33px;
+    height: 1px;
+    background: #40c5f1;
+
+    left: 50%;
+    margin-left: -16.5px;
+    position: absolute;
+    top: -1.2px;
+}
+
+.beilu_three_Board_text_person_bottom {
+    background: url("../public/textures/orientation/titleTop.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left center;
+    width: 19px;
+    height: 4px;
+    left: 50%;
+    margin-left: -9.5px;
+    position: absolute;
+    bottom: -2.8px;
+}
+
+.beilu_three_Board_text_person_bottom_down {
+    background: url("../public/textures/orientation/titleBottom.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left center;
+    width: 14px;
+    height: 6px;
+    position: absolute;
+    left: 50%;
+    margin-left: -7px;
+    bottom: -12px;
+}
+
+.labelEntity-container {
+    bottom: -10px;
+}
+
+.labelEntity {
+    display: inline-block;
+    padding: 0px 10px;
+    height: 28px;
+    color: #ffffff;
+    text-align: center;
+    line-height: 24px;
+    background-image: url("/textures/building.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    cursor: pointer;
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+
+.labelEntity_down {
+    position: absolute;
+    display: block;
+    transform: translate(-50%, 0%);
+    left: 50%;
+}

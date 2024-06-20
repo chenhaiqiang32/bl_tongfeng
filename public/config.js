@@ -1,0 +1,4 @@
+/** Global Configs */
+window.configs = {
+
+};
