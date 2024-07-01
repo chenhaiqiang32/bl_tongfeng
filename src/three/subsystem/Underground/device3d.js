@@ -1,73 +1,103 @@
 import * as THREE from "three";
-import { createSprite } from "./utils";
 import MemoryManager from "../../../lib/memoryManager";
 import { PersonCard } from "./utils";
-import { createCSS2DObject,createDom } from "../../../lib/CSSObject";
+import { createCSS2DObject,createCSS3DObject,createCSS3DSprite,createDom } from "../../../lib/CSSObject";
 
-const spriteScale = new THREE.Vector3(0.028,0.028,0.028);
-
-// const SpriteMap = {
-//     externalPerson: createSprite("/person/externalPerson.png",spriteScale),
-//     insidePerson: createSprite("/person/insidePerson.png",spriteScale),
-//     laborPerson: createSprite("/person/laborPerson.png",spriteScale),
-// };
 export class Device3D {
     constructor(device) {
-
+        this.scene = device.scene;
         this.device = device;
-        this.core = device.core;
+        this.underGround = device.underGround;
 
         this.singleGroup = new THREE.Group();
         this.singleGroup.name = "singleGroup";
         this.pointerArr = [];
+        this.scene.add(this.singleGroup);
 
     }
 
-    add(item) {
-        if (item.sceneType === Orientation.SCENE_TYPE.INDOOR) {
+    // add(item) {
+    //     if (item.sceneType === Orientation.SCENE_TYPE.INDOOR) {
 
-            const buildingId = item.originId.slice(0,-3);
+    //         const buildingId = item.originId.slice(0,-3);
 
-            if (!obj[buildingId]) obj[buildingId] = {};
+    //         if (!obj[buildingId]) obj[buildingId] = {};
 
-            if (!obj[buildingId][item.originId]) obj[buildingId][item.originId] = new THREE.Group();
+    //         if (!obj[buildingId][item.originId]) obj[buildingId][item.originId] = new THREE.Group();
 
-            obj[buildingId][item.originId].add(item.object3d);
+    //         obj[buildingId][item.originId].add(item.object3d);
 
-        } else {
+    //     } else {
 
-            obj.add(item.object3d);
+    //         obj.add(item.object3d);
 
-        }
-    }
+    //     }
+    // }
 
     /**
-     * 根据人员数据创建 3D 对象，包含精灵图，人物背景
-     * @param {T2} data
+     * 设备属性
+     * @param {deviceEdit} data
      */
     create(data) {
+        const { id,type,tunnelId,distance } = data;
         const object = new THREE.Object3D();
-        object.name = data.id;
-        // const sprit = SpriteMap[data.typeName].clone();
-        // sprit.name = data.id;
-        // object.add(sprit);
-        const nameDom = createDom({ innerText: data.name,id: `person-sprite-${data.typeName}` });
-        const container = createDom({ id: "person-sprite-container",children: [nameDom] },"click",() => {
-        });
-        const css2d = createCSS2DObject(container);
-        object.add(css2d);
-
-        if (data.id === this.orientation.followId) {
-
-            object.position.copy(this.orientation.followModule.from);
-            this.orientation.followModule.to.copy(data.position);
-
-        } else {
-
-            object.position.copy(data.position);
-
+        object.name = id;
+        let currentPosition = this.underGround.getPosition(tunnelId,distance);
+        if (!currentPosition) {
+            console.log("巷道id" + id + "不存在");
+            return false;
+        }
+        let container = this.device.deviceCode[type].dom;
+        if (!container) {
+            console.log("巷道id" + id + "dom不存在");
+            return false;
         }
 
+        let div = container.cloneNode(true);
+
+        const css2d = createCSS3DSprite(div);
+        css2d.scale.set(0.08,0.08,0.08);
+        let toPosition = currentPosition.clone();
+        toPosition.y = toPosition.y + 20;
+        css2d.position.copy(toPosition);
+        object.add(css2d);
+
+
+
+        // 创建直线的材质
+        const lineMaterial = new THREE.LineDashedMaterial(
+            {
+                color: 0xfffffff,
+                linewidth: 1,
+                scale: 1,
+                dashSize: 3,
+                gapSize: 12,
+            }
+        );
+
+        // 创建直线的几何体，这里使用BufferGeometry
+        const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+            currentPosition,
+            toPosition
+        ]);
+
+        // 创建直线对象
+        const line = new THREE.Line(lineGeometry,lineMaterial);
+
+        // 将直线添加到场景中
+        this.singleGroup.add(line);
+
+
+
+        const geometry = new THREE.BoxGeometry(1,1,1);
+        const material = new THREE.MeshBasicMaterial({ color: 0xfffffff });
+        const cube = new THREE.Mesh(geometry,material);
+        cube.position.copy(currentPosition);
+        this.singleGroup.add(cube);
+
+
+        this.singleGroup.add(object);
+        console.log(this.scene,'8888');
         return object;
     }
 
@@ -129,7 +159,7 @@ export class Device3D {
         const label = new PersonCard(item);
         label.name = "board" + item.id;
         label.typeName = "boardTitle";
-        label.setInnerText(item.name);
+        // label.setInnerText(item.name);
         label.visible = true;
         item.object3d.add(label);
     }

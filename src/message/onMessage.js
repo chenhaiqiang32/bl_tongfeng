@@ -9,7 +9,6 @@ export const openMessage = Core3D => {
                     break;
                 }
                 case "deviceManage": {
-                    console.log(event.data.param,"deviceManage");
                     Core3D.deviceManage(event.data.param);
                     break;
                 }
@@ -19,6 +18,10 @@ export const openMessage = Core3D => {
                 }
                 case "updateWindSpeed": {
                     Core3D.updateTunnelConfig(event.data.param,"speed");
+                    break;
+                }
+                case "updateWindDirection": {
+                    Core3D.updateTunnelConfig(event.data.param,"direction");
                     break;
                 }
                 case "updateResistance": {

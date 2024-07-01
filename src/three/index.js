@@ -8,7 +8,6 @@ import { updateStyle,updateTime } from "../shader/constant";
 import { openMessage } from "../message/onMessage";
 import { onLoaded } from "../message/postMessage";
 import { getData } from "./data/format";
-import { DeviceManger } from "./subsystem/Underground/device";
 
 const timeUpdate = Symbol("timeUpdate");
 
@@ -25,6 +24,7 @@ export class Core3D extends CoreExtensions {
     init() {
         // 添加CSS2DRenderer
         this.initCSS2DRenderer();
+        this.initCSS3DRenderer();
 
         // 添加后处理
         this.initComposer();
@@ -46,7 +46,6 @@ export class Core3D extends CoreExtensions {
 
     setClass() {
         this.main = new UnderGround(this);
-        this.equipSystem = new DeviceManger(this); // 设备系统
         this.changeSystem("main");
         this.onRenderQueue.set(timeUpdate,scope => updateTime(scope.delta));
     }
@@ -113,7 +112,7 @@ export class Core3D extends CoreExtensions {
 
     /**
      *
-     * @param {string} code -
+     * @param {string} config -
      * 巷道风格
      * default:默认
      * direction：风向
@@ -121,9 +120,8 @@ export class Core3D extends CoreExtensions {
      * speed：风速
      * resistance：阻力
     */
-    switchTunnelStyle(code) {
-        console.log(code);
-        this.main.switchTunnelStyle(code);
+    switchTunnelStyle(config) {
+        this.main.switchTunnelStyle(config);
     }
     /**
      *

@@ -88,17 +88,41 @@ class _AlarmPersonCard extends CSS2DObject {
 
 class _TunnelCard extends CSS2DObject {
     constructor() {
-        let labelEleOut = document.createElement("div");
-        labelEleOut.className = "red_three_Board_text_person";
-        labelEleOut.style.color = "#0000000";
-        labelEleOut.style.background = "#111111";
+        let labelEleOut = document.getElementById("deviceTunnel");
 
         super(labelEleOut);
 
     }
+    /**
+      * 处理用户数组的函数
+      * @param {initialized} ars - 巷道数据
+     */
+    setInnerText(ars) {
+        const { branchName,volume,speed,resistance,length,crossSectional } = ars;
+        let labelEleOut = this.element;
+        let targetElements = labelEleOut.getElementsByClassName("tunnelName"); // 巷道名称
+        // 遍历这些子元素，并修改它们的文本内容
+        targetElements[0].innerText = branchName;
 
-    setInnerText(str) {
-        this.element.innerText = str;
+        let volumeValue = labelEleOut.getElementsByClassName("volume"); // 风量
+        // 遍历这些子元素，并修改它们的文本内容
+        volumeValue[0].innerText = volume;
+
+        let speedValue = labelEleOut.getElementsByClassName("speed"); // 风速
+        // 遍历这些子元素，并修改它们的文本内容
+        speedValue[0].innerText = speed;
+
+        let resistanceValue = labelEleOut.getElementsByClassName("resistance"); // 阻力
+        // 遍历这些子元素，并修改它们的文本内容
+        resistanceValue[0].innerText = resistance;
+
+        let lengthValue = labelEleOut.getElementsByClassName("length"); // 长度
+        // 遍历这些子元素，并修改它们的文本内容
+        lengthValue[0].innerText = length;
+
+        let crossSectionalValue = labelEleOut.getElementsByClassName("crossSectional"); // 断面积
+        // 遍历这些子元素，并修改它们的文本内容
+        crossSectionalValue[0].innerText = crossSectional;
     }
 
 }

@@ -43,7 +43,7 @@
     },
     "ambientLight": {
         "color": "0xffffff",
-        "intensity": 0.55
+        "intensity": 1.55
     },
     "directionalLight": {
         "color": "0xffffff",

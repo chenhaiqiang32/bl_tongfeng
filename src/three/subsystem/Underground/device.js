@@ -1,62 +1,106 @@
-import { element } from "three/examples/jsm/nodes/shadernode/ShaderNode";
 import { Device3D } from "./device3d";
+import * as THREE from "three";
 
 export class DeviceManger {
-    constructor() {
+    static DeviceType = {
+        co2: 101, // 二氧化碳
+        dust: 102, // 粉尘
+        o2: 103, // 氧气
+        temperature: 104, // 温度
+        humidity: 105, // 湿度
+        pressure: 106, // 差压
+        speedSensor: 107, // 风速传感器
+        ultrasonic: 108, // 超声波风速仪
+        bidirectional: 109, // 双向风速传感器
+        co: 110, // 一氧化碳
+        ch4: 111, // 甲烷
+        mainFan: 201, // 主扇
+        localFan: 202, // 局扇
+        airDoor: 203, // 风门
+        airWindow: 204, // 风窗
+        airStation: 205, // 测风站
+        baseStation: 206, // 基站
+        video: 207 // 视频
+    };
+    constructor(core) {
+        this.scene = core.scene;
+        this.underGround = core;
         this.deviceCode = {
-            101: {
+            [DeviceManger.DeviceType.co2]: {
                 name: "二氧化碳"
             },
-            102: {
+            [DeviceManger.DeviceType.dust]: {
                 name: "粉尘"
             },
-            103: {
+            [DeviceManger.DeviceType.o2]: {
                 name: "氧气"
             },
-            104: {
+            [DeviceManger.DeviceType.temperature]: {
                 name: "温度"
             },
-            105: {
+            [DeviceManger.DeviceType.humidity]: {
                 name: "湿度"
             },
-            106: {
+            [DeviceManger.DeviceType.pressure]: {
                 name: "差压"
             },
-            107: {
+            [DeviceManger.DeviceType.speedSensor]: {
                 name: "风速传感器"
             },
-            108: {
+            [DeviceManger.DeviceType.ultrasonic]: {
                 name: "超声波风速仪"
             },
-            109: {
+            [DeviceManger.DeviceType.bidirectional]: {
                 name: "双向风速传感器"
             },
-            110: {
+            [DeviceManger.DeviceType.co]: {
                 name: "一氧化碳"
             },
-            111: {
+            [DeviceManger.DeviceType.ch4]: {
                 name: "甲烷"
             },
-            201: {
-                name: "主扇"
+            [DeviceManger.DeviceType.mainFan]: {
+                name: "主扇",
+                dom: document.getElementById("deviceFan"),
+                changeDom: {
+                    name: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomName'),
+                    status: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomStatus'),
+                    volume: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomVolume'),
+                    pressure: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomPressure')
+                },
             },
-            202: {
-                name: "局扇"
+            [DeviceManger.DeviceType.localFan]: {
+                name: "局扇",
+                dom: document.getElementById("deviceFan"),
+                changeDom: {
+                    name: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomName'),
+                    status: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomStatus'),
+                    volume: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomVolume'),
+                    pressure: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomPressure')
+                }
             },
-            203: {
-                name: "风门"
+            [DeviceManger.DeviceType.airDoor]: {
+                name: "风门",
+                dom: document.getElementById("deviceWindWindow"),
+                changeDom: [ // dom中修改的字段
+                    {},
+                    {},
+                    {},
+                ]
             },
-            204: {
-                name: "风窗"
+            [DeviceManger.DeviceType.airWindow]: {
+                name: "风窗",
+                dom: document.getElementById("deviceWindWindow")
             },
-            205: {
-                name: "测风站"
+            [DeviceManger.DeviceType.airStation]: {
+                name: "测风站",
+                dom: document.getElementById("deviceWindStation")
             },
-            206: {
-                name: "基站"
+            [DeviceManger.DeviceType.baseStation]: {
+                name: "基站",
             },
-            207: {
-                name: "视频"
+            [DeviceManger.DeviceType.video]: {
+                name: "视频",
             }
         };
         this.sensorsCategory = { // 传感器的分类
@@ -95,8 +139,8 @@ export class DeviceManger {
     deviceManger(ars) {
         const { add,update,remove } = ars;
         add.forEach(element => {
-            const { id,type } = element;
-            element.object3d = this.device3d.create(item);
+            const { id } = element;
+            element.object3d = this.device3d.create(element);
             this.set(id,element);
         });
         update.forEach(element => {

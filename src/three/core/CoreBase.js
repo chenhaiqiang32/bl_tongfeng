@@ -20,14 +20,14 @@ const _$vec3 = new THREE.Vector3();
  */
 THREE.Vector3.prototype.clampSphere = function (sphere) {
     if (this.distanceTo(sphere.center) > sphere.radius) {
-        _$vec3.subVectors(this, sphere.center).normalize();
+        _$vec3.subVectors(this,sphere.center).normalize();
         _$vec3.setLength(sphere.radius);
-        this.addVectors(sphere.center, _$vec3);
+        this.addVectors(sphere.center,_$vec3);
     }
 };
 
 //
-const { innerWidth, innerHeight, devicePixelRatio } = window;
+const { innerWidth,innerHeight,devicePixelRatio } = window;
 
 export class CoreBase {
     /**@type { THREE.Scene } 场景 */
@@ -168,7 +168,7 @@ export class CoreBase {
         this.#scene = new THREE.Scene();
         this.#baseScene = this.#scene;
 
-        this.#camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.01, 30000);
+        this.#camera = new THREE.PerspectiveCamera(50,innerWidth / innerHeight,0.01,30000);
         this.#baseCamera = this.#camera;
 
         /**@type {THREE.WebGLRendererParameters} */
@@ -191,35 +191,37 @@ export class CoreBase {
         this.#domElement.oncontextmenu = e => false;
 
         this.#renderer = new THREE.WebGLRenderer(webGLRendererParameters);
-        this.#renderer.setSize(innerWidth, innerHeight);
+        this.#renderer.setSize(innerWidth,innerHeight);
         this.#renderer.outputColorSpace = THREE.SRGBColorSpace;
         this.#renderer.toneMapping = THREE.ACESFilmicToneMapping;
         this.#renderer.shadowMap.enabled = DEFAULT.shadow.enabled;
         this.#renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         this.#renderer.setPixelRatio(devicePixelRatio);
         this.#renderer.domElement.removeAttribute("data-engine");
+        // todo 背景透明
+        this.#renderer.setClearColor(0x000000,0);
 
-        this.#controls = new OrbitControls(this.#camera, this.#renderer.domElement);
+        this.#controls = new OrbitControls(this.#camera,this.#renderer.domElement);
         this.#controls.data = {};
-        this.#controls.target.set(0, 0, 0);
-        this.#onRenderQueue.set(Symbol(), () => this.#controls.update());
+        this.#controls.target.set(0,0,0);
+        this.#onRenderQueue.set(Symbol(),() => this.#controls.update());
 
         // 控制器初始化会改变相机的位置。
         this.#camera.position.set(...DEFAULT.camera.position);
-        this.#camera.lookAt(0, 0, 0);
+        this.#camera.lookAt(0,0,0);
 
         this.#initLight();
 
         document.oncontextmenu = () => false;
 
-        window.addEventListener("resize", () => {
-            const { innerWidth, innerHeight } = window;
+        window.addEventListener("resize",() => {
+            const { innerWidth,innerHeight } = window;
 
             this.#camera.aspect = innerWidth / innerHeight;
             this.#camera.updateProjectionMatrix();
-            this.#renderer.setSize(innerWidth, innerHeight);
+            this.#renderer.setSize(innerWidth,innerHeight);
 
-            this.#onresizeQueue.forEach(fn => fn(innerWidth, innerHeight));
+            this.#onresizeQueue.forEach(fn => fn(innerWidth,innerHeight));
         });
     }
 
@@ -233,19 +235,19 @@ export class CoreBase {
 
     /**@param {THREE.Scene} scene 设置默认灯光*/
     setDefaultLight(scene) {
-        scene._add(this.#ambientLight.clone(), this.#directionalLight.clone());
+        scene._add(this.#ambientLight.clone(),this.#directionalLight.clone());
     }
 
     initComposer() {
-        this.#postprocessing = new Postprocessing(this.#renderer, this.#scene, this.#camera);
-        this.#onresizeQueue.set(Symbol(), this.#postprocessing.resize);
+        this.#postprocessing = new Postprocessing(this.#renderer,this.#scene,this.#camera);
+        this.#onresizeQueue.set(Symbol(),this.#postprocessing.resize);
     }
 
     initStats() {
         this.#stats = new Stats();
         document.body.appendChild(this.#stats.dom);
 
-        this.#onRenderQueue.set(Symbol(), param => param.#stats.update());
+        this.#onRenderQueue.set(Symbol(),param => param.#stats.update());
     }
     initGridHelper() {
         const gridHelper = new THREE.GridHelper(100);
@@ -267,14 +269,14 @@ export class CoreBase {
     };
 
     logMemory() {
-        console.log(this.#renderer.info.memory.geometries, this.#renderer.info.memory.textures);
+        console.log(this.#renderer.info.memory.geometries,this.#renderer.info.memory.textures);
     }
 
     render() {
         if (this.#postprocessing) {
             this.#postprocessing.composer.render();
         } else {
-            this.#renderer.render(this.#scene, this.#camera);
+            this.#renderer.render(this.#scene,this.#camera);
         }
     }
 

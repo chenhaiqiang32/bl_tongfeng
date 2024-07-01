@@ -1,4 +1,4 @@
-import { Scene, Camera, WebGLRenderer, Object3D } from "three";
+import { Scene,Camera,WebGLRenderer,Object3D } from "three";
 import {
     EffectPass,
     SelectiveBloomEffect,
@@ -8,6 +8,8 @@ import {
     OutlineEffect,
     HueSaturationEffect,
     BrightnessContrastEffect,
+    FXAAEffect,
+    SMAAEffect,
 } from "postprocessing";
 
 export class Postprocessing {
@@ -19,15 +21,15 @@ export class Postprocessing {
      * @param { Scene } scene
      * @param { Camera } camera
      */
-    constructor(renderer, scene, camera) {
+    constructor(renderer,scene,camera) {
         this.#renderer = renderer;
         this.#scene = scene;
         this.#camera = camera;
         this.#init();
     }
 
-    resize = (width, height) => {
-        this.composer.setSize(width, height, true);
+    resize = (width,height) => {
+        this.composer.setSize(width,height,true);
     };
 
     #init() {
@@ -42,16 +44,16 @@ export class Postprocessing {
     #initComposer() {
         // msaa anti-aliasing 多重采样抗锯齿
         const multisampling = this.#renderer.capabilities.maxSamples;
-        this.composer = new EffectComposer(this.#renderer, { multisampling });
+        this.composer = new EffectComposer(this.#renderer,{});
     }
 
     #initRenderPass() {
-        this.renderPass = new RenderPass(this.#scene, this.#camera);
+        this.renderPass = new RenderPass(this.#scene,this.#camera);
         this.composer.addPass(this.renderPass);
     }
 
     #initBloomEffect() {
-        this.bloomEffect = new SelectiveBloomEffect(this.#scene, this.#camera, {
+        this.bloomEffect = new SelectiveBloomEffect(this.#scene,this.#camera,{
             blendFunction: BlendFunction.ADD,
             luminanceThreshold: 0.01,
             luminanceSmoothing: 1.1,
@@ -63,7 +65,7 @@ export class Postprocessing {
     }
 
     #initOutLineEffect1() {
-        this.outlineEffect1 = new OutlineEffect(this.#scene, this.#camera, {
+        this.outlineEffect1 = new OutlineEffect(this.#scene,this.#camera,{
             blendFunction: BlendFunction.ADD,
             edgeStrength: 3,
             pulseSpeed: 0,
@@ -76,7 +78,7 @@ export class Postprocessing {
     }
 
     #initOutLineEffect2() {
-        this.outlineEffect2 = new OutlineEffect(this.#scene, this.#camera, {
+        this.outlineEffect2 = new OutlineEffect(this.#scene,this.#camera,{
             blendFunction: BlendFunction.ADD,
             edgeStrength: 0.25,
             patternScale: 5,
@@ -95,6 +97,7 @@ export class Postprocessing {
         this.brightnessContrastEffect = new BrightnessContrastEffect({
             contrast: 0.2,
         });
+        this.smAAComposer = new SMAAEffect({});
         // 创建通道
         const effectPass = new EffectPass(
             this.#camera,
@@ -103,6 +106,7 @@ export class Postprocessing {
             this.outlineEffect2,
             this.hueSaturationEffect,
             this.brightnessContrastEffect,
+            this.smAAComposer
         );
         this.composer.addPass(effectPass);
     }
@@ -122,20 +126,20 @@ export class Postprocessing {
             obj.forEach(this.clearBloom);
         }
     };
-    addOutline = (obj, channel = 1) => {
+    addOutline = (obj,channel = 1) => {
         let pass = channel === 1 ? this.outlineEffect1 : this.outlineEffect2;
         if (obj instanceof Object3D) {
             pass.selection.add(obj);
         } else if (Array.isArray(obj)) {
-            obj.forEach(child => this.addOutline(child, channel));
+            obj.forEach(child => this.addOutline(child,channel));
         }
     };
-    clearOutline = (obj, channel = 1) => {
+    clearOutline = (obj,channel = 1) => {
         let pass = channel === 1 ? this.outlineEffect1 : this.outlineEffect2;
         if (obj instanceof Object3D) {
             pass.selection.delete(obj);
         } else if (Array.isArray(obj)) {
-            obj.forEach(child => this.clearOutline(child, channel));
+            obj.forEach(child => this.clearOutline(child,channel));
         }
     };
 }

@@ -18,45 +18,46 @@ class FlowLight extends THREE.Mesh {
      * @param {THREE.Vector3[]} vertices
      * @param {{width:number,radius:number,type:"line"|"tube",segments:number,color1:THREE.Vector3,color2:THREE.Vector3}} config
      */
-    constructor(vertices, config = {}) {
+    constructor(vertices,config = {}) {
         super();
 
         config.width = config.width || 1;
         config.radius = config.radius || 1;
         config.type = config.type || "line";
         config.segments = config.segments || 2;
-        config.color1 = config.color1 || new THREE.Vector3(1, 1, 0);
-        config.color2 = config.color2 || new THREE.Vector3(0.95, 0.39, 0.22);
+        config.color1 = config.color1 || new THREE.Vector3(1,1,0);
+        config.color2 = config.color2 || new THREE.Vector3(0.95,0.39,0.22);
 
         this.uOpacity = { value: config.opacity === undefined ? 1 : config.opacity };
 
         if (Array.isArray(vertices)) {
-            this.#createPath(vertices, config);
+            this.#createPath(vertices,config);
         } else {
             console.error("创建流光第一个参数必须是Vector3[]");
         }
         this.type = "FlowLight";
+        this.renderOrder = 10;
     }
     /**
      * 流光
      * @param {THREE.Vector3[]} vertices
      * @param {{width:number,radius:number,type:"line"|"tube",segments:number,color1:THREE.Vector3,color2:THREE.Vector3}} config
      */
-    #createPath(vertices, config) {
-        const up = new THREE.Vector3(0, 1, 0);
+    #createPath(vertices,config) {
+        const up = new THREE.Vector3(0,1,0);
         const pathPointList = new PathPointList();
-        pathPointList.set(vertices, 0.5, 10, up, false);
+        pathPointList.set(vertices,0.5,10,up,false);
 
         if (config.type === "line") {
             this.geometry = new PathGeometry();
-            this.geometry.update(pathPointList, {
+            this.geometry.update(pathPointList,{
                 width: config.width,
                 arrow: false,
                 side: "both",
             });
         } else if (config.type === "tube") {
             this.geometry = new PathTubeGeometry();
-            this.geometry.update(pathPointList, {
+            this.geometry.update(pathPointList,{
                 arrow: false,
                 side: "both",
                 radius: config.radius,
@@ -114,6 +115,7 @@ class FlowLight extends THREE.Mesh {
             transparent: true,
             side: THREE.DoubleSide,
             forceSinglePass: true,
+            depthTest: false
         });
     }
     update(elapseTime) {
@@ -124,7 +126,7 @@ class FlowLight extends THREE.Mesh {
 // 雨天，雪天，效果范围
 
 // 默认粒子范围
-const BOX = new THREE.Box3(new THREE.Vector3(-100, 0, -100), new THREE.Vector3(100, 100, 100));
+const BOX = new THREE.Box3(new THREE.Vector3(-100,0,-100),new THREE.Vector3(100,100,100));
 
 class Rain extends THREE.Mesh {
     #time;
@@ -134,7 +136,7 @@ class Rain extends THREE.Mesh {
      * @param { THREE.Box3 } box 粒子范围
      * @param { { speed: number, count: number, size: number} } _config 粒子配置
      */
-    constructor(box = BOX, _config) {
+    constructor(box = BOX,_config) {
         super();
         this.#config = _config;
         this.#box = box;
@@ -271,7 +273,7 @@ class Rain extends THREE.Mesh {
             );
 
             shader.uniforms.cameraPosition = {
-                value: new THREE.Vector3(0, 200, 0),
+                value: new THREE.Vector3(0,200,0),
             };
 
             shader.uniforms.top = {
@@ -341,30 +343,30 @@ class Rain extends THREE.Mesh {
                 pos.z,
             );
 
-            uvs.push(1, 1, 0, 1, 0, 0, 1, 0);
+            uvs.push(1,1,0,1,0,0,1,0);
 
-            indices.push(i * 4 + 0, i * 4 + 1, i * 4 + 2, i * 4 + 0, i * 4 + 2, i * 4 + 3);
+            indices.push(i * 4 + 0,i * 4 + 1,i * 4 + 2,i * 4 + 0,i * 4 + 2,i * 4 + 3);
         }
 
         geometry.setAttribute(
             "position",
 
-            new THREE.BufferAttribute(new Float32Array(vertices), 3),
+            new THREE.BufferAttribute(new Float32Array(vertices),3),
         );
 
         geometry.setAttribute(
             "normal",
 
-            new THREE.BufferAttribute(new Float32Array(normals), 3),
+            new THREE.BufferAttribute(new Float32Array(normals),3),
         );
 
         geometry.setAttribute(
             "uv",
 
-            new THREE.BufferAttribute(new Float32Array(uvs), 2),
+            new THREE.BufferAttribute(new Float32Array(uvs),2),
         );
 
-        geometry.setIndex(new THREE.BufferAttribute(new Uint32Array(indices), 1));
+        geometry.setIndex(new THREE.BufferAttribute(new Uint32Array(indices),1));
 
         return geometry;
     }
@@ -374,7 +376,7 @@ class Rain extends THREE.Mesh {
         this.material.dispose();
     }
 
-    update(deltaTime, cameraPosition) {
+    update(deltaTime,cameraPosition) {
         this.#time = (this.#time + deltaTime * this.#config.speed) % 1;
         if (this.material && "uniforms" in this.material) {
             this.material.uniforms.cameraPosition.value = cameraPosition;
@@ -391,7 +393,7 @@ class Snow extends THREE.Points {
      * @param { THREE.Box3 } box 粒子范围
      * @param { { speed: number, count: number, size: number} } _config 粒子配置
      */
-    constructor(box, _config) {
+    constructor(box,_config) {
         super();
         this.config = _config;
         this.box = box;
@@ -444,10 +446,10 @@ class Snow extends THREE.Points {
             positions[i] = Math.random() * (box.max.x - box.min.x) + box.min.x;
             positions[i + 1] = Math.random() * (box.max.y - box.min.y) + box.min.y;
             positions[i + 2] = Math.random() * (box.max.z - box.min.z) + box.min.z;
-            this.positionBackup.push(positions[i], positions[i + 1], positions[i + 2]);
+            this.positionBackup.push(positions[i],positions[i + 1],positions[i + 2]);
         }
 
-        geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+        geometry.setAttribute("position",new THREE.Float32BufferAttribute(positions,3));
         return geometry;
     }
 
@@ -507,7 +509,7 @@ class Lake extends Water {
             size: 2,
         };
         mesh.geometry.applyMatrix4(new THREE.Matrix4().makeRotationX(Math.PI / 2));
-        super(mesh.geometry, options);
+        super(mesh.geometry,options);
 
         this.rotation.x = -Math.PI / 2;
     }
@@ -520,7 +522,7 @@ class Lake extends Water {
 class Smoke extends THREE.Points {
     #particles;
     time;
-    constructor(speed = new THREE.Vector3(0, 1, 0), size = 10) {
+    constructor(speed = new THREE.Vector3(0,1,0),size = 10) {
         super();
         this.#particles = [];
         this.time = 0;
@@ -532,7 +534,7 @@ class Smoke extends THREE.Points {
 
     update() {
         if (Date.now() - this.time > 1000) {
-            this.#particles.push(new Particle(this.speed, this.size));
+            this.#particles.push(new Particle(this.speed,this.size));
             this.time = Date.now();
         }
         this.smokeUpdate();
@@ -545,10 +547,10 @@ class Smoke extends THREE.Points {
         const texture = new THREE.TextureLoader().load("./textures/smoke.png");
         const geometry = new THREE.BufferGeometry();
         // 设置顶点数据
-        geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array([]), 3));
-        geometry.setAttribute("a_opacity", new THREE.BufferAttribute(new Float32Array([]), 1));
-        geometry.setAttribute("a_size", new THREE.BufferAttribute(new Float32Array([]), 1));
-        geometry.setAttribute("a_scale", new THREE.BufferAttribute(new Float32Array([]), 1));
+        geometry.setAttribute("position",new THREE.BufferAttribute(new Float32Array([]),3));
+        geometry.setAttribute("a_opacity",new THREE.BufferAttribute(new Float32Array([]),1));
+        geometry.setAttribute("a_size",new THREE.BufferAttribute(new Float32Array([]),1));
+        geometry.setAttribute("a_scale",new THREE.BufferAttribute(new Float32Array([]),1));
         this.geometry = geometry;
         // material
         this.material = new THREE.PointsMaterial({
@@ -612,22 +614,22 @@ class Smoke extends THREE.Points {
         const sizeList = [];
 
         particles.forEach(particle => {
-            const { x, y, z } = particle.position;
-            positionList.push(x, y, z);
+            const { x,y,z } = particle.position;
+            positionList.push(x,y,z);
             opacityList.push(particle.opacity);
             scaleList.push(particle.scale);
             sizeList.push(particle.size);
         });
         // 粒子属性写入
-        this.geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(positionList), 3));
-        this.geometry.setAttribute("a_opacity", new THREE.BufferAttribute(new Float32Array(opacityList), 1));
-        this.geometry.setAttribute("a_scale", new THREE.BufferAttribute(new Float32Array(scaleList), 1));
-        this.geometry.setAttribute("a_size", new THREE.BufferAttribute(new Float32Array(sizeList), 1));
+        this.geometry.setAttribute("position",new THREE.BufferAttribute(new Float32Array(positionList),3));
+        this.geometry.setAttribute("a_opacity",new THREE.BufferAttribute(new Float32Array(opacityList),1));
+        this.geometry.setAttribute("a_scale",new THREE.BufferAttribute(new Float32Array(scaleList),1));
+        this.geometry.setAttribute("a_size",new THREE.BufferAttribute(new Float32Array(sizeList),1));
     }
 }
 
 class Particle {
-    constructor(speed = new THREE.Vector3(0, 1, 0), size = 10) {
+    constructor(speed = new THREE.Vector3(0,1,0),size = 10) {
         this.position = new THREE.Vector3(); // 粒子位置
         this.life = 10000; // 粒子的存活时间，毫秒
         this.createTime = Date.now(); // 粒子创建时间
@@ -678,11 +680,11 @@ class FatLine extends Line2 {
         super();
         this.geometry = new LineGeometry();
         this.material = new LineMaterial(parameters);
-        this.material.resolution.set(window.innerWidth, window.innerHeight);
+        this.material.resolution.set(window.innerWidth,window.innerHeight);
     }
 
-    onResize(innerWidth, innerHeight) {
-        this.material.resolution.set(innerWidth, innerHeight);
+    onResize(innerWidth,innerHeight) {
+        this.material.resolution.set(innerWidth,innerHeight);
     }
     /**
      * @param { number[] }
@@ -709,39 +711,39 @@ class FatLine extends Line2 {
 }
 
 class StarLink extends THREE.Points {
-    constructor(width = 100, height = 100, count = 1000) {
+    constructor(width = 100,height = 100,count = 1000) {
         super();
         this.points = [];
-        this.plane = new THREE.Mesh(new THREE.PlaneGeometry(width, height));
+        this.plane = new THREE.Mesh(new THREE.PlaneGeometry(width,height));
 
         this.plane.rotation.x = -Math.PI / 2;
         this.plane.material.side = THREE.DoubleSide;
         this.plane.updateMatrixWorld();
 
-        this.createGeometry(width, height, count);
+        this.createGeometry(width,height,count);
         this.createMaterial();
 
-        function distance(a, b) {
+        function distance(a,b) {
             const dx = a.x - b.x;
             const dz = a.z - b.z;
             return Math.sqrt(dx * dx + dz * dz);
         }
 
-        this.tree = new kdTree(this.points, distance, ["x", "z"]);
+        this.tree = new kdTree(this.points,distance,["x","z"]);
         this.onmousemove = this.bindMousemove.bind(this);
     }
 
-    createGeometry(width, height, count) {
+    createGeometry(width,height,count) {
         for (let i = 0; i < count; i++) {
             const x = Math.random() * width - width / 2;
             const y = 0;
             const z = Math.random() * height - height / 2;
-            this.points.push(new THREE.Vector3(x, y, z));
+            this.points.push(new THREE.Vector3(x,y,z));
         }
         this.geometry.setFromPoints(this.points);
     }
     createMaterial() {
-        this.material = new THREE.PointsMaterial({ transparent: true, vertexColors: true, size: 1, alphaTest: 0.1 });
+        this.material = new THREE.PointsMaterial({ transparent: true,vertexColors: true,size: 1,alphaTest: 0.1 });
 
         this.material.onBeforeCompile = shader => {
             shader.uniforms.uColor = {
@@ -781,18 +783,18 @@ class StarLink extends THREE.Points {
     bindMousemove(intersects) {
         if (intersects.length) {
             const point = intersects[0].point;
-            const nearest = this.tree.nearest(point, 100, 10);
+            const nearest = this.tree.nearest(point,100,10);
         }
     }
 }
 
 class SpecialGround extends THREE.Mesh {
     /**@param {THREE.Box3} aabb BoundingBox */
-    constructor(center, min) {
+    constructor(center,min) {
         super();
         this.elapsedTime = { value: 0 };
-        this.position.set(center.x, min.y - 20, center.z);
-        this.geometry = new THREE.PlaneGeometry(8000, 8000);
+        this.position.set(center.x,min.y - 20,center.z);
+        this.geometry = new THREE.PlaneGeometry(8000,8000);
         this.geometry.rotateX(-Math.PI / 2);
         this.material = new THREE.ShaderMaterial({
             side: THREE.DoubleSide,
@@ -866,7 +868,7 @@ class RangeBox extends THREE.Group {
         if (value instanceof THREE.Vector3) {
             this.minBall.position.copy(value);
         } else if (this.vector3Like(value)) {
-            this.minBall.position.set(value.x, value.y, value.z);
+            this.minBall.position.set(value.x,value.y,value.z);
         } else {
             console.warn("RangeBox.min 需要赋值 Vector3:{ x:number,y:number,z:number }");
         }
@@ -882,7 +884,7 @@ class RangeBox extends THREE.Group {
         if (value instanceof THREE.Vector3) {
             this.maxBall.position.copy(value);
         } else if (this.vector3Like(value)) {
-            this.maxBall.position.set(value.x, value.y, value.z);
+            this.maxBall.position.set(value.x,value.y,value.z);
         } else {
             console.warn("RangeBox.min 需要赋值 Vector3:{ x:number,y:number,z:number }");
         }
@@ -897,30 +899,30 @@ class RangeBox extends THREE.Group {
     }
 
     createLine() {
-        const { x: minX, y: minY, z: minZ } = this.min;
-        const { x: maxX, y: maxY, z: maxZ } = this.max;
+        const { x: minX,y: minY,z: minZ } = this.min;
+        const { x: maxX,y: maxY,z: maxZ } = this.max;
 
-        const vertices = new Float32Array([minX, minY, minZ, maxX, maxY, maxZ]);
+        const vertices = new Float32Array([minX,minY,minZ,maxX,maxY,maxZ]);
         const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
-        const material = new THREE.MeshBasicMaterial({ color: 0xff0000, depthTest: false });
+        geometry.setAttribute("position",new THREE.BufferAttribute(vertices,3));
+        const material = new THREE.MeshBasicMaterial({ color: 0xff0000,depthTest: false });
 
-        this.line = new THREE.Line(geometry, material);
+        this.line = new THREE.Line(geometry,material);
         this.add(this.line);
     }
 
     createBall() {
-        const geometry = new THREE.SphereGeometry(1, 32, 32);
-        const material = new THREE.MeshBasicMaterial({ color: 0xff0000, depthTest: false });
+        const geometry = new THREE.SphereGeometry(1,32,32);
+        const material = new THREE.MeshBasicMaterial({ color: 0xff0000,depthTest: false });
 
-        this.minBall = new THREE.Mesh(geometry, material);
-        this.maxBall = new THREE.Mesh(geometry.clone(), material.clone());
+        this.minBall = new THREE.Mesh(geometry,material);
+        this.maxBall = new THREE.Mesh(geometry.clone(),material.clone());
 
-        this.add(this.minBall, this.maxBall);
+        this.add(this.minBall,this.maxBall);
     }
 
     createBox() {
-        this.box = new THREE.Box3Helper(new THREE.Box3(this.min, this.max));
+        this.box = new THREE.Box3Helper(new THREE.Box3(this.min,this.max));
         this.box.material.depthTest = false;
 
         this.add(this.box);
@@ -932,8 +934,8 @@ class RangeBox extends THREE.Group {
         this.min.min(this.max);
         this.max.max(this.min);
 
-        const { x: minX, y: minY, z: minZ } = this.min;
-        const { x: maxX, y: maxY, z: maxZ } = this.max;
+        const { x: minX,y: minY,z: minZ } = this.min;
+        const { x: maxX,y: maxY,z: maxZ } = this.max;
 
         positionAttribute.array[0] = minX;
         positionAttribute.array[1] = minY;
@@ -975,12 +977,12 @@ class HeatCircle extends THREE.Mesh {
      * @param {number} radius 热图半径
      * @param {1|2|3} level 热图热度
      */
-    constructor(center = ZeroVec3, radius = 1, level = 1) {
+    constructor(center = ZeroVec3,radius = 1,level = 1) {
         super();
 
         this.position.copy(center);
 
-        this.geometry = new THREE.PlaneGeometry(radius, radius, 10, 10);
+        this.geometry = new THREE.PlaneGeometry(radius,radius,10,10);
         this.geometry.applyMatrix4(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
 
         this.material = new THREE.ShaderMaterial({
@@ -1071,4 +1073,4 @@ class HeatCircle extends THREE.Mesh {
     }
 }
 
-export { FlowLight, Rain, Snow, Lake, Smoke, FatLine, StarLink, SpecialGround, RangeBox, HeatCircle };
+export { FlowLight,Rain,Snow,Lake,Smoke,FatLine,StarLink,SpecialGround,RangeBox,HeatCircle };

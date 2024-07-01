@@ -6,10 +6,10 @@ const vec3$1 = new Vector3();
 
 export class TweenControls {
     /** @param {Subsystem} system */
-    constructor (system) {
+    constructor(system) {
         this.camera = system.camera;
         this.controls = system.controls;
-        this.tweenEntities = []
+        this.tweenEntities = [];
     }
 
     /**
@@ -19,13 +19,13 @@ export class TweenControls {
      * @param {number} duration
      * @param {Vector3} offset
      */
-    lerpTo(position, distance = 100, duration = 1000, offset = new Vector3()) {
+    lerpTo(position,distance = 100,duration = 1000,offset = new Vector3()) {
         const _distance = this.camera.position.distanceTo(position);
         const alpha = (_distance - distance) / _distance;
-        vec3$1.lerpVectors(this.camera.position, position, alpha);
+        vec3$1.lerpVectors(this.camera.position,position,alpha);
         vec3$1.add(offset);
-        this.changeTo({ start: this.camera.position, end: vec3$1, duration });
-        this.changeTo({ start: this.controls.target, end: position, duration });
+        this.changeTo({ start: this.camera.position,end: vec3$1,duration });
+        this.changeTo({ start: this.controls.target,end: position,duration });
     }
     /**
      * 相机线性过度到目标点 distance 距离,保存 tween 实例，不会立即执行
@@ -34,13 +34,13 @@ export class TweenControls {
      * @param {number} duration
      * @param {Vector3} offset
      */
-    lerpToDelay(position, distance = 100, duration = 1000, offset = new Vector3()) {
+    lerpToDelay(position,distance = 100,duration = 1000,offset = new Vector3()) {
         const _distance = this.camera.position.distanceTo(position);
         const alpha = (_distance - distance) / _distance;
-        vec3$1.lerpVectors(this.camera.position, position, alpha);
+        vec3$1.lerpVectors(this.camera.position,position,alpha);
         vec3$1.add(offset);
-        this.changeTo({ start: this.camera.position, end: vec3$1, duration }, false);
-        this.changeTo({ start: this.controls.target, end: position, duration }, false);
+        this.changeTo({ start: this.camera.position,end: vec3$1,duration },false);
+        this.changeTo({ start: this.controls.target,end: position,duration },false);
     }
 
     /**
@@ -50,10 +50,10 @@ export class TweenControls {
      * @param {number} duration
      * @returns
      */
-    flyTo(position, target, duration = 1000) {
-        if (!position || !target) return
+    flyTo(position,target,duration = 1000) {
+        if (!position || !target) return;
 
-        if (this.camera.position.equals(position) && this.controls.target.equals(target)) return
+        if (this.camera.position.equals(position) && this.controls.target.equals(target)) return;
 
         this.changeTo({
             start: this.camera.position,
@@ -63,12 +63,12 @@ export class TweenControls {
                 this.controls.target.copy(target);
             },
             onStart: () => {
-                this.controls.enabled = false
+                this.controls.enabled = false;
             },
             onComplete: () => {
-                this.controls.enabled = true
+                this.controls.enabled = true;
             }
-        })
+        });
     }
 
     /**
@@ -78,10 +78,10 @@ export class TweenControls {
      * @param {number} duration
      * @returns
      */
-    flyToDelay(position, target, duration = 1000) {
-        if (!position || !target) return
+    flyToDelay(position,target,duration = 1000) {
+        if (!position || !target) return;
 
-        if (this.camera.position.equals(position) && this.controls.target.equals(target)) return
+        if (this.camera.position.equals(position) && this.controls.target.equals(target)) return;
 
         this.changeTo({
             start: this.camera.position,
@@ -91,12 +91,12 @@ export class TweenControls {
                 this.controls.target.copy(target);
             },
             onStart: () => {
-                this.controls.enabled = false
+                this.controls.enabled = false;
             },
             onComplete: () => {
-                this.controls.enabled = true
+                this.controls.enabled = true;
             }
-        }, false)
+        },false);
     }
 
     /**
@@ -104,31 +104,30 @@ export class TweenControls {
      * @param {boolean} immediate 是否立即执行  或是 保存在tween实例当中，手动执行。默认为 true
      * @returns
      */
-    changeTo(options, immediate = true) {
-        const { start, end, duration, onUpdate, onComplete, onStart } = options;
+    changeTo(options,immediate = true) {
+        const { start,end,duration,onUpdate,onComplete,onStart } = options;
 
         if (!duration || !end || !start) return;
-
         const tween = new TWEEN.Tween(start)
-            .to(end, duration)
+            .to(end,duration)
             .onStart(onStart)
             .onUpdate(onUpdate)
-            .onComplete(onComplete)
+            .onComplete(onComplete);
 
         if (immediate) {
-            tween.start()
+            tween.start();
         } else {
-            this.tweenEntities.push(tween)
+            this.tweenEntities.push(tween);
         }
     }
 
     /** 执行所有tween实例 */
     start() {
-        if (this.tweenEntities.length === 0) return
+        if (this.tweenEntities.length === 0) return;
 
-        this.tweenEntities.forEach(tween => tween.start())
+        this.tweenEntities.forEach(tween => tween.start());
 
-        this.tweenEntities.length = 0
+        this.tweenEntities.length = 0;
     }
 
     removeAll() {
