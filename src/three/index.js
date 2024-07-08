@@ -52,7 +52,7 @@ export class Core3D extends CoreExtensions {
         this.boringMachineSubsystem = new BoringMachineSubsystem(this);
         this.fanSubsystem = new FanSubsystem(this);
         this.airDoor = new AirDoor(this);
-        this.changeSystem("fanSubsystem");
+        this.changeSystem("main");
         this.onRenderQueue.set(timeUpdate,scope => updateTime(scope.delta));
     }
 
