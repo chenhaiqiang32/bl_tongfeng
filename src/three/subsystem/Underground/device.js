@@ -68,6 +68,7 @@ export class DeviceManger {
                     volume: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomVolume'),
                     pressure: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomPressure')
                 },
+                changeSystem: document.getElementById("deviceFan").getElementsByClassName("changeSystem")
             },
             [DeviceManger.DeviceType.localFan]: {
                 name: "局扇",
@@ -77,7 +78,8 @@ export class DeviceManger {
                     status: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomStatus'),
                     volume: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomVolume'),
                     pressure: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomPressure')
-                }
+                },
+                changeSystem: document.getElementById("deviceFan").getElementsByClassName("changeSystem")
             },
             [DeviceManger.DeviceType.airDoor]: {
                 name: "风门",

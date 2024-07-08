@@ -52,9 +52,13 @@ export class Device3D {
             console.log("巷道id" + id + "dom不存在");
             return false;
         }
-
         let div = container.cloneNode(true);
-
+        let hasChangeSystem = div.getElementsByClassName("changeSystem");
+        if (hasChangeSystem) { // 点击管控按钮进入子系统
+            hasChangeSystem[0].addEventListener('click',function () {
+                // 这里写点击事件发生时想要执行的代码
+            });
+        }
         const css2d = createCSS3DSprite(div);
         css2d.scale.set(0.08,0.08,0.08);
         let toPosition = currentPosition.clone();

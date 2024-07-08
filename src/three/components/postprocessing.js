@@ -44,7 +44,7 @@ export class Postprocessing {
     #initComposer() {
         // msaa anti-aliasing 多重采样抗锯齿
         const multisampling = this.#renderer.capabilities.maxSamples;
-        this.composer = new EffectComposer(this.#renderer,{});
+        this.composer = new EffectComposer(this.#renderer,{ multisampling });
     }
 
     #initRenderPass() {

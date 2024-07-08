@@ -32,6 +32,10 @@ export const openMessage = Core3D => {
                     Core3D.updateTunnelConfig(event.data.param,"volume");
                     break;
                 }
+                case "changeScene": {
+                    Core3D.changeScene(event.data.param);
+                    break;
+                }
             }
         }
     };

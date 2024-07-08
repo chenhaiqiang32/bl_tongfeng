@@ -31,7 +31,7 @@ class FlowLight extends THREE.Mesh {
         this.uOpacity = { value: config.opacity === undefined ? 1 : config.opacity };
 
         if (Array.isArray(vertices)) {
-            this.#createPath(vertices,config);
+            this.#createPath(vertices,config,config.up);
         } else {
             console.error("创建流光第一个参数必须是Vector3[]");
         }
@@ -43,10 +43,10 @@ class FlowLight extends THREE.Mesh {
      * @param {THREE.Vector3[]} vertices
      * @param {{width:number,radius:number,type:"line"|"tube",segments:number,color1:THREE.Vector3,color2:THREE.Vector3}} config
      */
-    #createPath(vertices,config) {
-        const up = new THREE.Vector3(0,1,0);
+    #createPath(vertices,config,up) {
         const pathPointList = new PathPointList();
         pathPointList.set(vertices,0.5,10,up,false);
+        this.elapsedTime = { value: 0 };
 
         if (config.type === "line") {
             this.geometry = new PathGeometry();
@@ -97,29 +97,188 @@ class FlowLight extends THREE.Mesh {
 
             float t = uElapseTime;
             float final_a = a * step(vUv.x,t);
-
-            gl_FragColor = vec4(color ,final_a*uOpacity);
+            float dist = abs(vUv.x - 0.2);
+            float alpha = 1. - smoothstep(0.4, 0.8, dist);
+            gl_FragColor = vec4(color ,alpha*final_a*uOpacity);
             #include <logdepthbuf_fragment>
         }`;
+        const fragmentShader2 = `
+        uniform float uElapseTime;
+        uniform float uCount;
+        uniform vec3 uColor1;
+        uniform vec3 uColor2;
+        uniform float uOpacity;
+        varying vec2 vUv;
+        #include <logdepthbuf_pars_fragment>
 
+        void main() {
+
+            float p = uCount; //线段段数
+            float al = fract(vUv.x * p - uElapseTime);
+
+            vec3 color = mix(uColor2,uColor1,pow(al,4.));
+
+            float a = al*al;
+
+            float t = uElapseTime;
+            float final_a = a * step(vUv.x,t);
+            float dist = abs(vUv.x - 0.2);
+            float alpha = 1. - smoothstep(0.4, 0.8, dist);
+            gl_FragColor = vec4(color ,alpha*final_a*uOpacity);
+            #include <logdepthbuf_fragment>
+        }`;
         this.material = new THREE.ShaderMaterial({
-            uniforms: {
-                uElapseTime: { value: 0 },
-                uCount: { value: config.segments },
-                uColor1: { value: config.color1 },
-                uColor2: { value: config.color2 },
-                uOpacity: this.uOpacity,
-            },
-            vertexShader,
-            fragmentShader,
+            vertexShader: `
+                  varying vec2 vUv;
+                  void main() {
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+                    vUv = uv;
+                  }
+                  `,
+            fragmentShader: `
+                  /* This work is protected under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License
+                    * more information canbe found at:
+                    * https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US
+                    */
+
+                    const float overallSpeed=12.8;
+                    const float gridSmoothWidth=.025;
+                    const float axisWidth=.25;
+                    uniform float uTime;
+                    const float majorLineWidth=.025;
+                    const float minorLineWidth=.0125;
+                    const float majorLineFrequency=5.;
+                    const float minorLineFrequency=1.;
+                    const vec4 gridColor=vec4(.5);
+                    const float scale=.32;
+                    const vec4 lineColor=vec4(0.8314, 0.8902, 0.9529, 0.02);
+                    const float minLineWidth=.12;
+                    const float maxLineWidth=.18;
+                    const float lineSpeed=2.*overallSpeed;
+                    const float lineAmplitude=.002; // 线条振幅
+                    const float lineFrequency=2.32;
+                    const float warpSpeed=.82*overallSpeed;
+                    const float warpFrequency=.85;
+                    const float warpAmplitude=.04;
+                    const float offsetFrequency=.5;
+                    const float offsetSpeed=.23*overallSpeed;
+                    const float minOffsetSpread=.32;
+                    const float maxOffsetSpread=.32;
+                    const int linesPerGroup=28; // 线条数量
+                    varying vec2 vUv;
+                    const vec4[]bgColors=vec4[]
+                    (
+                      lineColor*.5,
+                      lineColor-vec4(.2,.2,.7,1)
+                    );
+
+                    #define drawCircle(pos,radius,coord)smoothstep(radius+gridSmoothWidth,radius,length(coord-(pos)))
+
+                    #define drawSmoothLine(pos,halfWidth,t)smoothstep(halfWidth,0.,abs(pos-(t)))
+
+                    #define drawCrispLine(pos,halfWidth,t)smoothstep(halfWidth+gridSmoothWidth,halfWidth,abs(pos-(t)))
+
+                    #define drawPeriodicLine(freq,width,t)drawCrispLine(freq/2.,width,abs(mod(t,freq)-(freq)/2.))
+
+                    float drawGridLines(float axis)
+                    {
+                      return drawCrispLine(0.,axisWidth,axis)
+                      +drawPeriodicLine(majorLineFrequency,majorLineWidth,axis)
+                      +drawPeriodicLine(minorLineFrequency,minorLineWidth,axis);
+                    }
+
+                    float drawGrid(vec2 space)
+                    {
+                      return min(1.,drawGridLines(space.x)
+                      +drawGridLines(space.y));
+                    }
+
+                    // probably can optimize w/ noise, but currently using fourier transform
+                    float random(float t)
+                    {
+                      return(cos(t)+cos(t*1.3+1.3)+cos(t*1.4+1.4))/3.;
+                    }
+
+                    float getPlasmaY(float x,float horizontalFade,float offset)
+                    {
+                      return random(x*lineFrequency+uTime*lineSpeed)*horizontalFade*lineAmplitude+offset;
+                    }
+
+                    void main()
+                    {
+
+                    vec2 vUvt=vec2(vUv-.5)*2.;
+                      vec2 space=vUvt*2.*scale;
+
+                      float horizontalFade=1.-(cos(vUvt.x*6.28)*.5+.5);
+                      float verticalFade=1.-(cos(vUvt.y*6.28)*.5+.5);
+
+                      // fun with nonlinear transformations! (wind / turbulence)
+                      space.y+=random(space.x*warpFrequency+uTime*warpSpeed)*warpAmplitude*(.5+horizontalFade);
+                      space.x+=random(space.y*warpFrequency+uTime*warpSpeed+2.)*warpAmplitude*horizontalFade;
+
+                      vec4 lines=vec4(0);
+
+                      for(int l=0;l<linesPerGroup;l++)
+                      {
+                        float normalizedLineIndex=float(l)/float(linesPerGroup);
+                        float offsetTime=uTime*offsetSpeed;
+                        float offsetPosition=float(l)+space.x*offsetFrequency;
+                        float rand=random(offsetPosition+offsetTime)*.5+.5;
+                        float halfWidth=mix(minLineWidth,maxLineWidth,rand*horizontalFade)/2.;
+                        float offset=random(offsetPosition+offsetTime*(1.+normalizedLineIndex))*mix(minOffsetSpread,maxOffsetSpread,horizontalFade);
+                        float linePosition=getPlasmaY(space.x,horizontalFade,offset);
+                        float line=drawSmoothLine(linePosition,halfWidth,space.y)/2.+drawCrispLine(linePosition,halfWidth*.15,space.y);
+
+                        float circleX=mod(float(l)+uTime*lineSpeed,25.)-12.;
+                        vec2 circlePosition=vec2(circleX,getPlasmaY(circleX,horizontalFade,offset));
+                        float circle=drawCircle(circlePosition,.01,space)*4.;
+
+                        // line=line+circle;
+                        lines+=line*lineColor*rand;
+                      }
+
+                      // gl_FragColor=mix(bgColors[0],bgColors[1],vUvt.x);
+                      gl_FragColor*=verticalFade;
+                      gl_FragColor.a=0.2;
+                      // debug grid:
+                      //gl_FragColor = mix(gl_FragColor, gridColor, drawGrid(space))
+                      float dist = abs(vUvt.x - 0.0001);
+                      float alpha = 1. - smoothstep(0.0000001, 0.99999, dist);
+                    //   float alpha = 1.0;
+                      gl_FragColor+=lines;
+                      gl_FragColor.a = gl_FragColor.a * alpha * 0.32;
+                    }
+                  `,
             transparent: true,
             side: THREE.DoubleSide,
-            forceSinglePass: true,
-            depthTest: false
+            depthTest: false,
+            uniforms: {
+                uTime: this.elapsedTime,
+                uIndex: {
+                    value: 2,
+                },
+            },
         });
+        // this.material_bei = new THREE.ShaderMaterial({
+        //     uniforms: {
+        //         uElapseTime: { value: 0 },
+        //         uCount: { value: config.segments },
+        //         uColor1: { value: config.color1 },
+        //         uColor2: { value: config.color2 },
+        //         uOpacity: this.uOpacity,
+        //     },
+        //     vertexShader,
+        //     fragmentShader,
+        //     transparent: true,
+        //     side: THREE.DoubleSide,
+        //     forceSinglePass: true,
+        //     depthTest: false
+        // });
     }
     update(elapseTime) {
-        this.material.uniforms.uElapseTime.value = elapseTime;
+        // this.material.uniforms.uElapseTime.value = elapseTime;
+        this.elapsedTime.value = elapseTime;
     }
 }
 

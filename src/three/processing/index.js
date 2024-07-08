@@ -296,6 +296,7 @@ function processingAnimations(gltf,system) {
         for (let i = 0; i < animations.length; i++) {
             system.actions.push(mixer.clipAction(animations[i]));
         }
+        // system.actions.push(mixer.clipAction(animations[2]));
         system.mixers.push(mixer);
         system.uncaches.push(() => uncache(animations,mixer,model));
     }

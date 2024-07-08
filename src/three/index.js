@@ -8,6 +8,9 @@ import { updateStyle,updateTime } from "../shader/constant";
 import { openMessage } from "../message/onMessage";
 import { onLoaded } from "../message/postMessage";
 import { getData } from "./data/format";
+import { BoringMachineSubsystem } from "./subsystem/BoringMachine";
+import { FanSubsystem } from "./subsystem/Fan";
+import { AirDoor } from "./subsystem/airDoor";
 
 const timeUpdate = Symbol("timeUpdate");
 
@@ -46,7 +49,10 @@ export class Core3D extends CoreExtensions {
 
     setClass() {
         this.main = new UnderGround(this);
-        this.changeSystem("main");
+        this.boringMachineSubsystem = new BoringMachineSubsystem(this);
+        this.fanSubsystem = new FanSubsystem(this);
+        this.airDoor = new AirDoor(this);
+        this.changeSystem("fanSubsystem");
         this.onRenderQueue.set(timeUpdate,scope => updateTime(scope.delta));
     }
 
