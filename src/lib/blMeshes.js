@@ -63,70 +63,6 @@ class FlowLight extends THREE.Mesh {
                 radius: config.radius,
             });
         }
-
-        const vertexShader = `
-        varying vec2 vUv;
-        #include <logdepthbuf_pars_vertex>
-        #include <common>
-
-        void main(){
-            vUv = uv;
-            // vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-            // gl_Position = projectionMatrix * mvPosition;
-            #include <begin_vertex>
-            #include <project_vertex>
-            #include <logdepthbuf_vertex>
-        }`;
-        const fragmentShader = `
-        uniform float uElapseTime;
-        uniform float uCount;
-        uniform vec3 uColor1;
-        uniform vec3 uColor2;
-        uniform float uOpacity;
-        varying vec2 vUv;
-        #include <logdepthbuf_pars_fragment>
-
-        void main() {
-
-            float p = uCount; //线段段数
-            float al = fract(vUv.x * p - uElapseTime);
-
-            vec3 color = mix(uColor2,uColor1,pow(al,4.));
-
-            float a = al*al;
-
-            float t = uElapseTime;
-            float final_a = a * step(vUv.x,t);
-            float dist = abs(vUv.x - 0.2);
-            float alpha = 1. - smoothstep(0.4, 0.8, dist);
-            gl_FragColor = vec4(color ,alpha*final_a*uOpacity);
-            #include <logdepthbuf_fragment>
-        }`;
-        const fragmentShader2 = `
-        uniform float uElapseTime;
-        uniform float uCount;
-        uniform vec3 uColor1;
-        uniform vec3 uColor2;
-        uniform float uOpacity;
-        varying vec2 vUv;
-        #include <logdepthbuf_pars_fragment>
-
-        void main() {
-
-            float p = uCount; //线段段数
-            float al = fract(vUv.x * p - uElapseTime);
-
-            vec3 color = mix(uColor2,uColor1,pow(al,4.));
-
-            float a = al*al;
-
-            float t = uElapseTime;
-            float final_a = a * step(vUv.x,t);
-            float dist = abs(vUv.x - 0.2);
-            float alpha = 1. - smoothstep(0.4, 0.8, dist);
-            gl_FragColor = vec4(color ,alpha*final_a*uOpacity);
-            #include <logdepthbuf_fragment>
-        }`;
         this.material = new THREE.ShaderMaterial({
             vertexShader: `
                   varying vec2 vUv;
@@ -151,7 +87,8 @@ class FlowLight extends THREE.Mesh {
                     const float minorLineFrequency=1.;
                     const vec4 gridColor=vec4(.5);
                     const float scale=.32;
-                    const vec4 lineColor=vec4(0.8314, 0.8902, 0.9529, 0.02);
+                    // const vec4 lineColor=vec4(0.8314, 0.8902, 0.9529, 0.02);
+                    const vec4 lineColor=vec4(0.051, 0.9647, 0.6745, 0.02);
                     const float minLineWidth=.12;
                     const float maxLineWidth=.18;
                     const float lineSpeed=2.*overallSpeed;

@@ -17,11 +17,11 @@ class BoxModel {
             "/shader/icon_20210625174703331_294105.png",
             // "/shader/icon_20210625174822322_937383.png",
             "/shader/icon_20210625175116741_958937.png",
-            "/shader/icon_20210625175205515_73731.png",
+            // "/shader/icon_20210625175205515_73731.png",
             // "/shader/icon_20210407163008223_378401.png",
-            "/shader/icon_20210418125256801_956034.png",
+            // "/shader/icon_20210418125256801_956034.png",
 
-            "/地板面02.png",
+            // "/地板面02.png",
         ];
         this.imagesObj = [
             {
@@ -66,13 +66,14 @@ class BoxModel {
                 0.26,
                 1,
                 "rgba(54,215,255,1)",
-                6.4,
+                1.2,
                 0.5,
                 "rgba(18,208,255,1)",
                 false,
                 "flow",
                 5,
                 5,
+                i === 1 ? 48 : 12
             );
             var r = new THREE.PlaneGeometry(radius * 20,radius * 20);
             var tm = new THREE.Mesh(r,t);
@@ -94,13 +95,13 @@ class BoxModel {
             },
             time: this.elapsedTime,
             opacity: {
-                value: 0.12,
+                value: 0.88,
             },
             alpha: {
                 value: r,
             },
             repeatFactor: {
-                value: [c || i,u || i],
+                value: repeatFactor,
             },
             maskMap: {
                 value: g,
@@ -136,7 +137,7 @@ class BoxModel {
             uniform float glowFactor;
             uniform float speed;
             void main() {
-              float repeatFactor = 48.0;
+            //   float repeatFactor = 48.0;
               vec2 mapUv = vUv * repeatFactor;
               float t = mod(time / 5. * speed, 1.);
               vec2 uv = abs((vUv - vec2(0.5)) * 2.0);

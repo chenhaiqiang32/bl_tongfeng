@@ -203,9 +203,10 @@ function processingCommonModel(gltf,system,postprocess = undefined,preprocess = 
 
                 renderQueue.set(Symbol(),lake.update);
                 system.add(lake);
-            } else if (material.name.includes("水")) {
-                water2(material);
             }
+            // else if (material.name.includes("水")) {
+            //     water2(material);
+            // }
 
             if (material.name.includes("漆面")) {
                 const texture = new TextureLoader().load("./textures/water_normal.jpg");

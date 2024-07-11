@@ -53,33 +53,10 @@ export function glassTimeUpdate(time) {
  * @param {THREE.Mesh} mesh
  * @param {{shader:string}} [param={}]
  */
-export function shaderModify(mesh,param = {}) {
-    if (mesh instanceof THREE.Mesh == false) {
-        console.log("格式错误，传入的mesh格式为 " + typeof mesh);
-        return;
-    }
-    if (!param.shader) {
-        console.log("shader is undefined!");
-        return;
-    }
-    mesh.material.onBeforeCompile = shader => {
-        shader.uniforms.uStyle = lightingPattern; // 风格切换开关，1为白天，2为夜晚 3为科技风
-        shader.uniforms.uElapseTime = elapsedTime;
-        if (param.shader === "fresnel" && param.shaderName) {
-            shader.uniforms.fresnelLevel = fresnelLevelS[param.shaderName];
-        }
-        if (param.shader === "fresnel" && param.cColor) {
-            param.cColor && (shader.uniforms.uColor = fresnelChangeColor[param.shaderName]);
-        }
-        param.color && (shader.uniforms.uColor = { value: param.color });
-        addUniform(shader,param);
-        shaderChunk[param.shader](shader,param,mesh);
-    };
-}
 
-export function shaderModify1(shader,param = {}) {
+export function shaderModify(shader,param = {}) {
 
-    shader.uniforms.uStyle = lightingPattern; // 风格切换开关，1为白天，2为夜晚 3为科技风
+    shader.uniforms.uStyle = lightingPattern;
     shader.uniforms.uElapseTime = elapsedTime;
     if (param.shader === "fresnel" && param.shaderName) {
         shader.uniforms.fresnelLevel = fresnelLevelS[param.shaderName];

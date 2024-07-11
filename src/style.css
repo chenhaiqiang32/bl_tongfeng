@@ -13,8 +13,10 @@ body,
 }
 body {
     background: url("./assets//tunnelBg.jpg") no-repeat left top;
-    background-size: cover;
+    background-size: 100% 100%;
     overflow: hidden;
+    width: 100vw;
+    height: 100vh;
 }
 
 .ellipsis {

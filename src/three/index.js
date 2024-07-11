@@ -11,6 +11,9 @@ import { getData } from "./data/format";
 import { BoringMachineSubsystem } from "./subsystem/BoringMachine";
 import { FanSubsystem } from "./subsystem/Fan";
 import { AirDoor } from "./subsystem/airDoor";
+import { AirWindow } from "./subsystem/AirWindow";
+import { PartFanSubsystem } from "./subsystem/partFan";
+import { AirStation } from "./subsystem/AirStation";
 
 const timeUpdate = Symbol("timeUpdate");
 
@@ -52,6 +55,9 @@ export class Core3D extends CoreExtensions {
         this.boringMachineSubsystem = new BoringMachineSubsystem(this);
         this.fanSubsystem = new FanSubsystem(this);
         this.airDoor = new AirDoor(this);
+        this.airWindow = new AirWindow(this);
+        this.airStation = new AirStation(this);
+        this.partFanSubsystem = new PartFanSubsystem(this);
         this.changeSystem("main");
         this.onRenderQueue.set(timeUpdate,scope => updateTime(scope.delta));
     }

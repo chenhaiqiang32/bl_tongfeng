@@ -39,7 +39,7 @@ export class Device3D {
      * @param {deviceEdit} data
      */
     create(data) {
-        const { id,type,tunnelId,distance } = data;
+        const { id,type,tunnelId,distance,deviceInfo } = data;
         const object = new THREE.Object3D();
         object.name = id;
         let currentPosition = this.underGround.getPosition(tunnelId,distance);
@@ -47,19 +47,63 @@ export class Device3D {
             console.log("巷道id" + id + "不存在");
             return false;
         }
-        let container = this.device.deviceCode[type].dom;
+        let container = this.device.deviceCode[type].dom();
+        let domObj = this.device.deviceCode[type].domToValue;
+        let domObjParts = this.device.deviceCode[type].domToValueParts;
+        let domEvent = this.device.deviceCode[type].domEvent;
+        let statusShow = this.device.deviceCode[type].statusValue;
+        let toSystem = this.device.deviceCode[type].systemName;
         if (!container) {
             console.log("巷道id" + id + "dom不存在");
             return false;
         }
-        let div = container.cloneNode(true);
-        let hasChangeSystem = div.getElementsByClassName("changeSystem");
-        if (hasChangeSystem) { // 点击管控按钮进入子系统
-            hasChangeSystem[0].addEventListener('click',function () {
-                // 这里写点击事件发生时想要执行的代码
-            });
+
+        for (let key in deviceInfo) {
+            let value = deviceInfo[key];
+            if (domObj[key]) { // 修改常规css3d展示dom数据
+                let changeDom = container.getElementsByClassName(domObj[key])[0];
+                changeDom.innerText = value; // dom元素赋值
+                if (key === "status") { // 修改dom颜色
+                    changeDom.innerText = statusShow[value + ""]; // dom元素赋值
+                    value ? changeDom.classList.add("green") : changeDom.classList.add("red");
+                }
+            }
+            if (key === "parts") { // 修改部件css3d展示dom数据
+                value.forEach((child,index) => {
+                    let currentDom = domObjParts[index];
+                    for (let i in child) {
+                        let val = child[i];
+                        if (currentDom[i]) { // 存在要修改的dom
+                            let changeDom = container.getElementsByClassName(currentDom[i])[0];
+                            changeDom.innerText = val; // dom元素赋值
+                            if (i === "status") { // 修改dom颜色
+                                changeDom.innerText = val ? "开" : "关";
+                                val ? changeDom.classList.add("green") : changeDom.classList.add("grey");
+                            }
+                        }
+                    }
+                });
+            }
         }
-        const css2d = createCSS3DSprite(div);
+        if (domEvent) {
+            if (domEvent["定位"]) { // 定位
+                let eventDom = container.getElementsByClassName(domEvent["定位"])[0];
+                eventDom.addEventListener('click',() => {
+                    // 这里写点击事件发生时想要执行的代码
+                    alert(423423);
+                });
+
+            }
+            if (domEvent["管控"]) { // 切换场景
+                let eventDom = container.getElementsByClassName(domEvent["管控"])[0];
+                eventDom.addEventListener('click',() => {
+                    // 这里写点击事件发生时想要执行的代码
+                    this.device.core.core.changeSystem(toSystem);
+                });
+
+            }
+        }
+        const css2d = createCSS3DSprite(container);
         css2d.scale.set(0.08,0.08,0.08);
         let toPosition = currentPosition.clone();
         toPosition.y = toPosition.y + 20;

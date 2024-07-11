@@ -19,26 +19,41 @@ export const fresnelChangeColor = {
         value: new THREE.Color(0.9451,0.9451,0.5725)
     },
 };
-export const fresnelLevelS = {
-    "#1通风机": {
-        value: 2.8
+export const fresnelColorBlue = {
+    "深蓝偏紫": {
+        value: new THREE.Color("#007BFF")
     },
-    "#2通风机": {
-        value: 2.8
+    "道奇蓝": {
+        value: new THREE.Color("#1E90FF")
     },
-    "wall": {
-        value: 2.8
+    "天蓝": {
+        value: new THREE.Color("#87CEEB")
     },
-    "door": {
-        value: 200.8
+    "深天蓝": {
+        value: new THREE.Color("#00BFFF")
     },
-    "shan": {
-        value: 0.32
+    "浅蓝绿色": {
+        value: new THREE.Color("#ADD8E6")
     },
-    "dian": {
-        value: 0.32
+    "亮钢兰色": {
+        value: new THREE.Color("#B0C4DE")
     },
 };
+export const fresnelLevelS = {
+    "base": {
+        value: 2.8
+    },
+    "level2": {
+        value: 1.8
+    },
+    "level3": {
+        value: .8
+    },
+    "level4": {
+        value: 10.8
+    },
+};
+
 export const flowTime = {
     value: 0,
 };

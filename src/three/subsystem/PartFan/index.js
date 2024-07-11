@@ -2,18 +2,14 @@ import * as THREE from "three";
 import * as TWEEN from "three/examples/jsm/libs/tween.module";
 import { Subsystem } from "../Subsystem";
 import { loadGLTF,loadOBJ } from "../../loader";
-import { fan_models } from "@/assets/models";
+import { partFan_models } from "@/assets/models";
 import { Core3D } from "../..";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import {
     processingCommonModel,
-    processingInstancedModel,
-    processingInstancedTree,
-    processingMergedTree,
     processingAnimations,
-    processingCameraAnimation,
 } from "../../processing";
 
 import { FlowLight } from "../../../lib/blMeshes";
@@ -55,7 +51,7 @@ const labelData = [
 ];
 
 /**@classdesc 包含场景，子系统特有的功能，系统的切换（包含主场景和子场景切换） */
-export class FanSubsystem extends Subsystem {
+export class PartFanSubsystem extends Subsystem {
     /** @param {Core3D} core*/
     constructor(core) {
         super(core);
@@ -70,6 +66,9 @@ export class FanSubsystem extends Subsystem {
         this.bloomLights = [];
         this.ground = null;
         this.raycastEvents = [];
+        let data = {
+            direction: 0 // 0 顺丰  1 逆风
+        };
 
         this.fanner1 = {
             name: "#1通风机",
@@ -88,6 +87,9 @@ export class FanSubsystem extends Subsystem {
             flowLights: [],
             object: [],
         };
+        this.data = {
+            direction: 0
+        };
         this.shaderColor = {
             wall: new THREE.Color(0.4431,0.4784,0.502),
             shan: new THREE.Color(0.9569,0.9843,0.5882),
@@ -97,7 +99,6 @@ export class FanSubsystem extends Subsystem {
     }
 
     init() {
-        // this.initAxesHelper();
         this.initScene();
     }
 
@@ -139,8 +140,8 @@ export class FanSubsystem extends Subsystem {
         this.handleControls();
         this.onRenderQueue.set(fan,this.update);
 
-        await loadGLTF(fan_models,this.onProgress);
-        await loadOBJ(fan_models,this.onOBJProgress);
+        await loadGLTF(partFan_models,this.onProgress);
+        await loadOBJ(partFan_models,this.onOBJProgress);
 
         this.onLoaded();
     }
@@ -154,139 +155,162 @@ export class FanSubsystem extends Subsystem {
         if (this.core.scene !== this.scene) return;
         let group;
         let color1 = {
-            data: ["#1通风机电机人孔门_1","#1通风机电机人孔门_2","#2通风机电机人孔门_1","#2通风机电机人孔门_2","#1通风机_1","#2通风机_1"],
+            data: ["局部风机_1","局部风机_2","局部风机_3","舱盖1_1","舱盖2_1"],
             color: fresnelColorBlue["深蓝偏紫"].value
         };
-        let JSkin = ["#1通风机","#2通风机","#1通风机电机人孔门","#2通风机电机人孔门"];
+        let JSkin = [];
         let color2 = {
-            data: ["#1通风机_3","#2通风机_3","#2通风机二级电机_2","#2通风机一级电机_2","#1通风机二级电机_2","#1通风机一级电机_2","#2通风机二级电机_3","#2通风机一级电机_3","#1通风机二级电机_3","#1通风机一级电机_3",],
+            data: [],
             color: fresnelColorBlue["道奇蓝"].value
         };
         let color3 = {
-            data: ["#1通风机_4","#2通风机_4"],
+            data: [],
             color: fresnelColorBlue["天蓝"].value
         };
         let color4 = {
-            data: ["#1通风机_2","#1通风机_5","#1通风机_6","#2通风机_2","#2通风机_5","#2通风机_6"],
+            data: [],
             color: fresnelColorBlue["深天蓝"].value
         };
-        let color5Includes = { data: ["电机风扇"],color: fresnelColorBlue["浅蓝绿色"].value };
-        let color6Includes = { data: ["通风水平风门扇叶","通风垂直风门扇叶","#1机立式风门","#2机立式风门"],color: fresnelColorBlue["亮钢兰色"].value };
-        gltf.scene.traverse(child => {
-            if (color1.data.includes(child.name)) {
-                child.material = child.material.clone();
-                child.material.transparent = true;
-                child.uPosition = child.position.clone();
-                child.material.onBeforeCompile = shader => {
-                    shaderModify(shader,{ shader: "fresnel",color: color1.color,shaderName: "level2" });
-                };
-            }
-            if (JSkin.includes(child.name)) {
-                child.traverse(res => {
-                    if (res instanceof THREE.Mesh) {
-                        if (res.name === "#2通风机_5" || res.name === "#1通风机_5") {
-                            res.visible = false;
-                        }
-                        res.material.transparent = true;
-                        if (color1.data.includes(res.name)) {
-                            res.renderOrder = 10;
-                            res.material = res.material.clone();
-                            res.material.transparent = true;
-                            res.material.onBeforeCompile = shader => {
-                                shaderModify(shader,{ shader: "fresnel",color: color1.color,shaderName: "base" });
-                            };
-                        }
-                        if (color2.data.includes(res.name)) {
-                            res.material.transparent = true;
-                            res.material.onBeforeCompile = shader => {
-                                shaderModify(shader,{ shader: "fresnel",color: color2.color,shaderName: "base" });
-                            };
-                        }
-                        if (color3.data.includes(res.name)) {
-                            res.material.opacity = 0.24;
-                            res.material.map = null;
-                            res.material.color = color3.color;
-                        }
-                        if (color4.data.includes(res.name)) {
-                            res.renderOrder = 10;
-                            res.material = res.material.clone();
-                            res.material.transparent = true;
-                            res.material.onBeforeCompile = shader => {
-                                shaderModify(shader,{ shader: "fresnel",color: color4.color,shaderName: "base" });
-                            };
-                        }
-                    }
-
-                });
-            }
-        });
+        let color5 = {
+            data: ["局部风机_4","局部风机_5","局部风机_6"],
+            color: fresnelColorBlue["浅蓝绿色"].value
+        };
+        if (name === "wall") {
+            gltf.scene.traverse(child => {
+                if (child instanceof THREE.Mesh && !child.name.includes("风门左")) {
+                    child.material = child.material.clone();
+                    child.material.transparent = true;
+                    child.material.onBeforeCompile = shader => {
+                        shaderModify(shader,{ shader: "fresnel",color: color1.color,shaderName: "level2" });
+                    };
+                }
+                if (child instanceof THREE.Mesh && child.name.includes("风门左")) {
+                    child.material = child.material.clone();
+                    child.material.transparent = true;
+                    child.material.onBeforeCompile = shader => {
+                        shaderModify(shader,{ shader: "fresnel",color: color2.color,shaderName: "level2" });
+                    };
+                }
+            });
+        }
         if (name === "equip") {
             gltf.scene.traverse(child => {
                 if (child instanceof THREE.Mesh) {
-                    child.material.transparent = true;
+                    child.renderOrder = 0;
                     child.material = child.material.clone();
-                    if (color2.data.includes(child.name)) {
-                        child.material.onBeforeCompile = shader => {
-                            shaderModify(shader,{ shader: "fresnel",color: color2.color,shaderName: "base" });
-                        };
-                    }
-                    color5Includes.data.forEach(res => {
-                        if (child.name.includes(res)) {
-                            child.material.onBeforeCompile = shader => {
-                                shaderModify(shader,{ shader: "fresnel",color: color5Includes.color,shaderName: "base" });
-                            };
-                        }
-                    });
-                    color6Includes.data.forEach(res => {
-                        if (child.name.includes(res)) {
-                            child.material.onBeforeCompile = shader => {
-                                shaderModify(shader,{ shader: "fresnel",color: color6Includes.color,shaderName: "level3" });
-                            };
-                        }
-                    });
+                    child.material.transparent = true;
+                    child.material.onBeforeCompile = shader => {
+                        shaderModify(shader,{ shader: "pumpModify",color: color5.color,shaderName: "level4" });
+                    };
                 }
-
             });
         }
-        if (name === "wall") {
+        if (name === "test") {
             gltf.scene.traverse(child => {
-                if (child instanceof THREE.Mesh && child.name !== "通风口_2") {
+                if (child instanceof THREE.Mesh) {
+                    child.position.y = 3.2;
+                    child.renderOrder = 0;
+                    child.material = child.material.clone();
                     child.material.transparent = true;
-                    child.material.opacity = 0.88;
+                    child.material.onBeforeCompile = shader => {
+                        shaderModify(shader,{ shader: "pumpModify",color: color1.color,shaderName: "level4" });
+                    };
                 }
             });
+        }
+        if (name === "wind") {
+            let obj = {
+                shiLi: {
+                    hui: null,
+                    chu: null
+                },
+                position: [
 
+                ]
+            };
+            gltf.scene.traverse(child => {
+                if (child.name === "新风") {
+                    obj.shiLi.chu = child;
+                }
+                if (child.name === "回风") {
+                    obj.shiLi.hui = child;
+                }
+                if (child.name.includes("风流")) {
+                    let wordPosition = new THREE.Vector3();
+                    child.getWorldPosition(wordPosition);
+                    obj.position.push(wordPosition);
+                }
+            });
+            gltf.scene.visible = false;
+            let currentObj = this.data.direction === 0 ? obj.shiLi.chu : obj.shiLi.hui;
+            for (let i = 0; i < obj.position.length; i++) {
+                let newObj = currentObj.clone();
+                newObj.position.copy(obj.position[i]);
+                newObj.visible = true;
+                newObj.material.onBeforeCompile = shader => {
+                    // shaderModify(shader,{ shader: "pumpModify",color: color5.color,shaderName: "level4" });
+                };
+                this.add(newObj);
+            }
+        }
+        if (name === "fenJi") {
+            gltf.scene.name = "fenJi";
+            gltf.scene.traverse(child => {
+                if (child.name === "局部风机_2") {
+                    child.visible = false;
+                }
+                if (child instanceof THREE.Mesh && color1.data.includes(child.name)) {
+                    child.material = child.material.clone();
+                    child.material.transparent = true;
+                    child.renderOrder = 10;
+                    child.material.onBeforeCompile = shader => {
+                        shaderModify(shader,{ shader: "pumpModify",color: color4.color,shaderName: "level2" });
+                    };
+                }
+                if (child instanceof THREE.Mesh && color5.data.includes(child.name)) {
+                    child.material = child.material.clone();
+                    child.material.transparent = true;
+                    child.renderOrder = 0;
+                    child.material.onBeforeCompile = shader => {
+                        shaderModify(shader,{ shader: "pumpModify",color: color5.color,shaderName: "level2" });
+                    };
+                }
+            });
         }
         if (name === "ground") {
             gltf.scene.traverse(child => {
                 if (child instanceof THREE.Mesh) {
+                    child.material = child.material.clone();
                     child.material.transparent = true;
-                    child.material.opacity = 0.2;
+                    child.material.onBeforeCompile = shader => {
+                        shaderModify(shader,{ shader: "fresnel",color: color2.color,shaderName: "level4" });
+                    };
                 }
             });
 
-            let geometry = new THREE.CircleGeometry(76,76);
+            let geometry = new THREE.CircleGeometry(400,640);
             let groundMirror = new Reflector(geometry,{
                 gaussEffect: true,
-                opacity: 0.08,
+                opacity: 0.32,
                 clipBias: 0.003,
                 textureHeight: window.innerHeight * window.devicePixelRatio,
                 textureWidth: window.innerWidth * window.devicePixelRatio,
-                color: new THREE.Color(0.0667,0.0061,0.1098,0.1),
+                color: 0x000000,
             });
             groundMirror.position.y = -2;
             groundMirror.rotateX(- Math.PI / 2);
             groundMirror.material.transparent = true;
             groundMirror.material.opacity = 0.001;
-            gltf.scene.visible = false;
             this.ground = gltf.scene;
+            console.log(this.scene);
             this.add(groundMirror);
         }
         processingAnimations(gltf,this);
         this.actions.forEach(action => {
-            if (action._clip.name.includes("#1机")) {
+            console.log(action._clip.name);
+            if (action._clip.name.includes("#1风机")) {
                 this.fanner1.actions.push(action);
-            } else if (action._clip.name.includes("#2机")) {
+            } else if (action._clip.name.includes("#2风机")) {
                 this.fanner2.actions.push(action);
             }
         });
@@ -308,11 +332,11 @@ export class FanSubsystem extends Subsystem {
             const vertices = line.vertices;
             const flowLight = new FlowLight(vertices,{
                 type: "line",
-                width: 4.8,
+                width: 2.4,
                 color1: new THREE.Vector3(0.3,0.3,0.6),
                 color2: new THREE.Vector3(0,0.8,0.4),
                 segments: 3,
-                up: new THREE.Vector3(0,0,1),
+                up: new THREE.Vector3(0,1,0),
             });
             flowLight.renderOrder = 2;
             flowLight.visible = false;
@@ -329,11 +353,11 @@ export class FanSubsystem extends Subsystem {
 
             const flowLight2 = new FlowLight(vertices,{
                 type: "line",
-                width: 4.8,
+                width: 1.2,
                 color1: new THREE.Vector3(0.3,0.3,0.6),
                 color2: new THREE.Vector3(0,0.8,0.4),
                 segments: 3,
-                up: new THREE.Vector3(0,1,0),
+                up: new THREE.Vector3(1,0,0),
             });
             flowLight2.renderOrder = 2;
             flowLight2.visible = false;
@@ -389,9 +413,9 @@ export class FanSubsystem extends Subsystem {
     test() {
         this.setEquipmentState(true,1,"toOut");
         setTimeout(() => {
-            this.setEquipmentState(false,1,"toIn");
+            this.setEquipmentState(false,1,"toOut");
             this.setEquipmentState(true,2,"toIn");
-        },2000);
+        },8000);
     }
     box() {
         const { center,radius } = getBoxAndSphere(this.ground).sphere;

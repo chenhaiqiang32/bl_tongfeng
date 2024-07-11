@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { Subsystem } from "../Subsystem";
 import { loadGLTF,loadOBJ } from "../../loader";
-import { air_door } from "@/assets/models";
+import { air_window_double } from "@/assets/models";
 import { Core3D } from "../..";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -46,7 +46,7 @@ const controlsParameters = {
 };
 
 /**@classdesc 包含场景，子系统特有的功能，系统的切换（包含主场景和子场景切换） */
-export class AirDoor extends Subsystem {
+export class AirWindow extends Subsystem {
     /** @param {Core3D} core*/
     constructor(core) {
         super(core);
@@ -116,8 +116,8 @@ export class AirDoor extends Subsystem {
         this.handleControls();
         this.onRenderQueue.set(_BoringMachineSubsystem,this.update);
 
-        await loadGLTF(air_door,this.onProgress);
-        await loadOBJ(air_door,this.onOBJProgress);
+        await loadGLTF(air_window_double,this.onProgress);
+        await loadOBJ(air_window_double,this.onOBJProgress);
 
         this.onLoaded();
     }

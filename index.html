@@ -15,8 +15,9 @@
     <script src="/config.js"></script>
     <div id="deviceFan" style="display: none;">
         <div class="deviceDialog">
-            <div class="top ellipsis IdentifyDomName">
-                XXXX主风机名称sadfasdgfasdgsdgsddgasdgsd
+            <div class="top ellipsis">
+                <span class="IdentifyDomName">XXXX主风机名称sadfasdgfasdgsdgsddgasdgsd</span>
+
                 <div class="shadow"></div>
             </div>
             <div class="middle">
@@ -25,7 +26,7 @@
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
                         <span>状态：</span>
-                        <span class="word red IdentifyDomStatus">停止运行</span>
+                        <span class="word IdentifyDomStatus">停止运行</span>
                     </div>
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
@@ -41,7 +42,7 @@
                     </div>
 
                     <div class="button">
-                        <div class="buttonIcon gradient-border-radius"><img src="/device/cameraIcon.png"
+                        <div class="buttonIcon gradient-border-radius changeToLocal"><img src="/device/cameraIcon.png"
                                 alt=""><span>定位</span></div>
                         <div class="buttonIcon gradient-border-radius changeSystem"><img src="/device/guankong.png"
                                 alt=""><span>管控</span></div>
@@ -49,8 +50,14 @@
                 </div>
             </div>
             <div class="bottom">
-                <div class="list">1#风机：<span class="green">开</span></div>
-                <div class="list">2#风机：<span>关</span></div>
+                <div class="list">
+                    <span class="deviceFirstName">1#风机</span>：
+                    <span class="deviceFirstStatus">开</span>
+                </div>
+                <div class="list">
+                    <span class="deviceSecondName">2#风机</span>：
+                    <span class="deviceSecondStatus">关</span>
+                </div>
             </div>
         </div>
     </div>
@@ -58,7 +65,7 @@
     <div id="deviceWindStation" style="display: none;">
         <div class="deviceDialog">
             <div class="top ellipsis">
-                XXXX测风名称sadfasdgfasdgsdgsddgasdgsd
+                <span class="measureName">XXXX测风名称</span>
                 <div class="shadow"></div>
             </div>
             <div class="middle">
@@ -67,31 +74,31 @@
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
                         <span>状态：</span>
-                        <span class="word green">运行正常</span>
+                        <span class="word measureStatus">运行正常</span>
                     </div>
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
                         <span>风速：</span>
-                        <span class="green">150.1</span>
+                        <span class="green measureSpeed">150.1</span>
                         <span class="danwei">m/s</span>
                     </div>
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
                         <span>甲烷：</span>
-                        <span class="green">105.3</span>
+                        <span class="green measureCh4">105.3</span>
                         <span class="danwei">VOL%</span>
                     </div>
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
                         <span>一氧化碳：</span>
-                        <span class="green">105.3</span>
+                        <span class="green measureCo">105.3</span>
                         <span class="danwei">ppm</span>
                     </div>
 
                     <div class="button">
-                        <div class="buttonIcon gradient-border-radius"><img src="/device/cameraIcon.png"
+                        <div class="buttonIcon gradient-border-radius changeToLocal"><img src="/device/cameraIcon.png"
                                 alt=""><span>定位</span></div>
-                        <div class="buttonIcon gradient-border-radius"><img src="/device/guankong.png"
+                        <div class="buttonIcon gradient-border-radius changeSystem"><img src="/device/guankong.png"
                                 alt=""><span>管控</span></div>
                     </div>
                 </div>
@@ -101,8 +108,8 @@
 
     <div id="deviceWindWindow" style="display: none;">
         <div class="deviceDialog">
-            <div class="top ellipsis">
-                XXXX风窗名称sadfasdgfasdgsdgsddgasdgsd
+            <div class="top ellipsis ">
+                <span class="windowName">XXXX风窗名称</span>
                 <div class="shadow"></div>
             </div>
             <div class="middle">
@@ -111,28 +118,32 @@
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
                         <span>状态：</span>
-                        <span class="word red">停止运行</span>
+                        <span class="word windowStatus">停止运行</span>
                     </div>
 
                     <div class="button">
-                        <div class="buttonIcon gradient-border-radius"><img src="/device/cameraIcon.png"
+                        <div class="buttonIcon gradient-border-radius changeToLocal"><img src="/device/cameraIcon.png"
                                 alt=""><span>定位</span></div>
-                        <div class="buttonIcon gradient-border-radius"><img src="/device/guankong.png"
+                        <div class="buttonIcon gradient-border-radius changeSystem"><img src="/device/guankong.png"
                                 alt=""><span>管控</span></div>
                     </div>
                 </div>
             </div>
             <div class="bottom">
-                <div class="list">A窗：<span>0°</span></div>
-                <div class="list">B窗：<span class="green">90°</span></div>
+                <div class="list">
+                    <span class="deviceFirstName">A窗</span>：<span class="green windowFirstAngle">0°</span>
+                </div>
+                <div class="list secondWindowHas">
+                    <span class="deviceSecondName">B窗</span>：<span class="green windowSecondAngle">90°</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="deviceFan" style="display: none;">
+    <div id="partFan" style="display: none;">
         <div class="deviceDialog">
             <div class="top ellipsis">
-                XXXX局扇名称sadfasdgfasdgsdgsddgasdgsd
+                <span class="partName">XXXX局扇名称sadfasdgfasdgsdgsddgasdgsd</span>
                 <div class="shadow"></div>
             </div>
             <div class="middle">
@@ -141,40 +152,50 @@
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
                         <span>状态：</span>
-                        <span class="word green">运行正常</span>
+                        <span class="word partStatus">运行正常</span>
                     </div>
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
                         <span>电流：</span>
-                        <span class="green">150.1</span>
+                        <span class="green electricValue">150.1</span>
                         <span class="danwei">A</span>
                     </div>
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
                         <span>电压：</span>
-                        <span class="green">105.3</span>
+                        <span class="green voltageValue">105.3</span>
                         <span class="danwei">V</span>
                     </div>
 
                     <div class="button">
-                        <div class="buttonIcon gradient-border-radius"><img src="/device/cameraIcon.png"
-                                alt=""><span>定位</span></div>
-                        <div class="buttonIcon gradient-border-radius"><img src="/device/guankong.png"
-                                alt=""><span>管控</span></div>
+                        <div class="buttonIcon gradient-border-radius changeToLocal">
+                            <img src="/device/cameraIcon.png" alt="">
+                            <span>定位</span>
+                        </div>
+                        <div class="buttonIcon gradient-border-radius  changeSystem">
+                            <img src="/device/guankong.png" alt="">
+                            <span>管控</span>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="bottom">
-                <div class="list">1#风机：<span class="green">开</span></div>
-                <div class="list">2#风机：<span>关</span></div>
+                <div class="list">
+                    <span class="deviceFirstName">1#风机</span>：
+                    <span class="deviceFirstStatus">开</span>
+                </div>
+                <div class="list">
+                    <span class="deviceSecondName">2#风机</span>：
+                    <span class="deviceSecondStatus">关</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="deviceWindWindow" style="display: none;">
+    <div id="deviceWindDoor" style="display: none;">
         <div class="deviceDialog">
             <div class="top ellipsis">
-                XXXX风门名称sadfasdgfasdgsdgsddgasdgsd
+                <span class="doorName">XXXX风门名称</span>
                 <div class="shadow"></div>
             </div>
             <div class="middle">
@@ -183,20 +204,22 @@
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
                         <span>状态：</span>
-                        <span class="word green">连接正常</span>
+                        <span class="word doorStatus">连接正常</span>
                     </div>
 
                     <div class="button">
-                        <div class="buttonIcon gradient-border-radius"><img src="/device/cameraIcon.png"
+                        <div class="buttonIcon gradient-border-radius changeToLocal"><img src="/device/cameraIcon.png"
                                 alt=""><span>定位</span></div>
-                        <div class="buttonIcon gradient-border-radius"><img src="/device/guankong.png"
+                        <div class="buttonIcon gradient-border-radius changeSystem"><img src="/device/guankong.png"
                                 alt=""><span>管控</span></div>
                     </div>
                 </div>
             </div>
             <div class="bottom">
-                <div class="list">A门：<span class="green">开</span></div>
-                <div class="list">B门：<span>关</span></div>
+                <div class="list"><span class="deviceFirstName">A门</span>：<span class="deviceFirstStatus">开</span>
+                </div>
+                <div class="list"><span class="deviceSecondName">B门</span>：<span class="deviceSecondStatus">关</span>
+                </div>
             </div>
         </div>
     </div>
@@ -241,11 +264,278 @@
             </div>
         </div>
     </div>
+
+    <div id="sensor" style="display: none;">
+        <div class="deviceDialog">
+            <div class="top ellipsis">
+                <span class="tunnelName sensorName">传感器的名称</span>
+                <div class="shadow"></div>
+            </div>
+            <div class="middle">
+                <div class="list">
+                    <img src="/device/arrow.png" alt="">
+                    <span>点号：</span>
+                    <span class="green sensorPoint">XXXX</span>
+                </div>
+                <div class="list">
+                    <img src="/device/arrow.png" alt="">
+                    <span>HID：</span>
+                    <span class="green HID">XXXXX</span>
+                </div>
+                <div class="list">
+                    <img src="/device/arrow.png" alt="">
+                    <span>类型：</span>
+                    <span class="green deviceCategory">XXXXX</span>
+                </div>
+                <div class="list">
+                    <img src="/device/arrow.png" alt="">
+                    <span>位置：</span>
+                    <span class="green devicePosition">XXXXXX</span>
+                </div>
+                <div class="list">
+                    <img src="/device/arrow.png" alt="">
+                    <span>测值：</span>
+                    <span class="green measureValue">XXXXX</span>
+                    <span class="danwei">m/s</span>
+                </div>
+            </div>
+            <div class="bottom">
+                <div class="button">
+                    <div class="buttonIcon gradient-border-radius changeToLocal"><img src="/device/cameraIcon.png"
+                            alt=""><span>定位</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="station" style="display: none;">
+        <div class="deviceDialog">
+            <div class="top ellipsis">
+                <span class="tunnelName stationName">控制器名称</span>
+                <div class="shadow"></div>
+            </div>
+            <div class="middle">
+                <div class="list">
+                    <img src="/device/arrow.png" alt="">
+                    <span>状态：</span>
+                    <span class="stationStatus">XXXXX</span>
+                </div>
+                <div class="list">
+                    <img src="/device/arrow.png" alt="">
+                    <span>点号：</span>
+                    <span class="green stationPoint">XXXX</span>
+                </div>
+                <div class="list">
+                    <img src="/device/arrow.png" alt="">
+                    <span>HID：</span>
+                    <span class="green hid">XXXXX</span>
+                </div>
+                <div class="list">
+                    <img src="/device/arrow.png" alt="">
+                    <span>IP：</span>
+                    <span class="green ip">XXXXX</span>
+                </div>
+                <div class="list">
+                    <img src="/device/arrow.png" alt="">
+                    <span>位置：</span>
+                    <span class="green stationLocal">XXXXXX</span>
+                </div>
+            </div>
+            <div class="bottom">
+                <div class="button">
+                    <div class="buttonIcon gradient-border-radius changeToLocal"><img src="/device/cameraIcon.png"
+                            alt=""><span>定位</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
 <style>
     #deviceFan {
+        position: absolute;
+
+        .deviceDialog {
+            background: url('./device/bg.png') no-repeat center center;
+            background-size: contain;
+            width: 385px;
+            height: 232px;
+            display: flex;
+            flex-direction: column;
+            padding-top: 28px;
+            padding-left: 36px;
+            box-sizing: border-box;
+
+            .top {
+                width: 320px;
+                height: auto;
+                font-family: SourceHanSansCN;
+                font-weight: bold;
+                font-size: 18px;
+                color: #C9C9C9;
+                line-height: 27px;
+                text-align: left;
+                font-style: normal;
+                position: relative;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 8px;
+                background-image: linear-gradient(180deg, #ffffff 30%, #10c4f0 100%);
+
+                .shadow {
+                    position: absolute;
+                    left: 0;
+                    bottom: 2px;
+                    width: 187px;
+                    height: 4px;
+                    background: linear-gradient(270deg, rgba(55, 114, 196, 0) 0%, #318CC3 100%);
+                }
+
+            }
+
+            .middle {
+                display: flex;
+                flex-direction: row;
+
+                .left {
+                    width: 160px;
+                    height: 108px;
+                    margin-right: 16px;
+
+                    & img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+
+                .right {
+                    width: auto;
+                    height: 108px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+
+                    .list {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+
+                        .danwei {
+                            font-size: 12px;
+                            text-align: left;
+                            font-style: normal;
+                            margin-left: 4px;
+                        }
+
+                        & img {
+                            width: 9px;
+                            height: 12px;
+                            margin-right: 2px;
+                        }
+
+                        & span {
+                            width: auto;
+                            font-family: SourceHanSansCN;
+                            font-weight: 400;
+                            font-size: 14px;
+                            color: #98C7DF;
+                            line-height: 21px;
+                            text-align: left;
+                            font-style: normal;
+
+                            &.red {
+                                color: #FF5959;
+                                font-family: "AlibabaPuHuiTi";
+
+                            }
+
+                            &.green {
+                                color: #50D887 !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+
+                            &.grey {
+                                color: #98BCCE !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+                        }
+                    }
+
+                    .button {
+                        display: flex;
+                        flex-direction: row;
+
+                        .buttonIcon {
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: center;
+                            align-items: center;
+                            margin-right: 8px;
+                            width: 63px;
+                            height: 28px;
+                            background: linear-gradient(180deg, #3399FF 0%, #215A9D 100%);
+                            border-radius: 4px;
+                            --border-color: linear-gradient(180deg, rgba(146, 209, 251, 1), rgba(50, 129, 167, 1));
+
+                            &:hover {
+                                background: linear-gradient(180deg, #6BB4FB 0%, #4E7CB3 100%);
+                                cursor: pointer;
+                            }
+
+                            &:active {
+                                background: linear-gradient(180deg, #2877C7 0%, #1B4980 100%);
+                                cursor: pointer;
+                            }
+
+                            & img {
+                                width: 16px;
+                                height: 16px;
+                            }
+
+                            & span {
+                                font-family: SourceHanSansCN;
+                                font-weight: 400;
+                                font-size: 12px;
+                                color: #FFFFFF;
+                                line-height: 28px;
+                                text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+                                text-align: left;
+                                font-style: normal;
+                            }
+                        }
+
+                    }
+                }
+
+            }
+
+            .bottom {
+                display: flex;
+                flex-direction: row;
+                width: auto;
+                font-family: SourceHanSansCN;
+                font-weight: 400;
+                font-size: 14px;
+                color: #98C7DF;
+                line-height: 21px;
+                text-align: left;
+                font-style: normal;
+                margin-top: 16px;
+
+                .list {
+                    margin-right: 32px;
+
+                    .green {
+                        color: #50D887 !important;
+                        font-family: "AlibabaPuHuiTi";
+                    }
+                }
+            }
+        }
+    }
+
+    #partFan {
         position: absolute;
 
         .deviceDialog {
@@ -771,7 +1061,482 @@
         }
     }
 
+    #deviceWindDoor {
+        position: absolute;
+
+        .deviceDialog {
+            background: url('./device/bg.png') no-repeat center center;
+            background-size: contain;
+            width: 385px;
+            height: 232px;
+            display: flex;
+            flex-direction: column;
+            padding-top: 28px;
+            padding-left: 36px;
+            box-sizing: border-box;
+
+            .top {
+                width: 320px;
+                height: auto;
+                font-family: SourceHanSansCN;
+                font-weight: bold;
+                font-size: 18px;
+                color: #C9C9C9;
+                line-height: 27px;
+                text-align: left;
+                font-style: normal;
+                position: relative;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 8px;
+                background-image: linear-gradient(180deg, #ffffff 30%, #10c4f0 100%);
+
+                .shadow {
+                    position: absolute;
+                    left: 0;
+                    bottom: 2px;
+                    width: 187px;
+                    height: 4px;
+                    background: linear-gradient(270deg, rgba(55, 114, 196, 0) 0%, #318CC3 100%);
+                }
+
+            }
+
+            .middle {
+                display: flex;
+                flex-direction: row;
+
+                .left {
+                    width: 160px;
+                    height: 108px;
+                    margin-right: 16px;
+
+                    & img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+
+                .right {
+                    width: auto;
+                    height: 108px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-around;
+
+                    .list {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+
+                        .danwei {
+                            font-size: 12px;
+                            text-align: left;
+                            font-style: normal;
+                            margin-left: 4px;
+                        }
+
+                        & img {
+                            width: 9px;
+                            height: 12px;
+                            margin-right: 2px;
+                        }
+
+                        & span {
+                            width: auto;
+                            font-family: SourceHanSansCN;
+                            font-weight: 400;
+                            font-size: 14px;
+                            color: #98C7DF;
+                            line-height: 21px;
+                            text-align: left;
+                            font-style: normal;
+
+                            &.red {
+                                color: #FF5959;
+                                font-family: "AlibabaPuHuiTi";
+
+                            }
+
+                            &.green {
+                                color: #50D887 !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+
+                            &.grey {
+                                color: #98BCCE !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+                        }
+                    }
+
+                    .button {
+                        display: flex;
+                        flex-direction: row;
+
+                        .buttonIcon {
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: center;
+                            align-items: center;
+                            margin-right: 8px;
+                            width: 63px;
+                            height: 28px;
+                            background: linear-gradient(180deg, #3399FF 0%, #215A9D 100%);
+                            border-radius: 4px;
+                            --border-color: linear-gradient(180deg, rgba(146, 209, 251, 1), rgba(50, 129, 167, 1));
+
+                            &:hover {
+                                background: linear-gradient(180deg, #6BB4FB 0%, #4E7CB3 100%);
+                                cursor: pointer;
+                            }
+
+                            &:active {
+                                background: linear-gradient(180deg, #2877C7 0%, #1B4980 100%);
+                                cursor: pointer;
+                            }
+
+                            & img {
+                                width: 16px;
+                                height: 16px;
+                            }
+
+                            & span {
+                                font-family: SourceHanSansCN;
+                                font-weight: 400;
+                                font-size: 12px;
+                                color: #FFFFFF;
+                                line-height: 28px;
+                                text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+                                text-align: left;
+                                font-style: normal;
+                            }
+                        }
+
+                    }
+                }
+
+            }
+
+            .bottom {
+                display: flex;
+                flex-direction: row;
+                width: auto;
+                font-family: SourceHanSansCN;
+                font-weight: 400;
+                font-size: 14px;
+                color: #98C7DF;
+                line-height: 21px;
+                text-align: left;
+                font-style: normal;
+                margin-top: 16px;
+
+                .list {
+                    margin-right: 32px;
+
+                    .green {
+                        color: #50D887 !important;
+                        font-family: "AlibabaPuHuiTi";
+                    }
+                }
+            }
+        }
+    }
+
     #deviceTunnel {
+        position: absolute;
+
+        .deviceDialog {
+            background: url('./device/deviceIconTunnel.png') no-repeat center center;
+            background-size: contain;
+            width: 387px;
+            height: 204px;
+            display: flex;
+            flex-direction: column;
+            padding-top: 28px;
+            padding-left: 36px;
+            padding-bottom: 28px;
+            padding-right: 41px;
+            box-sizing: border-box;
+            justify-content: space-between;
+
+            .top {
+                width: 320px;
+                height: auto;
+                font-family: SourceHanSansCN;
+                font-weight: bold;
+                font-size: 18px;
+                color: #C9C9C9;
+                line-height: 27px;
+                text-align: left;
+                font-style: normal;
+                position: relative;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 8px;
+                background-image: linear-gradient(180deg, #ffffff 30%, #10c4f0 100%);
+
+                .shadow {
+                    position: absolute;
+                    left: 0;
+                    bottom: 2px;
+                    width: 187px;
+                    height: 4px;
+                    background: linear-gradient(270deg, rgba(55, 114, 196, 0) 0%, #318CC3 100%);
+                }
+
+            }
+
+            .middle {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+
+                .list {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    width: 50%;
+                    margin-bottom: 8px;
+
+                    .danwei {
+                        font-size: 12px;
+                        text-align: left;
+                        font-style: normal;
+                        margin-left: 4px;
+                    }
+
+                    & img {
+                        width: 9px;
+                        height: 12px;
+                        margin-right: 2px;
+                    }
+
+                    & span {
+                        width: auto;
+                        font-family: SourceHanSansCN;
+                        font-weight: 400;
+                        font-size: 14px;
+                        color: #98C7DF;
+                        line-height: 21px;
+                        text-align: left;
+                        font-style: normal;
+
+                        &.red {
+                            color: #FF5959;
+                            font-family: "AlibabaPuHuiTi";
+
+                        }
+
+                        &.green {
+                            color: #50D887 !important;
+                            font-family: "AlibabaPuHuiTi";
+                        }
+
+                        &.grey {
+                            color: #98BCCE !important;
+                            font-family: "AlibabaPuHuiTi";
+                        }
+                    }
+                }
+
+            }
+
+            .bottom {
+                display: flex;
+                flex-direction: row-reverse;
+
+                .buttonIcon {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    margin-right: 8px;
+                    width: 63px;
+                    height: 28px;
+                    background: linear-gradient(180deg, #3399FF 0%, #215A9D 100%);
+                    border-radius: 4px;
+                    --border-color: linear-gradient(180deg, rgba(146, 209, 251, 1), rgba(50, 129, 167, 1));
+
+                    &:hover {
+                        background: linear-gradient(180deg, #6BB4FB 0%, #4E7CB3 100%);
+                        cursor: pointer;
+                    }
+
+                    &:active {
+                        background: linear-gradient(180deg, #2877C7 0%, #1B4980 100%);
+                        cursor: pointer;
+                    }
+
+                    & img {
+                        width: 16px;
+                        height: 16px;
+                    }
+
+                    & span {
+                        font-family: SourceHanSansCN;
+                        font-weight: 400;
+                        font-size: 12px;
+                        color: #FFFFFF;
+                        line-height: 28px;
+                        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+                        text-align: left;
+                        font-style: normal;
+                    }
+                }
+            }
+        }
+    }
+
+    #sensor {
+        position: absolute;
+
+        .deviceDialog {
+            background: url('./device/deviceIconTunnel.png') no-repeat center center;
+            background-size: contain;
+            width: 387px;
+            height: 204px;
+            display: flex;
+            flex-direction: column;
+            padding-top: 28px;
+            padding-left: 36px;
+            padding-bottom: 28px;
+            padding-right: 41px;
+            box-sizing: border-box;
+            justify-content: space-between;
+
+            .top {
+                width: 320px;
+                height: auto;
+                font-family: SourceHanSansCN;
+                font-weight: bold;
+                font-size: 18px;
+                color: #C9C9C9;
+                line-height: 27px;
+                text-align: left;
+                font-style: normal;
+                position: relative;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 8px;
+                background-image: linear-gradient(180deg, #ffffff 30%, #10c4f0 100%);
+
+                .shadow {
+                    position: absolute;
+                    left: 0;
+                    bottom: 2px;
+                    width: 187px;
+                    height: 4px;
+                    background: linear-gradient(270deg, rgba(55, 114, 196, 0) 0%, #318CC3 100%);
+                }
+
+            }
+
+            .middle {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+
+                .list {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    width: 50%;
+                    margin-bottom: 8px;
+
+                    .danwei {
+                        font-size: 12px;
+                        text-align: left;
+                        font-style: normal;
+                        margin-left: 4px;
+                    }
+
+                    & img {
+                        width: 9px;
+                        height: 12px;
+                        margin-right: 2px;
+                    }
+
+                    & span {
+                        width: auto;
+                        font-family: SourceHanSansCN;
+                        font-weight: 400;
+                        font-size: 14px;
+                        color: #98C7DF;
+                        line-height: 21px;
+                        text-align: left;
+                        font-style: normal;
+
+                        &.red {
+                            color: #FF5959;
+                            font-family: "AlibabaPuHuiTi";
+
+                        }
+
+                        &.green {
+                            color: #50D887 !important;
+                            font-family: "AlibabaPuHuiTi";
+                        }
+
+                        &.grey {
+                            color: #98BCCE !important;
+                            font-family: "AlibabaPuHuiTi";
+                        }
+                    }
+                }
+
+            }
+
+            .bottom {
+                display: flex;
+                flex-direction: row-reverse;
+
+                .buttonIcon {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    margin-right: 8px;
+                    width: 63px;
+                    height: 28px;
+                    background: linear-gradient(180deg, #3399FF 0%, #215A9D 100%);
+                    border-radius: 4px;
+                    --border-color: linear-gradient(180deg, rgba(146, 209, 251, 1), rgba(50, 129, 167, 1));
+
+                    &:hover {
+                        background: linear-gradient(180deg, #6BB4FB 0%, #4E7CB3 100%);
+                        cursor: pointer;
+                    }
+
+                    &:active {
+                        background: linear-gradient(180deg, #2877C7 0%, #1B4980 100%);
+                        cursor: pointer;
+                    }
+
+                    & img {
+                        width: 16px;
+                        height: 16px;
+                    }
+
+                    & span {
+                        font-family: SourceHanSansCN;
+                        font-weight: 400;
+                        font-size: 12px;
+                        color: #FFFFFF;
+                        line-height: 28px;
+                        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+                        text-align: left;
+                        font-style: normal;
+                    }
+                }
+            }
+        }
+    }
+
+    #station {
         position: absolute;
 
         .deviceDialog {

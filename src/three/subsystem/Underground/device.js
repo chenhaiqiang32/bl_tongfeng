@@ -1,108 +1,222 @@
 import { Device3D } from "./device3d";
-import * as THREE from "three";
 
 export class DeviceManger {
-    static DeviceType = {
-        co2: 101, // 二氧化碳
-        dust: 102, // 粉尘
-        o2: 103, // 氧气
-        temperature: 104, // 温度
-        humidity: 105, // 湿度
-        pressure: 106, // 差压
-        speedSensor: 107, // 风速传感器
-        ultrasonic: 108, // 超声波风速仪
-        bidirectional: 109, // 双向风速传感器
-        co: 110, // 一氧化碳
-        ch4: 111, // 甲烷
-        mainFan: 201, // 主扇
-        localFan: 202, // 局扇
-        airDoor: 203, // 风门
-        airWindow: 204, // 风窗
-        airStation: 205, // 测风站
-        baseStation: 206, // 基站
-        video: 207 // 视频
-    };
     constructor(core) {
+        this.core = core;
         this.scene = core.scene;
         this.underGround = core;
         this.deviceCode = {
-            [DeviceManger.DeviceType.co2]: {
-                name: "二氧化碳"
+            101: {
+                code: 101, // 二氧化碳、
+                name: "二氧化碳",
+                dom: () => { return document.getElementById("sensor").cloneNode(true); },
+                domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
+                domColor: {},
+                domEvent: { "定位": "changeToLocal" },
+                iconImg: "/textures/building.png"
             },
-            [DeviceManger.DeviceType.dust]: {
-                name: "粉尘"
+            102: {
+                code: 102, // 粉尘
+                name: "粉尘",
+                dom: () => {
+                    return document.getElementById("sensor").cloneNode(true);
+                },
+                domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
+                domColor: {},
+                domEvent: { "定位": "changeToLocal" },
+                iconImg: "/textures/building.png"
             },
-            [DeviceManger.DeviceType.o2]: {
-                name: "氧气"
+            103: {
+                code: 103, // 氧气
+                name: "氧气",
+                dom: () => {
+                    return document.getElementById("sensor").cloneNode(true);
+                },
+                domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
+                domColor: {},
+                domEvent: { "定位": "changeToLocal" },
+                iconImg: "/textures/building.png"
             },
-            [DeviceManger.DeviceType.temperature]: {
-                name: "温度"
+            104: {
+                code: 104, // 温湿度
+                name: "温湿度",
+                dom: () => {
+                    return document.getElementById("sensor").cloneNode(true);
+                },
+                domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
+                domColor: {},
+                domEvent: { "定位": "changeToLocal" },
+                iconImg: "/textures/building.png"
             },
-            [DeviceManger.DeviceType.humidity]: {
-                name: "湿度"
+            105: {
+                code: 105, // 声光
+                name: "声光",
+                dom: () => {
+                    return document.getElementById("sensor").cloneNode(true);
+                },
+                domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
+                domColor: {},
+                domEvent: { "定位": "changeToLocal" },
+                iconImg: "/textures/building.png"
             },
-            [DeviceManger.DeviceType.pressure]: {
-                name: "差压"
+            106: {
+                code: 106, // 差压
+                name: "差压",
+                dom: () => {
+                    return document.getElementById("sensor").cloneNode(true);
+                },
+                domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
+                domColor: {},
+                domEvent: { "定位": "changeToLocal" },
+                iconImg: "/textures/building.png"
             },
-            [DeviceManger.DeviceType.speedSensor]: {
-                name: "风速传感器"
+            107: {
+                code: 107, // 风速传感器
+                name: "风速传感器",
+                dom: () => {
+                    return document.getElementById("sensor").cloneNode(true);
+                },
+                domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
+                domColor: {},
+                domEvent: { "定位": "changeToLocal" },
+                iconImg: "/textures/building.png"
             },
-            [DeviceManger.DeviceType.ultrasonic]: {
-                name: "超声波风速仪"
+            108: {
+                code: 108, // 超声波风速仪
+                name: "超声波风速仪",
+                dom: () => {
+                    return document.getElementById("sensor").cloneNode(true);
+                },
+                domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
+                domColor: {},
+                domEvent: { "定位": "changeToLocal" },
+                iconImg: "/textures/building.png",
             },
-            [DeviceManger.DeviceType.bidirectional]: {
-                name: "双向风速传感器"
+            109: {
+                code: 109, // 双向风速传感器
+                name: "双向风速传感器",
+                dom: () => {
+                    return document.getElementById("sensor").cloneNode(true);
+                },
+                domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
+                domColor: {},
+                iconImg: "/textures/building.png",
+                domEvent: { "定位": "changeToLocal" }
             },
-            [DeviceManger.DeviceType.co]: {
-                name: "一氧化碳"
+            110: {
+                code: 110,  // 一氧化碳
+                name: "一氧化碳",
+                dom: () => {
+                    return document.getElementById("sensor").cloneNode(true);
+                },
+                domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
+                domColor: {},
+                iconImg: "/textures/building.png",
+                domEvent: { "定位": "changeToLocal" }
             },
-            [DeviceManger.DeviceType.ch4]: {
-                name: "甲烷"
+            111: {
+                code: 111,  // 甲烷
+                name: "甲烷",
+                dom: () => {
+                    return document.getElementById("sensor").cloneNode(true);
+                },
+                domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
+                domColor: {},
+                iconImg: "/textures/building.png",
+                domEvent: { "定位": "changeToLocal" }
             },
-            [DeviceManger.DeviceType.mainFan]: {
+            112: {
+                code: 112,  // 负压传感器
+                name: "负压传感器",
+                dom: () => {
+                    return document.getElementById("sensor").cloneNode(true);
+                },
+                domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
+                domColor: {},
+                iconImg: "/textures/building.png",
+                domEvent: { "定位": "changeToLocal" }
+            },
+            201: {
+                code: 201, // 主扇
                 name: "主扇",
-                dom: document.getElementById("deviceFan"),
-                changeDom: {
-                    name: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomName'),
-                    status: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomStatus'),
-                    volume: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomVolume'),
-                    pressure: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomPressure')
+                dom: () => {
+                    return document.getElementById("deviceFan").cloneNode(true);
                 },
-                changeSystem: document.getElementById("deviceFan").getElementsByClassName("changeSystem")
+                systemName: "fanSubsystem",
+                domToValue: { "name": "IdentifyDomName","status": "IdentifyDomStatus","volume": "IdentifyDomVolume","pressure": "IdentifyDomPressure",},
+                statusValue: { "true": "运行正常","false": "停止运行" },
+                domToValueParts: [{ "name": "deviceFirstName","status": "deviceFirstStatus" },{ "name": "deviceSecondName","status": "deviceSecondStatus" }],
+                iconImg: "/textures/building.png",
+                domEvent: { "定位": "changeToLocal","管控": "changeSystem" }
             },
-            [DeviceManger.DeviceType.localFan]: {
+            202: {
+                code: 202, // 局扇
                 name: "局扇",
-                dom: document.getElementById("deviceFan"),
-                changeDom: {
-                    name: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomName'),
-                    status: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomStatus'),
-                    volume: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomVolume'),
-                    pressure: document.getElementById("deviceFan").getElementsByClassName('IdentifyDomPressure')
+                dom: () => {
+                    return document.getElementById("partFan").cloneNode(true);
                 },
-                changeSystem: document.getElementById("deviceFan").getElementsByClassName("changeSystem")
+                systemName: "partFanSubsystem",
+                domToValue: { "name": "partName","status": "partStatus","electric": "electricValue","voltage": "voltageValue" },
+                statusValue: { "true": "运行正常","false": "停止运行" },
+                domToValueParts: [{ "name": "deviceFirstName","status": "deviceFirstStatus" },{ "name": "deviceSecondName","status": "deviceSecondStatus" }],
+                iconImg: "/textures/building.png",
+                domEvent: { "定位": "changeToLocal","管控": "changeSystem" }
             },
-            [DeviceManger.DeviceType.airDoor]: {
+            203: {
+                code: 203,// 风门
                 name: "风门",
-                dom: document.getElementById("deviceWindWindow"),
-                changeDom: [ // dom中修改的字段
-                    {},
-                    {},
-                    {},
-                ]
+                dom: () => {
+                    return document.getElementById("deviceWindDoor").cloneNode(true);
+                },
+                systemName: "airDoor",
+                domToValue: { "name": "doorName","status": "doorStatus",},
+                statusValue: { "true": "连接正常","false": "连接异常" },
+                domToValueParts: [{ "name": "deviceFirstName","status": "deviceFirstStatus" },{ "name": "deviceSecondName","status": "deviceSecondStatus" }],
+                iconImg: "/textures/building.png",
+                domEvent: { "定位": "changeToLocal","管控": "changeSystem" }
             },
-            [DeviceManger.DeviceType.airWindow]: {
+            204: {
+                code: 204, // 风窗
                 name: "风窗",
-                dom: document.getElementById("deviceWindWindow")
+                dom: () => {
+                    return document.getElementById("deviceWindWindow").cloneNode(true);
+                },
+                systemName: "airWindow",
+                domToValue: { "name": "windowName","status": "windowStatus" },
+                statusValue: { "true": "连接正常","false": "连接异常" },
+                domToValueParts: [{ "name": "deviceFirstName","angle": "windowFirstAngle" },{ "name": "deviceSecondName","angle": "windowSecondAngle" }],
+                iconImg: "/textures/building.png",
+                domEvent: { "定位": "changeToLocal","管控": "changeSystem" }
             },
-            [DeviceManger.DeviceType.airStation]: {
+
+            205: {
+                code: 205, // 测风站
                 name: "测风站",
-                dom: document.getElementById("deviceWindStation")
+                dom: () => {
+                    return document.getElementById("deviceWindStation").cloneNode(true);
+                },
+                systemName: "airStation",
+                domToValue: { "name": "measureName","status": "measureStatus","speed": "measureSpeed","methane": "measureCh4","co": "measureCo" },
+                statusValue: { "true": "连接正常","false": "连接异常" },
+                iconImg: "/textures/building.png",
+                domEvent: { "定位": "changeToLocal","管控": "changeSystem" }
             },
-            [DeviceManger.DeviceType.baseStation]: {
+            206: {
+                code: 206,// 基站
                 name: "基站",
+                dom: () => {
+                    return document.getElementById("station").cloneNode(true);
+                },
+                domToValue: { "name": "stationName","point": "stationPoint","hid": "hid","ip": "ip","local": "stationLocal","status": "stationStatus" },
+                statusValue: { "true": "连接正常","false": "连接异常" },
+                iconImg: "/textures/building.png",
+                domEvent: { "定位": "changeToLocal" }
             },
-            [DeviceManger.DeviceType.video]: {
+            207: {
+                code: 207, // 视频
                 name: "视频",
+                iconImg: "/textures/building.png",
+                dom: null
             }
         };
         this.sensorsCategory = { // 传感器的分类
