@@ -66,7 +66,7 @@ class BoxModel {
                 0.26,
                 1,
                 "rgba(54,215,255,1)",
-                1.2,
+                2.4,
                 0.5,
                 "rgba(18,208,255,1)",
                 false,
@@ -76,10 +76,11 @@ class BoxModel {
                 i === 1 ? 48 : 12
             );
             var r = new THREE.PlaneGeometry(radius * 20,radius * 20);
-            var tm = new THREE.Mesh(r,t);
-            tm.rotation.x = -Math.PI / 2;
-            tm.position.set(this.position.x,this.position.y,this.position.z);
-            this.core.scene.add(tm);
+            this.boxModel = new THREE.Mesh(r,t);
+            this.boxModel.renderOrder = -1;
+            this.boxModel.rotation.x = -Math.PI / 2;
+            this.boxModel.position.set(this.position.x,this.position.y,this.position.z);
+            this.core.scene.add(this.boxModel);
         }
     }
     _createMaterial(e,t,r,i,n,o,s,a,l,h,c,u,repeatFactor) {
@@ -95,7 +96,7 @@ class BoxModel {
             },
             time: this.elapsedTime,
             opacity: {
-                value: 0.88,
+                value: 0.48,
             },
             alpha: {
                 value: r,
@@ -156,6 +157,7 @@ class BoxModel {
             vertexShader: m,
             fragmentShader: v,
             transparent: true,
+            // depthTest: false
         });
         return (y.roughness = l ? 0.1 : 1),y;
     }

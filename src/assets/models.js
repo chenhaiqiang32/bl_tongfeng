@@ -79,27 +79,32 @@ export const partFan_models = [
         path: "./models/partFan/wall.glb",
         type: ".glb",
     },
-    {
-        name: "wind",
-        path: "./models/partFan/wind.glb",
-        type: ".glb",
-    },
+    // {
+    //     name: "wind",
+    //     path: "./models/partFan/wind.glb",
+    //     type: ".glb",
+    // },
     {
         name: "fenJi",
         path: "./models/partFan/fengji.glb",
         type: ".glb",
     },
-    {
-        name: "test",
-        path: "./models/partFan/XXXX.glb",
-        type: ".glb",
-    },
+    // {
+    //     name: "test",
+    //     path: "./models/partFan/XXXX.glb",
+    //     type: ".glb",
+    // },
 ];
 export const air_door = [
     {
         name: "positon",
         path: "./models/airdoor/position.glb",
         type: ".glb",
+    },
+    {
+        name: "f1",
+        path: "./models/airdoor/f1.obj",
+        type: ".obj",
     },
     {
         name: "equip",
@@ -113,12 +118,12 @@ export const air_door = [
         // path: "./models/fan/HC_zhutongfengji_bei.glb",
         type: ".glb",
     },
-    {
-        name: "direction",
-        path: "./models/airdoor/direction.glb",
-        // path: "./models/fan/HC_zhutongfengji_bei.glb",
-        type: ".glb",
-    },
+    // {
+    //     name: "direction",
+    //     path: "./models/airdoor/direction.glb",
+    //     // path: "./models/fan/HC_zhutongfengji_bei.glb",
+    //     type: ".glb",
+    // },
     {
         name: "wall",
         path: "./models/airdoor/wall.glb",
@@ -135,13 +140,11 @@ export const air_window_only = [
     {
         name: "equip",
         path: "./models/airWindowOnly/equip.glb",
-        // path: "./models/fan/HC_zhutongfengji_bei.glb",
         type: ".glb",
     },
     {
         name: "ground",
         path: "./models/airWindowOnly/ground.glb",
-        // path: "./models/fan/HC_zhutongfengji_bei.glb",
         type: ".glb",
     },
     {
@@ -174,10 +177,30 @@ export const air_window_double = [
         type: ".glb",
     },
     {
-        name: "direction",
-        path: "./models/airWindowDouble/direction.glb",
-        type: ".glb",
+        name: "f1",
+        path: "./models/airWindowDouble/f1.obj",
+        type: ".obj",
     },
+    {
+        name: "f2",
+        path: "./models/airWindowDouble/f2.obj",
+        type: ".obj",
+    },
+    {
+        name: "f3",
+        path: "./models/airWindowDouble/f3.obj",
+        type: ".obj",
+    },
+    {
+        name: "f4",
+        path: "./models/airWindowDouble/f4.obj",
+        type: ".obj",
+    },
+    // {
+    //     name: "direction",
+    //     path: "./models/airWindowDouble/direction.glb",
+    //     type: ".glb",
+    // },
     {
         name: "wall",
         path: "./models/airWindowDouble/wall.glb",

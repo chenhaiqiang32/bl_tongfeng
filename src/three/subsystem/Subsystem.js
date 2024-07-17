@@ -128,10 +128,10 @@ export class Subsystem {
 
     /**@description 清除动画混合器 */
     clearMixers() {
-        this.uncaches.forEach(fn => fn());
-        this.uncaches.length = 0;
-        this.actions.length = 0;
-        this.mixers.length = 0;
+        // this.uncaches.forEach(fn => fn());
+        // this.uncaches.length = 0;
+        // this.actions.length = 0;
+        // this.mixers.length = 0;
     }
 
     /**@description 设置所有动画状态 */

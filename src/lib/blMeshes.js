@@ -28,7 +28,7 @@ class FlowLight extends THREE.Mesh {
         config.color1 = config.color1 || new THREE.Vector3(1,1,0);
         config.color2 = config.color2 || new THREE.Vector3(0.95,0.39,0.22);
 
-        this.uOpacity = { value: config.opacity === undefined ? 1 : config.opacity };
+        this.uOpacity = { value: config.opacity === undefined ? 0 : config.opacity };
 
         if (Array.isArray(vertices)) {
             this.#createPath(vertices,config,config.up);
@@ -66,9 +66,13 @@ class FlowLight extends THREE.Mesh {
         this.material = new THREE.ShaderMaterial({
             vertexShader: `
                   varying vec2 vUv;
+                  #include <logdepthbuf_pars_vertex>
+                  #include <common>
                   void main() {
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
                     vUv = uv;
+                    #include <begin_vertex>
+                    #include <project_vertex>
+                    #include <logdepthbuf_vertex>
                   }
                   `,
             fragmentShader: `
@@ -103,6 +107,7 @@ class FlowLight extends THREE.Mesh {
                     const float maxOffsetSpread=.32;
                     const int linesPerGroup=28; // 线条数量
                     varying vec2 vUv;
+                    #include <logdepthbuf_pars_fragment>
                     const vec4[]bgColors=vec4[]
                     (
                       lineColor*.5,
@@ -185,6 +190,7 @@ class FlowLight extends THREE.Mesh {
                     //   float alpha = 1.0;
                       gl_FragColor+=lines;
                       gl_FragColor.a = gl_FragColor.a * alpha * 0.32;
+                      #include <logdepthbuf_fragment>
                     }
                   `,
             transparent: true,
@@ -216,6 +222,115 @@ class FlowLight extends THREE.Mesh {
     update(elapseTime) {
         // this.material.uniforms.uElapseTime.value = elapseTime;
         this.elapsedTime.value = elapseTime;
+    }
+}
+class FlowLight2 extends THREE.Mesh {
+    /**
+     * 流光
+     * @param {THREE.Vector3[]} vertices
+     * @param {{width:number,radius:number,type:"line"|"tube",segments:number,color1:THREE.Vector3,color2:THREE.Vector3}} config
+     */
+    constructor(vertices,config = {}) {
+        super();
+
+        config.width = config.width || 1;
+        config.radius = config.radius || 1;
+        config.type = config.type || "line";
+        config.segments = config.segments || 2;
+        config.color1 = config.color1 || new THREE.Vector3(1,1,0);
+        config.color2 = config.color2 || new THREE.Vector3(0.95,0.39,0.22);
+
+        this.uOpacity = { value: config.opacity === undefined ? 1 : config.opacity };
+
+        if (Array.isArray(vertices)) {
+            this.#createPath(vertices,config);
+        } else {
+            console.error("创建流光第一个参数必须是Vector3[]");
+        }
+        this.type = "FlowLight";
+    }
+    /**
+     * 流光
+     * @param {THREE.Vector3[]} vertices
+     * @param {{width:number,radius:number,type:"line"|"tube",segments:number,color1:THREE.Vector3,color2:THREE.Vector3}} config
+     */
+    #createPath(vertices,config) {
+        const up = new THREE.Vector3(0,1,0);
+        const pathPointList = new PathPointList();
+        pathPointList.set(vertices,0.5,10,up,false);
+
+        if (config.type === "line") {
+            this.geometry = new PathGeometry();
+            this.geometry.update(pathPointList,{
+                width: config.width,
+                arrow: false,
+                side: "both",
+            });
+        } else if (config.type === "tube") {
+            this.geometry = new PathTubeGeometry();
+            this.geometry.update(pathPointList,{
+                arrow: false,
+                side: "both",
+                radius: config.radius,
+            });
+        }
+
+        const vertexShader = `
+        varying vec2 vUv;
+        #include <logdepthbuf_pars_vertex>
+        #include <common>
+
+        void main(){
+            vUv = uv;
+            // vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+            // gl_Position = projectionMatrix * mvPosition;
+            #include <begin_vertex>
+            #include <project_vertex>
+            #include <logdepthbuf_vertex>
+        }`;
+        const fragmentShader = `
+        uniform float uElapseTime;
+        uniform float uCount;
+        uniform vec3 uColor1;
+        uniform vec3 uColor2;
+        uniform float uOpacity;
+        varying vec2 vUv;
+        #include <logdepthbuf_pars_fragment>
+
+        void main() {
+
+            float p = uCount; //线段段数
+            float al = fract(vUv.x * p - uElapseTime);
+
+            vec3 color = mix(uColor2,uColor1,pow(al,4.));
+
+            float a = al*al;
+
+            float t = uElapseTime;
+            float final_a = a * step(vUv.x,t);
+
+            gl_FragColor = vec4(color ,final_a*uOpacity);
+            #include <logdepthbuf_fragment>
+        }`;
+
+        this.material = new THREE.ShaderMaterial({
+            uniforms: {
+                uElapseTime: { value: 0 },
+                uCount: { value: config.segments },
+                uColor1: { value: config.color1 },
+                uColor2: { value: config.color2 },
+                uOpacity: this.uOpacity,
+            },
+            vertexShader,
+            fragmentShader,
+            transparent: true,
+            side: THREE.DoubleSide,
+            forceSinglePass: true,
+            depthTest: false
+        });
+    }
+    update(elapseTime) {
+        this.material.uniforms.uElapseTime.value = elapseTime;
     }
 }
 
@@ -1169,4 +1284,4 @@ class HeatCircle extends THREE.Mesh {
     }
 }
 
-export { FlowLight,Rain,Snow,Lake,Smoke,FatLine,StarLink,SpecialGround,RangeBox,HeatCircle };
+export { FlowLight,FlowLight2,Rain,Snow,Lake,Smoke,FatLine,StarLink,SpecialGround,RangeBox,HeatCircle };

@@ -52,6 +52,9 @@ export const fresnelLevelS = {
     "level4": {
         value: 10.8
     },
+    "levelN": {
+        value: 1000.8
+    },
 };
 
 export const flowTime = {

@@ -33,7 +33,11 @@ export const openMessage = Core3D => {
                     break;
                 }
                 case "changeScene": {
-                    Core3D.changeScene(event.data.param);
+                    Core3D.changeSystem(event.data.param);
+                    break;
+                }
+                case "setTypeVisibleEx": {
+                    Core3D.setTypeVisibleEx(event.data.param);
                     break;
                 }
             }

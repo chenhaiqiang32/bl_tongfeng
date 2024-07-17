@@ -5,4 +5,5 @@ export const fresnelChunk = /* glsl */ `
     gl_FragColor = vec4(uColor,pow(intensity,fresnelLevel));
 
     //  gl_FragColor = vec4(0.0,intensity,intensity,pow(intensity,3.0)*0.6);
+
 `;

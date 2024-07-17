@@ -1,31 +1,28 @@
 import * as THREE from "three";
 import { Subsystem } from "../Subsystem";
 import { loadGLTF,loadOBJ } from "../../loader";
+import * as TWEEN from "three/examples/jsm/libs/tween.module";
 import { air_window_double } from "@/assets/models";
 import { Core3D } from "../..";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import {
-    processingCommonModel,
-    processingInstancedModel,
-    processingInstancedTree,
-    processingMergedTree,
     processingAnimations,
-    processingCameraAnimation,
 } from "../../processing";
 
 import { FlowLight } from "../../../lib/blMeshes";
-import { getLengthFromVertices } from "../../../utils";
+import { getBoxAndSphere,getLengthFromVertices } from "../../../utils";
 import { PlatformCircle } from "../../../lib/PlatformCircle";
 import { Stars } from "../../../lib/stars";
 import { fresnelColorBlue } from "../../../shader/paramaters";
 import { shaderModify } from "../../../shader/shaderModify";
 import { Reflector } from "../../../lib/Reflector";
+import BoxModel from "../../../lib/boxModel";
 
 export const _BoringMachineSubsystem = Symbol();
 
-const position = new THREE.Vector3(-320,20,80);
+const position = new THREE.Vector3(-320,120,80);
 const target = new THREE.Vector3(0,0,0);
 
 // camera limit SPHERE
@@ -40,7 +37,7 @@ const controlsParameters = {
     // minPolarAngle: Math.PI / 2.05,
     maxPolarAngle: Math.PI / 2.1,
     maxAzimuthAngle: 0, // 右侧
-    minAzimuthAngle: 1.2 - Math.PI * 3 / 4, // 左侧
+    minAzimuthAngle: Math.PI, // 左侧
     maxDistance: 15,
     enableDamping: true,
 };
@@ -50,7 +47,7 @@ export class AirWindow extends Subsystem {
     /** @param {Core3D} core*/
     constructor(core) {
         super(core);
-
+        this.boxModelObj = new BoxModel(core);
         this.postprocessing = core.postprocessing;
 
         this.elapseTime = 0;
@@ -64,22 +61,31 @@ export class AirWindow extends Subsystem {
 
         this.glasses = [];
         this.flowLights = [];
+        this.tweenCode = null;
         this.bloomLights = [];
+        this.fanner1 = {
+            name: "#1风窗",
+            actions: [],
+            state: false,
+            object: [],
+            trueName: "#1风窗开窗",
+            falseName: "#1风窗关窗",
+            actionName: "#1风窗关窗"
+        };
+
+        this.fanner2 = {
+            name: "#2风窗",
+            actions: [],
+            state: false,
+            object: [],
+            trueName: "#2风窗开窗",
+            falseName: "#2风窗关窗",
+            actionName: "#2风窗关窗"
+        };
     }
 
     init() {
         this.initScene();
-    }
-
-    /**@param {DAY|NIGHT|SCIENCE} param  黑夜白天科幻参数 */
-    updateLightingPattern(param) {
-        if (param === NIGHT) {
-            this.postprocessing.addBloom(this.glasses);
-            this.postprocessing.addBloom(this.flowLights);
-        } else {
-            this.postprocessing.clearBloom(this.glasses);
-            this.postprocessing.clearBloom(this.flowLights);
-        }
     }
 
     addEvents() { }
@@ -154,9 +160,11 @@ export class AirWindow extends Subsystem {
                 if (child instanceof THREE.Mesh) {
                     child.material = child.material.clone();
                     child.material.transparent = true;
-                    child.material.onBeforeCompile = shader => {
-                        shaderModify(shader,{ shader: "fresnel",color: color1.color,shaderName: "level2" });
-                    };
+                    // child.material.opacity = 0.68;
+                    if (child instanceof THREE.Mesh && child.material.name === "通风水泥") {
+                        child.material.map = null;
+
+                    }
                 }
             });
         }
@@ -167,7 +175,7 @@ export class AirWindow extends Subsystem {
                     child.material = child.material.clone();
                     child.material.transparent = true;
                     child.material.onBeforeCompile = shader => {
-                        shaderModify(shader,{ shader: "pumpModify",color: color5.color,shaderName: "level4" });
+                        // shaderModify(shader,{ shader: "pumpModify",color: color5.color,shaderName: "level4" });
                     };
                 }
             });
@@ -177,9 +185,10 @@ export class AirWindow extends Subsystem {
                 if (child instanceof THREE.Mesh) {
                     child.material = child.material.clone();
                     child.material.transparent = true;
-                    child.material.onBeforeCompile = shader => {
-                        shaderModify(shader,{ shader: "fresnel",color: color2.color,shaderName: "level4" });
-                    };
+                    child.material.opacity = 0.68;
+                    if (child.material.name === "地面") {
+                        child.material.map = null;
+                    }
                 }
             });
 
@@ -237,6 +246,16 @@ export class AirWindow extends Subsystem {
 
         processingAnimations(gltf,this);
 
+        this.actions.forEach(action => {
+            console.log(action._clip.name);
+            if (action._clip.name.includes("#1")) {
+                this.fanner1.actions.push(action);
+            }
+            if (action._clip.name.includes("#2")) {
+                this.fanner2.actions.push(action);
+            }
+        });
+
         const scope = this;
 
         // 通用模型处理
@@ -250,6 +269,37 @@ export class AirWindow extends Subsystem {
      * @param {string} name
      */
     onOBJProgress = (object,name) => {
+        object.forEach(line => {
+            const vertices = line.vertices;
+
+            const flowLight = new FlowLight(vertices,{
+                type: "line",
+                width: 1.2,
+                color1: new THREE.Vector3(0.3,0.3,0.6),
+                color2: new THREE.Vector3(0,0.8,0.4),
+                segments: 3,
+                up: new THREE.Vector3(1,0,0),
+            });
+            flowLight.renderOrder = 2;
+            flowLight.visible = false;
+            this.flowLights.push(flowLight);
+            this.add(flowLight);
+
+
+
+            const flowLight2 = new FlowLight(vertices,{
+                type: "line",
+                width: 1.2,
+                color1: new THREE.Vector3(0.3,0.3,0.6),
+                color2: new THREE.Vector3(0,0.8,0.4),
+                segments: 3,
+                up: new THREE.Vector3(0,1,0),
+            });
+            flowLight2.renderOrder = 2;
+            flowLight2.visible = false;
+            this.flowLights.push(flowLight2);
+            this.add(flowLight2);
+        });
     };
 
     onLeave() {
@@ -272,17 +322,81 @@ export class AirWindow extends Subsystem {
         if (this.scene !== this.core.scene) return;
         this.postprocessing.addBloom(this.bloomLights);
 
-        this.playActions();
-
         this.onRenderQueue.set(_BoringMachineSubsystem,this.update);
+        this.box();
+        this.test();
     }
 
+    test() {
+        setTimeout(() => {
+            this.setEquipmentState(true,1,0);
+        },2000);
+        setTimeout(() => {
+            this.setEquipmentState(true,2,1);
+        },4000);
+        setTimeout(() => {
+            this.setEquipmentState(false,1,1);
+        },6000);
+    }
+    box() {
+        const { center,radius } = getBoxAndSphere(this.ground).sphere;
+        const vec = new THREE.Vector3(radius,radius,radius).multiplyScalar(1.2);
+        const position = center.clone().add(vec);
+        // center.y = center.y - 2;
+        this.boxModelObj.initModel(center,radius);
+    }
     /**
      * 设置设备状态
      * @param {boolean} state
      */
-    setEquipmentState(state) {
-        this.actions.forEach(action => (action.paused = !state));
+    setEquipmentState(state,code,type) {
+        let fanner;
+        if (code === 1) {
+            fanner = this.fanner1;
+        } else if (code === 2) {
+            fanner = this.fanner2;
+        } else {
+            return;
+        }
+        fanner.actionName = state ? fanner.trueName : fanner.falseName;
+        // 通风机正在关闭的过程中开启通风机
+        if (this.tweenCode) TWEEN.remove(this.tweenCode);
+        if (state === true) this.elapsedTime = 0;
+
+        const actions = fanner.actions;
+        const flowLights = this.flowLights;
+
+        let toValue = 0;
+        if (this.fanner1.actionName.includes('开窗') && this.fanner2.actionName.includes('开窗')) {
+            toValue = 1;
+        }
+        const begin = { value: flowLights[0].uOpacity.value };
+        const end = { value: toValue };
+        this.tweenCode = new TWEEN.Tween(begin)
+            .to(end,40)
+            .onUpdate((object) => {
+
+                flowLights.forEach((flowLight) => {
+                    flowLight.uOpacity.value = object.value;
+                    flowLight.visible = !(flowLight.uOpacity.value === 0);
+                });
+
+            })
+            .onComplete(() => {
+                this.tweenCode = null;
+            })
+            .start();
+        actions.forEach(action => {
+            action.stop();
+            if (action._clip.name === fanner.actionName) {
+                action.play();
+                action.paused = false;
+                action.clampWhenFinished = true;
+                action.loop = THREE.LoopOnce;
+            }
+
+            fanner.state = state;
+        });
     }
 
     /**@param {Core3D} core  */
@@ -292,6 +406,7 @@ export class AirWindow extends Subsystem {
         this.elapseTime += core.delta;
 
         this.flowLights.forEach(flowLight => flowLight.update(this.elapseTime));
+        this.boxModelObj && this.boxModelObj.update(this.elapseTime);
     };
 
     initScene() {

@@ -11,7 +11,7 @@ import DEFAULT from "../../../config/index.json";
 import { LabelManager } from "../../components/label";
 import { TunnelCard } from "./utils";
 import MemoryManager from "../../../lib/memoryManager";
-import { FlowLight } from "../../../lib/blMeshes";
+import { FlowLight,FlowLight2 } from "../../../lib/blMeshes";
 import { getBoxAndSphere,getLengthFromVertices } from "../../../utils";
 import { TunnelPicture } from "./tunnelPicture";
 import { DeviceManger } from "./device";
@@ -99,18 +99,25 @@ export class UnderGround extends Subsystem {
 
     onOBJProgress = (vertices,direction) => { // 流光
         let tunnelVertices = vertices;
+        let color = new THREE.Color(0.4275,0.7216,0.4863);
+        let color2 = new THREE.Color(0.0118,0.3216,0.0706);
         if (direction === 2) { // 巷道没风
             return false;
         }
         if (direction === 1) {
             tunnelVertices = vertices.reverse();
+            color = new THREE.Color(0.1412,0.5922,0.8902);
+            color2 = new THREE.Color(0.0235,0.251,0.4039);
         }
-        const flowLight = new FlowLight(tunnelVertices,{
+        const flowLight = new FlowLight2(tunnelVertices,{
             type: "tube",
             width: 2.5,
             segments: getLengthFromVertices(tunnelVertices) / 12,
+            color1: color,
+            color2: color2
         });
         flowLight.renderOrder = 0;
+        flowLight.position.y = flowLight.position.y + 10;
         this.flowLights.push(flowLight);
         this.add(flowLight);
     };
@@ -142,12 +149,23 @@ export class UnderGround extends Subsystem {
     */
     initialized(ars) { // 生成巷道
         this.dispose();
-        ars.forEach(child => {
+        // ars.length = 23;
+        ars.forEach((child,index) => {
+            console.log(index);
             const { id,branchName,pList,direction,speed } = child;
-            let points = pList.map(res => { return new THREE.Vector3(res.x,res.y,res.z); });
+            pList.forEach(child => {
+                // [child.y,child.z] = [child.z,child.y];
+                const temp = child.y;
+                child.y = child.z;
+                child.z = temp;
+            });
+            let points = pList.map(res => {
+                return new THREE.Vector3(res.x,res.y,res.z);
+            });
             this.initCurve(points,id);
+            console.log(points);
             child.points = points;
-            let geometry = new HDGeometry({ points });
+            let geometry = new HDGeometry({ points },index);
             this.material = new THREE.MeshStandardMaterial({
                 color: new THREE.Color(0.1,0.4,0.6),
                 side: THREE.DoubleSide,
@@ -366,12 +384,12 @@ export class UnderGround extends Subsystem {
         });
     }
     limitInSphere = () => {
-        const position = this.camera.position;
-        const target = this.controls.target;
-        position.clampSphere(SPHERE_CAMERA);
-        target.clampSphere(SPHERE_CONTROLS);
-        position.y = position.y < 0 ? 0 : position.y;
-        target.y = target.y < 0 ? 0 : target.y;
+        // const position = this.camera.position;
+        // const target = this.controls.target;
+        // position.clampSphere(SPHERE_CAMERA);
+        // target.clampSphere(SPHERE_CONTROLS);
+        // position.y = position.y < 0 ? 0 : position.y;
+        // target.y = target.y < 0 ? 0 : target.y;
     };
     async onEnter() {
 
@@ -407,6 +425,7 @@ export class UnderGround extends Subsystem {
         this.playActions();
 
         this.onRenderQueue.set(ground,this.update);
+        this.postprocessing.addBloom(this.flowLights);
     }
 
     /**@param {Core3D} core  */
@@ -471,5 +490,8 @@ export class UnderGround extends Subsystem {
         this.labelManager.dispose();
         if (this.clearOutLine) this.core.postprocessing.clearOutline(this.clearOutLine);
 
+    }
+    setTypeVisibleEx(array) {
+        this.equipMentSystem.setTypeVisibleEx(array);
     }
 }

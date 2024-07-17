@@ -70,21 +70,21 @@ export class FanSubsystem extends Subsystem {
         this.bloomLights = [];
         this.ground = null;
         this.raycastEvents = [];
+        this.tweenCode = null;
 
         this.fanner1 = {
             name: "#1通风机",
             actions: [],
             state: false,
-            tweenCode: null,
             flowLights: [],
             object: [],
+
         };
 
         this.fanner2 = {
             name: "#2通风机",
             actions: [],
             state: false,
-            tweenCode: null,
             flowLights: [],
             object: [],
         };
@@ -297,7 +297,7 @@ export class FanSubsystem extends Subsystem {
 
         // 通用模型处理
         group = processingCommonModel(gltf,this,postProcess,preProcess);
-        group && this.add(group);
+        group && this._add(group);
     };
     /**
      * @param {{name:string;vertices:Vector3[];}[]} object
@@ -354,8 +354,6 @@ export class FanSubsystem extends Subsystem {
         this.removeEvents();
         this.resetControls();
         this.clearMixers();
-        this.postprocessing.clearBloom(this.bloomLights);
-        this.postprocessing.clearBloom(this.flowLights);
 
         this.flowLights.length = 0;
         this.bloomLights.length = 0;

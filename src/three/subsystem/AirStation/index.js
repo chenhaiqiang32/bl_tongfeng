@@ -16,16 +16,19 @@ import {
 } from "../../processing";
 
 import { FlowLight } from "../../../lib/blMeshes";
-import { getLengthFromVertices } from "../../../utils";
+import { getBoxAndSphere,getLengthFromVertices } from "../../../utils";
 import { PlatformCircle } from "../../../lib/PlatformCircle";
 import { Stars } from "../../../lib/stars";
 import { fresnelColorBlue } from "../../../shader/paramaters";
 import { shaderModify } from "../../../shader/shaderModify";
 import { Reflector } from "../../../lib/Reflector";
+import BoxModel from "../../../lib/boxModel";
+import { createCSS3DObject } from "../../../lib/CSSObject";
+import MemoryManager from "../../../lib/memoryManager";
 
 export const _BoringMachineSubsystem = Symbol();
 
-const position = new THREE.Vector3(-320,20,80);
+const position = new THREE.Vector3(-320,120,80);
 const target = new THREE.Vector3(0,0,0);
 
 // camera limit SPHERE
@@ -40,7 +43,7 @@ const controlsParameters = {
     // minPolarAngle: Math.PI / 2.05,
     maxPolarAngle: Math.PI / 2.1,
     maxAzimuthAngle: 0, // 右侧
-    minAzimuthAngle: 1.2 - Math.PI * 3 / 4, // 左侧
+    minAzimuthAngle: Math.PI, // 左侧
     maxDistance: 15,
     enableDamping: true,
 };
@@ -50,8 +53,9 @@ export class AirStation extends Subsystem {
     /** @param {Core3D} core*/
     constructor(core) {
         super(core);
-
+        this.boxModelObj = new BoxModel(core);
         this.postprocessing = core.postprocessing;
+        this.css2d = null;
 
         this.elapseTime = 0;
 
@@ -105,6 +109,16 @@ export class AirStation extends Subsystem {
             this.controls[key] = this.controls.data[key];
         });
     }
+    initDom() {
+        let changeDom = document.getElementById("windStation").cloneNode(true);
+        // changeDom.innerText = value; // dom元素赋值
+        const css2d = createCSS3DObject(changeDom);
+        css2d.scale.set(0.016,0.016,0.016);
+        css2d.position.set(1,2,0);
+        css2d.rotation.y = -Math.PI / 2;
+        this.css2d = css2d;
+        this.add(this.css2d);
+    }
 
     limitInSphere = () => {
         this.camera.position.clampSphere(SPHERE_CAMERA);
@@ -154,9 +168,11 @@ export class AirStation extends Subsystem {
                 if (child instanceof THREE.Mesh) {
                     child.material = child.material.clone();
                     child.material.transparent = true;
-                    child.material.onBeforeCompile = shader => {
-                        shaderModify(shader,{ shader: "fresnel",color: color1.color,shaderName: "level2" });
-                    };
+                    // child.material.opacity = 0.68;
+                    if (child instanceof THREE.Mesh && child.material.name === "通风水泥") {
+                        child.material.map = null;
+
+                    }
                 }
             });
         }
@@ -167,7 +183,7 @@ export class AirStation extends Subsystem {
                     child.material = child.material.clone();
                     child.material.transparent = true;
                     child.material.onBeforeCompile = shader => {
-                        shaderModify(shader,{ shader: "pumpModify",color: color5.color,shaderName: "level4" });
+                        // shaderModify(shader,{ shader: "pumpModify",color: color5.color,shaderName: "level4" });
                     };
                 }
             });
@@ -177,9 +193,10 @@ export class AirStation extends Subsystem {
                 if (child instanceof THREE.Mesh) {
                     child.material = child.material.clone();
                     child.material.transparent = true;
-                    child.material.onBeforeCompile = shader => {
-                        shaderModify(shader,{ shader: "fresnel",color: color2.color,shaderName: "level4" });
-                    };
+                    // child.material.opacity = 0.68;
+                    if (child.material.name === "地面") {
+                        child.material.map = null;
+                    }
                 }
             });
 
@@ -253,6 +270,7 @@ export class AirStation extends Subsystem {
     };
 
     onLeave() {
+        MemoryManager.dispose(this.css2d);
         this.removeEvents();
         this.resetControls();
         this.clearMixers();
@@ -275,8 +293,16 @@ export class AirStation extends Subsystem {
         this.playActions();
 
         this.onRenderQueue.set(_BoringMachineSubsystem,this.update);
+        this.box();
+        this.initDom();
     }
-
+    box() {
+        const { center,radius } = getBoxAndSphere(this.ground).sphere;
+        const vec = new THREE.Vector3(radius,radius,radius).multiplyScalar(1.2);
+        const position = center.clone().add(vec);
+        // center.y = center.y - 2;
+        this.boxModelObj.initModel(center,radius);
+    }
     /**
      * 设置设备状态
      * @param {boolean} state
@@ -292,6 +318,7 @@ export class AirStation extends Subsystem {
         this.elapseTime += core.delta;
 
         this.flowLights.forEach(flowLight => flowLight.update(this.elapseTime));
+        this.boxModelObj && this.boxModelObj.update(this.elapseTime);
     };
 
     initScene() {

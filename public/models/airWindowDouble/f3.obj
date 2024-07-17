@@ -1,0 +1,18 @@
+# 3ds Max Wavefront OBJ Exporter v0.99 - (c)2007 guruware
+# File Created: 15.07.2024 09:25:32
+
+mtllib ????\???\???3.mtl
+
+#
+# shape ???3
+#
+
+v  -0.5930 0.6182 -12.4046
+v  -0.5930 0.6182 11.3255
+# 2 vertices
+
+o ???3
+g ???3
+usemtl wire_140088225
+l 1 2
+

@@ -147,21 +147,7 @@ export class Core3D extends CoreExtensions {
         this.main.updateTunnelConfig(data,config);
     }
 
-    /**
- * @typedef {Object} User
- * @property {string} name - 用户的姓名
- * @property {number} age - 用户的年龄
- * @property {string} [email] - 用户的电子邮件地址（可选）
- */
-
-    /**
-     * 处理用户列表的函数
-     * @param {User[]} userList - 用户对象数组，每个对象包含姓名、年龄和可选的电子邮件
-     */
-    processUserList(userList) {
-        userList.forEach(user => {
-            console.log(`Processing user ${user.name}`);
-            // 其他处理逻辑...
-        });
+    setTypeVisibleEx(config) {
+        this.main.setTypeVisibleEx(config);
     }
 }

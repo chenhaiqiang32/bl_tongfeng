@@ -13,7 +13,6 @@ export class DeviceManger {
                 domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
                 domColor: {},
                 domEvent: { "定位": "changeToLocal" },
-                iconImg: "/textures/building.png"
             },
             102: {
                 code: 102, // 粉尘
@@ -24,7 +23,6 @@ export class DeviceManger {
                 domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
                 domColor: {},
                 domEvent: { "定位": "changeToLocal" },
-                iconImg: "/textures/building.png"
             },
             103: {
                 code: 103, // 氧气
@@ -35,7 +33,6 @@ export class DeviceManger {
                 domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
                 domColor: {},
                 domEvent: { "定位": "changeToLocal" },
-                iconImg: "/textures/building.png"
             },
             104: {
                 code: 104, // 温湿度
@@ -46,7 +43,6 @@ export class DeviceManger {
                 domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
                 domColor: {},
                 domEvent: { "定位": "changeToLocal" },
-                iconImg: "/textures/building.png"
             },
             105: {
                 code: 105, // 声光
@@ -57,7 +53,6 @@ export class DeviceManger {
                 domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
                 domColor: {},
                 domEvent: { "定位": "changeToLocal" },
-                iconImg: "/textures/building.png"
             },
             106: {
                 code: 106, // 差压
@@ -68,7 +63,6 @@ export class DeviceManger {
                 domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
                 domColor: {},
                 domEvent: { "定位": "changeToLocal" },
-                iconImg: "/textures/building.png"
             },
             107: {
                 code: 107, // 风速传感器
@@ -79,61 +73,35 @@ export class DeviceManger {
                 domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
                 domColor: {},
                 domEvent: { "定位": "changeToLocal" },
-                iconImg: "/textures/building.png"
             },
             108: {
-                code: 108, // 超声波风速仪
-                name: "超声波风速仪",
-                dom: () => {
-                    return document.getElementById("sensor").cloneNode(true);
-                },
-                domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
-                domColor: {},
-                domEvent: { "定位": "changeToLocal" },
-                iconImg: "/textures/building.png",
-            },
-            109: {
-                code: 109, // 双向风速传感器
-                name: "双向风速传感器",
-                dom: () => {
-                    return document.getElementById("sensor").cloneNode(true);
-                },
-                domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
-                domColor: {},
-                iconImg: "/textures/building.png",
-                domEvent: { "定位": "changeToLocal" }
-            },
-            110: {
-                code: 110,  // 一氧化碳
+                code: 108,  // 一氧化碳
                 name: "一氧化碳",
                 dom: () => {
                     return document.getElementById("sensor").cloneNode(true);
                 },
                 domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
                 domColor: {},
-                iconImg: "/textures/building.png",
                 domEvent: { "定位": "changeToLocal" }
             },
-            111: {
-                code: 111,  // 甲烷
+            109: {
+                code: 109,  // 甲烷
                 name: "甲烷",
                 dom: () => {
                     return document.getElementById("sensor").cloneNode(true);
                 },
                 domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
                 domColor: {},
-                iconImg: "/textures/building.png",
                 domEvent: { "定位": "changeToLocal" }
             },
-            112: {
-                code: 112,  // 负压传感器
+            110: {
+                code: 110,  // 负压传感器
                 name: "负压传感器",
                 dom: () => {
                     return document.getElementById("sensor").cloneNode(true);
                 },
                 domToValue: { "name": "sensorName","point": "sensorPoint","hid": "HID","category": "deviceCategory","local": "devicePosition","data": "measureValue" },
                 domColor: {},
-                iconImg: "/textures/building.png",
                 domEvent: { "定位": "changeToLocal" }
             },
             201: {
@@ -146,7 +114,6 @@ export class DeviceManger {
                 domToValue: { "name": "IdentifyDomName","status": "IdentifyDomStatus","volume": "IdentifyDomVolume","pressure": "IdentifyDomPressure",},
                 statusValue: { "true": "运行正常","false": "停止运行" },
                 domToValueParts: [{ "name": "deviceFirstName","status": "deviceFirstStatus" },{ "name": "deviceSecondName","status": "deviceSecondStatus" }],
-                iconImg: "/textures/building.png",
                 domEvent: { "定位": "changeToLocal","管控": "changeSystem" }
             },
             202: {
@@ -159,7 +126,6 @@ export class DeviceManger {
                 domToValue: { "name": "partName","status": "partStatus","electric": "electricValue","voltage": "voltageValue" },
                 statusValue: { "true": "运行正常","false": "停止运行" },
                 domToValueParts: [{ "name": "deviceFirstName","status": "deviceFirstStatus" },{ "name": "deviceSecondName","status": "deviceSecondStatus" }],
-                iconImg: "/textures/building.png",
                 domEvent: { "定位": "changeToLocal","管控": "changeSystem" }
             },
             203: {
@@ -172,7 +138,6 @@ export class DeviceManger {
                 domToValue: { "name": "doorName","status": "doorStatus",},
                 statusValue: { "true": "连接正常","false": "连接异常" },
                 domToValueParts: [{ "name": "deviceFirstName","status": "deviceFirstStatus" },{ "name": "deviceSecondName","status": "deviceSecondStatus" }],
-                iconImg: "/textures/building.png",
                 domEvent: { "定位": "changeToLocal","管控": "changeSystem" }
             },
             204: {
@@ -185,7 +150,6 @@ export class DeviceManger {
                 domToValue: { "name": "windowName","status": "windowStatus" },
                 statusValue: { "true": "连接正常","false": "连接异常" },
                 domToValueParts: [{ "name": "deviceFirstName","angle": "windowFirstAngle" },{ "name": "deviceSecondName","angle": "windowSecondAngle" }],
-                iconImg: "/textures/building.png",
                 domEvent: { "定位": "changeToLocal","管控": "changeSystem" }
             },
 
@@ -198,7 +162,6 @@ export class DeviceManger {
                 systemName: "airStation",
                 domToValue: { "name": "measureName","status": "measureStatus","speed": "measureSpeed","methane": "measureCh4","co": "measureCo" },
                 statusValue: { "true": "连接正常","false": "连接异常" },
-                iconImg: "/textures/building.png",
                 domEvent: { "定位": "changeToLocal","管控": "changeSystem" }
             },
             206: {
@@ -209,44 +172,38 @@ export class DeviceManger {
                 },
                 domToValue: { "name": "stationName","point": "stationPoint","hid": "hid","ip": "ip","local": "stationLocal","status": "stationStatus" },
                 statusValue: { "true": "连接正常","false": "连接异常" },
-                iconImg: "/textures/building.png",
                 domEvent: { "定位": "changeToLocal" }
             },
             207: {
                 code: 207, // 视频
                 name: "视频",
-                iconImg: "/textures/building.png",
                 dom: null
             }
         };
-        this.sensorsCategory = { // 传感器的分类
-            0: [101,102,103,104,105,106],
-            1: ["tunnel"],
-            2: [107,108,109],
-            3: [110],
-            4: [111]
+        this.device = {  // 按照设备类型和id存储的数据
         };
-        this.device = new Map(); // 按照设备id存储的数据
-        this.deviceTypeData = {}; // 按照 类别存储的设备数据
         this.device3d = new Device3D(this);
     }
-    set(id,value) {
-        this.device.set(id,value);
+    set(id,value,type) {
+        if (!this.device[type]) {
+            this.device[type] = new Map();
+        }
+        this.device[type].set(id,value);
     }
 
     /**是否存在id数据 */
-    has(id) {
-        return this.device.has(id);
+    has(id,type) {
+        return this.device[type].has(id);
     }
 
     /** 获取id数据 */
-    get(id) {
-        return this.device.get(id);
+    get(id,type) {
+        return this.device[type].get(id);
     }
 
     /**删除id数据 */
-    del(id) {
-        this.device.delete(id);
+    del(id,type) {
+        this.device[type].delete(id);
     }
     /**
      * 处理deviceManage的函数
@@ -255,17 +212,39 @@ export class DeviceManger {
     deviceManger(ars) {
         const { add,update,remove } = ars;
         add.forEach(element => {
-            const { id } = element;
+            const { id,type } = element;
             element.object3d = this.device3d.create(element);
-            this.set(id,element);
+            this.set(id,element,type);
         });
         update.forEach(element => {
             const { id,type } = element;
-            this.set(id,element);
+            this.set(id,element,type);
         });
         remove.forEach(element => {
             const { id,type } = element;
-            this.del(id);
+            this.del(id,type);
+        });
+    }
+    setTypeVisibleEx(arrays) { // 筛选
+        const filter = (child,visible) => {
+            this.device[child].forEach((value,key) => {
+                value.object3d.children[0].visible = visible;
+            });
+        };
+        let showObject = [];
+        let hideObject = [];
+        Object.keys(this.device).forEach(child => {
+            if (arrays.includes(Number(child))) {
+                showObject.push(child);
+            } else {
+                hideObject.push(child);
+            }
+        });
+        showObject.forEach(child => {
+            filter(child,true);
+        });
+        hideObject.forEach(child => {
+            filter(child,false);
         });
     }
 

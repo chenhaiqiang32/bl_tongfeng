@@ -47,6 +47,8 @@ export class Device3D {
             console.log("巷道id" + id + "不存在");
             return false;
         }
+
+        // css2dDom
         let container = this.device.deviceCode[type].dom();
         let domObj = this.device.deviceCode[type].domToValue;
         let domObjParts = this.device.deviceCode[type].domToValueParts;
@@ -103,49 +105,29 @@ export class Device3D {
 
             }
         }
-        const css2d = createCSS3DSprite(container);
-        css2d.scale.set(0.08,0.08,0.08);
+        const css2d = createCSS2DObject(container);
+        css2d.scale.set(0.001,0.001,0.001);
+        css2d.center = new THREE.Vector2(0.5,1);
         let toPosition = currentPosition.clone();
         toPosition.y = toPosition.y + 20;
+        let startPosition = currentPosition.clone();
+        startPosition.y = startPosition.y + 5.6;
         css2d.position.copy(toPosition);
+        css2d.visible = false;
         object.add(css2d);
 
 
-
-        // 创建直线的材质
-        const lineMaterial = new THREE.LineDashedMaterial(
-            {
-                color: 0xfffffff,
-                linewidth: 1,
-                scale: 1,
-                dashSize: 3,
-                gapSize: 12,
-            }
-        );
-
-        // 创建直线的几何体，这里使用BufferGeometry
-        const lineGeometry = new THREE.BufferGeometry().setFromPoints([
-            currentPosition,
-            toPosition
-        ]);
-
-        // 创建直线对象
-        const line = new THREE.Line(lineGeometry,lineMaterial);
-
-        // 将直线添加到场景中
-        this.singleGroup.add(line);
-
-
-
-        const geometry = new THREE.BoxGeometry(1,1,1);
-        const material = new THREE.MeshBasicMaterial({ color: 0xfffffff });
-        const cube = new THREE.Mesh(geometry,material);
-        cube.position.copy(currentPosition);
-        this.singleGroup.add(cube);
-
-
+        // sprite
+        let spriteImg = `./icons/${type}_${deviceInfo.status ? 'onLine' : 'outLine'}.png`;
+        const map = new THREE.TextureLoader().load(spriteImg);
+        const material = new THREE.SpriteMaterial({ map: map,color: 0xffffff,depthTest: false,sizeAttenuation: false });
+        const sprite = new THREE.Sprite(material);
+        sprite.scale.set(0.04,0.04,0.04);
+        sprite.center = new THREE.Vector2(0.5,0);
+        sprite.renderOrder = 0;
+        sprite.position.copy(startPosition);
+        object.add(sprite);
         this.singleGroup.add(object);
-        console.log(this.scene,'8888');
         return object;
     }
 
