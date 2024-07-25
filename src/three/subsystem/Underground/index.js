@@ -17,6 +17,7 @@ import { DeviceManger } from "./device";
 import BoxModel from "../../../lib/boxModel";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 import { shaderModify } from "../../../shader/shaderModify";
+import { Reflector } from "../../../lib/Reflector";
 
 export const ground = Symbol();
 
@@ -113,12 +114,13 @@ export class UnderGround extends Subsystem {
         const flowLight = new FlowLight2(tunnelVertices,{
             type: "tube",
             radius: 3.2,
-            segments: getLengthFromVertices(tunnelVertices) / 120,
+            segments: getLengthFromVertices(tunnelVertices) / 80,
             color1: color,
             color2: color2
         });
         tunnelObj.traverse(res => {
             if (res instanceof THREE.Mesh) {
+                res.oldMaterial = res.material.clone();
                 res.material.onBeforeCompile = shader => {
                     shaderModify(shader,{ shader: "pumpModify",color: new THREE.Color("#87CEEB"),shaderName: "levelN" });
                 };
@@ -261,7 +263,6 @@ export class UnderGround extends Subsystem {
 
         this.disposeStyle();
 
-
         if (typeName === "direction") {
             this.tunnelData.forEach(child => {
                 this.onOBJProgress(child.points,child.direction,child.object3d);
@@ -300,6 +301,12 @@ export class UnderGround extends Subsystem {
     }
     resetTunnelColor(id) {
         let tunnelObject3d = this.get(id).object3d;
+        tunnelObject3d.traverse(res => {
+            if (res instanceof THREE.Mesh && res.oldMaterial) {
+                res.material = res.oldMaterial;
+                res.oldMaterial = null;
+            }
+        });
         if (tunnelObject3d.children[0].material.oldColor) {
             tunnelObject3d.children[0].material.color = tunnelObject3d.children[0].material.oldColor.clone();
             tunnelObject3d.children[0].material.oldColor = null;
@@ -462,12 +469,9 @@ export class UnderGround extends Subsystem {
         label.setInnerText(this.get(id));
         label.visible = true;
         item.object3d.add(label);
-        let startPosition = position;
         let endPosition = position.clone();
-        // endPosition.y = endPosition.y + 40;
-        // endPosition.x = endPosition.x + 68;
         label.position.copy(endPosition);
-        label.center = new THREE.Vector2(0,0.88);
+        label.center = new THREE.Vector2(-0.28,1.12);
     }
 
     /** 关闭巷道弹窗 */
@@ -530,8 +534,8 @@ export class UnderGround extends Subsystem {
         this.resetControls();
         this.clearMixers();
         this.setCameraState(false);
-        this.equipMentSystem.dispose();
         this.onRenderQueue.delete(ground);
+        this.dispose();
     }
 
     onLoaded() {
@@ -645,6 +649,7 @@ export class UnderGround extends Subsystem {
         this.eventsArray = [];
         this.removeEvents();
         this.disposeStyle();
+        this.equipMentSystem.dispose();
         this.labelManager.dispose();
         if (this.clearOutLine) this.core.postprocessing.clearOutline(this.clearOutLine);
 

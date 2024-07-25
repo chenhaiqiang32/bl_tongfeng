@@ -27,6 +27,7 @@ class FlowLight extends THREE.Mesh {
         config.segments = config.segments || 2;
         config.color1 = config.color1 || new THREE.Vector3(1,1,0);
         config.color2 = config.color2 || new THREE.Vector3(0.95,0.39,0.22);
+        config.depthTest = config.depthTest || false;
 
         this.uOpacity = { value: config.opacity === undefined ? 0 : config.opacity };
 
@@ -189,13 +190,13 @@ class FlowLight extends THREE.Mesh {
                       float alpha = 1. - smoothstep(0.0000001, 0.99999, dist);
                     //   float alpha = 1.0;
                       gl_FragColor+=lines;
-                      gl_FragColor.a = gl_FragColor.a * alpha * 0.32;
+                      gl_FragColor.a = gl_FragColor.a * alpha * 0.32 * (pow(sin(uTime),2.0) + 0.12 );
                       #include <logdepthbuf_fragment>
                     }
                   `,
             transparent: true,
             side: THREE.DoubleSide,
-            depthTest: false,
+            depthTest: config.depthTest,
             uniforms: {
                 uTime: this.elapsedTime,
                 uIndex: {

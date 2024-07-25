@@ -189,7 +189,6 @@ export class DeviceManger {
         this.device = {  // 按照设备类型和id存储的数据
         };
         this.device3d = new Device3D(this);
-        this.addEvents();
     }
     set(id,value,type) {
         if (!this.device[type]) {
@@ -217,6 +216,7 @@ export class DeviceManger {
      * @param {deviceManage} ars - deviceManage对象，包含add、update、remove三个数组
     */
     deviceManger(ars) {
+        this.addEvents();
         const { add,update,remove } = ars;
         add.forEach(element => {
             const { id,type } = element;
@@ -282,7 +282,7 @@ export class DeviceManger {
                     return false;
                 }
 
-                if (clickEquipType && clickEquipType === Number(index) && clickEquipId === key) { // 点了设备，优先级是2
+                if (clickEquipType && clickEquipType === Number(index) && clickEquipId === key) { // 点了设备，优先级是2'
                     if (distance > this.cameraNear) { // 被选中的物体离开相机范围
                         this.showObjectById.type = null;
                         this.showObjectById.id = null;
@@ -336,5 +336,6 @@ export class DeviceManger {
     }
     dispose() {
         this.removeControlChange();
+        this.device3d.dispose();
     }
 }

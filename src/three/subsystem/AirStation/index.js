@@ -192,74 +192,39 @@ export class AirStation extends Subsystem {
                     child.material = child.material.clone();
                     child.material.transparent = true;
                     child.material.onBeforeCompile = shader => {
-                        // shaderModify(shader,{ shader: "pumpModify",color: color5.color,shaderName: "level4" });
                     };
                 }
             });
         }
         if (name === "ground") {
+            gltf.scene.position.y = -0.01;
             gltf.scene.traverse(child => {
                 if (child instanceof THREE.Mesh) {
                     child.material = child.material.clone();
                     child.material.transparent = true;
-                    // child.material.opacity = 0.68;
+                    child.material.opacity = 0.68;
                     if (child.material.name === "地面") {
                         child.material.map = null;
                     }
                 }
             });
 
-            let geometry = new THREE.CircleGeometry(400,640);
+            let geometry = new THREE.PlaneGeometry(3.48,32);
             let groundMirror = new Reflector(geometry,{
                 gaussEffect: true,
                 opacity: 0.32,
                 clipBias: 0.003,
                 textureHeight: window.innerHeight * window.devicePixelRatio,
                 textureWidth: window.innerWidth * window.devicePixelRatio,
-                color: 0x000000,
+                color: 0X5e5e5e,
             });
-            groundMirror.position.y = -1;
+            groundMirror.position.y = 0;
             groundMirror.rotateX(- Math.PI / 2);
             groundMirror.material.transparent = true;
             groundMirror.material.opacity = 0.001;
             this.ground = gltf.scene;
             this.add(groundMirror);
         }
-        // if (name === "wind") {
-        //     let obj = {
-        //         shiLi: {
-        //             hui: null,
-        //             chu: null
-        //         },
-        //         position: [
-
-        //         ]
-        //     };
-        //     gltf.scene.traverse(child => {
-        //         if (child.name === "新风") {
-        //             obj.shiLi.chu = child;
-        //         }
-        //         if (child.name === "回风") {
-        //             obj.shiLi.hui = child;
-        //         }
-        //         if (child.name.includes("风流")) {
-        //             let wordPosition = new THREE.Vector3();
-        //             child.getWorldPosition(wordPosition);
-        //             obj.position.push(wordPosition);
-        //         }
-        //     });
-        //     gltf.scene.visible = false;
-        //     let currentObj = this.data.direction === 0 ? obj.shiLi.chu : obj.shiLi.hui;
-        //     for (let i = 0; i < obj.position.length; i++) {
-        //         let newObj = currentObj.clone();
-        //         newObj.position.copy(obj.position[i]);
-        //         newObj.visible = true;
-        //         newObj.material.onBeforeCompile = shader => {
-        //             // shaderModify(shader,{ shader: "pumpModify",color: color5.color,shaderName: "level4" });
-        //         };
-        //         this.add(newObj);
-        //     }
-        // }
 
         processingAnimations(gltf,this);
 
@@ -310,7 +275,7 @@ export class AirStation extends Subsystem {
         const vec = new THREE.Vector3(radius,radius,radius).multiplyScalar(1.2);
         const position = center.clone().add(vec);
         // center.y = center.y - 2;
-        this.boxModelObj.initModel(center,radius);
+        this.boxModelObj.initModel(new THREE.Vector3(center.x,center.y + 0.1,center.z),radius);
     }
     /**
      * 设置设备状态

@@ -197,7 +197,7 @@ export class FanSubsystem extends Subsystem {
                             };
                         }
                         if (color3.data.includes(res.name)) {
-                            res.material.opacity = 0.24;
+                            res.material.opacity = 0.92;
                             res.material.map = null;
                             res.material.color = color3.color;
                         }
@@ -307,6 +307,7 @@ export class FanSubsystem extends Subsystem {
                 color2: new THREE.Vector3(0,0.8,0.4),
                 segments: 3,
                 up: new THREE.Vector3(0,0,1),
+                depthTest: false
             });
             flowLight.renderOrder = 2;
             flowLight.visible = false;
@@ -328,6 +329,7 @@ export class FanSubsystem extends Subsystem {
                 color2: new THREE.Vector3(0,0.8,0.4),
                 segments: 3,
                 up: new THREE.Vector3(0,1,0),
+                depthTest: false
             });
             flowLight2.renderOrder = 2;
             flowLight2.visible = false;
@@ -354,6 +356,9 @@ export class FanSubsystem extends Subsystem {
         this.postprocessing.bloomEffect.intensity = 1;
 
         this.onRenderQueue.delete(fan);
+        if (this.labelGroup.children.length) {
+            MemoryManager.dispose(this.labelGroup);
+        }
     }
 
     createLabel() {

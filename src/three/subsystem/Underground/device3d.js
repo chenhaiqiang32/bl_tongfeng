@@ -13,7 +13,7 @@ export class Device3D {
         this.singleGroup = new THREE.Group();
         this.singleGroup.name = "singleGroup";
         this.removes = [];
-        this.scene.add(this.singleGroup);
+        this.scene._add(this.singleGroup);
     }
 
     // add(item) {
@@ -112,13 +112,11 @@ export class Device3D {
             }
         }
         const css2d = createCSS2DObject(container);
-        css2d.scale.set(0.001,0.001,0.001);
-        css2d.center = new THREE.Vector2(0.5,0.5);
+        css2d.center = new THREE.Vector2(-0.28,1.2);
         let startPosition = currentPosition.clone();
         startPosition.y = startPosition.y + 5.6;
         css2d.position.copy(startPosition);
         css2d.visible = false;
-        css2d.center = new THREE.Vector2(0,1);
         object.add(css2d);
 
 
@@ -186,6 +184,17 @@ export class Device3D {
         if (this.orientation.followModule.singleBuildingLabel) {
             MemoryManager.dispose(this.orientation.followModule.singleBuildingLabel);
         }
+    }
+
+    dispose() {
+        [...this.singleGroup.children].forEach(child => {
+            child.removeFromParent();
+            child.traverse(childT => {
+                if (childT.element && childT.element.parentNode) {
+                    childT.element.parentNode.removeChild(childT.element);
+                }
+            });
+        });
     }
 
 }

@@ -49,7 +49,7 @@ export class AirWindow extends Subsystem {
     /** @param {Core3D} core*/
     constructor(core) {
         super(core);
-        this.dom = [];
+        this.css2ds = [];
         this.boxModelObj = new BoxModel(core);
         this.postprocessing = core.postprocessing;
 
@@ -211,12 +211,12 @@ export class AirWindow extends Subsystem {
                     child.material = child.material.clone();
                     child.material.transparent = true;
                     child.material.onBeforeCompile = shader => {
-                        // shaderModify(shader,{ shader: "pumpModify",color: color5.color,shaderName: "level4" });
                     };
                 }
             });
         }
         if (name === "ground") {
+            gltf.scene.position.y = -0.01;
             gltf.scene.traverse(child => {
                 if (child instanceof THREE.Mesh) {
                     child.material = child.material.clone();
@@ -228,16 +228,16 @@ export class AirWindow extends Subsystem {
                 }
             });
 
-            let geometry = new THREE.CircleGeometry(400,640);
+            let geometry = new THREE.PlaneGeometry(3.48,32);
             let groundMirror = new Reflector(geometry,{
                 gaussEffect: true,
                 opacity: 0.32,
                 clipBias: 0.003,
                 textureHeight: window.innerHeight * window.devicePixelRatio,
                 textureWidth: window.innerWidth * window.devicePixelRatio,
-                color: 0x000000,
+                color: 0X5e5e5e,
             });
-            groundMirror.position.y = -1;
+            groundMirror.position.y = 0;
             groundMirror.rotateX(- Math.PI / 2);
             groundMirror.material.transparent = true;
             groundMirror.material.opacity = 0.001;
@@ -301,9 +301,10 @@ export class AirWindow extends Subsystem {
         arDoom[0].innerText = '暂无'; // dom元素赋值
         this[local].dom.speed = arDoom[0];
         const css2d = createCSS3DObject(changeDom);
-        css2d.scale.set(0.0048,0.0048,0.0048);
+        css2d.scale.set(0.0088,0.0088,0.0088);
         css2d.position.copy(position);
         css2d.rotation.y = -Math.PI / 2;
+        this.css2ds.push(css2d);
         this.add(css2d);
 
     }
@@ -314,6 +315,7 @@ export class AirWindow extends Subsystem {
         const css2d = createCSS3DObject(changeDom);
         css2d.scale.set(0.0048,0.0048,0.0048);
         css2d.position.copy(position);
+        this.css2ds.push(css2d);
         this.add(css2d);
     }
 
@@ -322,18 +324,16 @@ export class AirWindow extends Subsystem {
         changeDom.innerText = '暂无'; // dom元素赋值
         this[local].dom.status = changeDom;
         const css2d = createCSS3DObject(changeDom);
-        css2d.scale.set(0.0048,0.0048,0.0048);
+        css2d.scale.set(0.0088,0.0088,0.0088);
         css2d.position.copy(position);
+        this.css2ds.push(css2d);
         this.add(css2d);
 
     }
     removeDom() {
-        if (this.fanner1.dom.speed) MemoryManager.dispose(this.fanner1.dom.speed);
-        if (this.fanner1.dom.name) MemoryManager.dispose(this.fanner1.dom.name);
-        if (this.fanner1.dom.status) MemoryManager.dispose(this.fanner1.dom.status);
-        if (this.fanner2.dom.speed) MemoryManager.dispose(this.fanner2.dom.speed);
-        if (this.fanner2.dom.name) MemoryManager.dispose(this.fanner2.dom.name);
-        if (this.fanner2.dom.status) MemoryManager.dispose(this.fanner2.dom.status);
+        [...this.css2ds].forEach(child => {
+            MemoryManager.dispose(child);
+        });
     }
     /**
      * @param {{name:string;vertices:Vector3[];}[]} object
@@ -350,6 +350,7 @@ export class AirWindow extends Subsystem {
                 color2: new THREE.Vector3(0,0.8,0.4),
                 segments: 3,
                 up: new THREE.Vector3(1,0,0),
+                depthTest: true
             });
             flowLight.renderOrder = 2;
             flowLight.visible = false;
@@ -365,6 +366,7 @@ export class AirWindow extends Subsystem {
                 color2: new THREE.Vector3(0,0.8,0.4),
                 segments: 3,
                 up: new THREE.Vector3(0,1,0),
+                depthTest: true
             });
             flowLight2.renderOrder = 2;
             flowLight2.visible = false;
@@ -415,7 +417,7 @@ export class AirWindow extends Subsystem {
         const vec = new THREE.Vector3(radius,radius,radius).multiplyScalar(1.2);
         const position = center.clone().add(vec);
         // center.y = center.y - 2;
-        this.boxModelObj.initModel(center,radius);
+        this.boxModelObj.initModel(new THREE.Vector3(center.x,center.y + 0.1,center.z),radius);
     }
     /**
      * 设置设备状态

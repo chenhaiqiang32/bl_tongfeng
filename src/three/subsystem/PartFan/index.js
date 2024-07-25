@@ -22,6 +22,7 @@ import { Reflector } from "../../../lib/Reflector";
 import { getBoxAndSphere } from "../../../utils";
 import BoxModel from "../../../lib/boxModel";
 import { fresnelChangeColor,fresnelColorBlue,fresnelLevelS } from "../../../shader/paramaters";
+import MemoryManager from "../../../lib/memoryManager";
 
 export const fan = Symbol();
 
@@ -235,7 +236,7 @@ export class PartFanSubsystem extends Subsystem {
                     child.renderOrder = 10;
                     if (color1.data.includes(child.material.name)) {
                         child.material.onBeforeCompile = shader => {
-                            shaderModify(shader,{ shader: "fresnel",color: color1.color,shaderName: "level3" });
+                            shaderModify(shader,{ shader: "fresnel",color: color1.color,shaderName: "level4" });
                         };
                     }
                     if (color3.data.includes(child.material.name)) {
@@ -245,7 +246,7 @@ export class PartFanSubsystem extends Subsystem {
                     }
                     console.log(child.material.name);
                     if (color4.data.includes(child.material.name)) {
-                        child.material.opacity = 0.48;
+                        child.material.opacity = 0.88;
                         child.material.map = null;
                         child.material.color = color3.color;
                     }
@@ -257,18 +258,11 @@ export class PartFanSubsystem extends Subsystem {
                         };
                     }
                 }
-                // if (child instanceof THREE.Mesh && child.material.name.includes("TY-136")) {
-                //     child.material = child.material.clone();
-                //     child.material.transparent = true;
-                //     child.renderOrder = 0;
-                //     child.material.onBeforeCompile = shader => {
-                //         shaderModify(shader,{ shader: "pumpModify",color: color3.color,shaderName: "level4" });
-                //     };
-                // }
             });
         }
         if (name === "ground") {
             // gltf.scene.visible = false;
+            gltf.scene.position.y = -0.01;
             gltf.scene.traverse(child => {
                 if (child instanceof THREE.Mesh) {
                     if (child.material.name === "地面") {
@@ -276,23 +270,20 @@ export class PartFanSubsystem extends Subsystem {
                     }
                     child.material = child.material.clone();
                     child.material.transparent = true;
-                    // child.material.onBeforeCompile = shader => {
-                    //     shaderModify(shader,{ shader: "fresnel",color: color2.color,shaderName: "level4" });
-                    // };
                     child.material.opacity = 0.88;
                 }
             });
 
-            let geometry = new THREE.CircleGeometry(400,640);
+            let geometry = new THREE.PlaneGeometry(3.48,32);
             let groundMirror = new Reflector(geometry,{
                 gaussEffect: true,
                 opacity: 0.32,
                 clipBias: 0.003,
                 textureHeight: window.innerHeight * window.devicePixelRatio,
                 textureWidth: window.innerWidth * window.devicePixelRatio,
-                color: 0x000000,
+                color: 0X5e5e5e,
             });
-            groundMirror.position.y = -2;
+            groundMirror.position.y = 0;
             groundMirror.rotateX(- Math.PI / 2);
             groundMirror.material.transparent = true;
             groundMirror.material.opacity = 0.001;
@@ -332,6 +323,7 @@ export class PartFanSubsystem extends Subsystem {
                 color2: new THREE.Vector3(0,0.8,0.4),
                 segments: 3,
                 up: new THREE.Vector3(0,1,0),
+                depthTest: false
             });
             flowLight.renderOrder = 2;
             flowLight.visible = false;
@@ -353,6 +345,7 @@ export class PartFanSubsystem extends Subsystem {
                 color2: new THREE.Vector3(0,0.8,0.4),
                 segments: 3,
                 up: new THREE.Vector3(1,0,0),
+                depthTest: false
             });
             flowLight2.renderOrder = 2;
             flowLight2.visible = false;
@@ -381,6 +374,9 @@ export class PartFanSubsystem extends Subsystem {
         this.postprocessing.bloomEffect.intensity = 1;
 
         this.onRenderQueue.delete(fan);
+        if (this.labelGroup.children.length) {
+            MemoryManager.dispose(this.labelGroup);
+        }
     }
     updateDataInfo(element,type) {
         const { parts } = element;
@@ -443,7 +439,7 @@ export class PartFanSubsystem extends Subsystem {
         const position = center.clone().add(vec);
         this.camera.position.copy(position);
         this.controls.target.copy(center);
-        center.y = center.y - 2;
+        center.y = center.y + 0.1;
         this.boxModelObj.initModel(center,20);
     }
     addClick() {
