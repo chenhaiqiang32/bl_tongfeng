@@ -14,6 +14,7 @@ import { AirDoor } from "./subsystem/airDoor";
 import { AirWindow } from "./subsystem/AirWindow";
 import { PartFanSubsystem } from "./subsystem/partFan";
 import { AirStation } from "./subsystem/AirStation";
+import * as THREE from "three";
 
 const timeUpdate = Symbol("timeUpdate");
 
@@ -23,7 +24,12 @@ export class Core3D extends CoreExtensions {
 
         /**@type {Subsystem} currentSystem */
         this.currentSystem = null;
-
+        this.currentSystemName = "";
+        this.currentSystemInfo = {
+            type: null,
+            id: null,
+            deviceInfo: null
+        };
         this.firstLoad = true;
     }
 
@@ -66,8 +72,14 @@ export class Core3D extends CoreExtensions {
      * @description 各个系统模块切换
      * @param {string} systemType 系统标识符
      */
-    async changeSystem(systemType) {
+    async changeSystem(systemType,info) {
         /**@type {Subsystem} 目标系统 */
+        this.currentSystemName = "";
+        this.currentSystemInfo = {
+            type: null,
+            id: null,
+            deviceInfo: null
+        };
         const targetSystem = this[systemType];
 
         /**@type {Subsystem} 当前系统 */
@@ -92,9 +104,18 @@ export class Core3D extends CoreExtensions {
 
         // 更改当前系统为目标系统
         this.currentSystem = targetSystem;
+        this.currentSystemName = systemType;
 
         // 当前系统执行进入事件，返回Promise。
         await targetSystem.onEnter();
+        if (info) {
+            this.currentSystemInfo = {
+                type: info.type,
+                id: info.id,
+                deviceInfo: info.deviceInfo
+            };
+            targetSystem.updateDataInfo(info.deviceInfo,"add");
+        }
 
         // openMessage(this);
 
@@ -122,6 +143,13 @@ export class Core3D extends CoreExtensions {
         this.main.deviceManage(ars);
     }
 
+    spotDevice(obj) {
+        this.main.spotDevice(obj);
+    }
+    spotTunnel(id) { // 拉近巷道距离
+        this.main.spotTunnel(id);
+    }
+
     /**
      *
      * @param {string} config -
@@ -147,7 +175,24 @@ export class Core3D extends CoreExtensions {
         this.main.updateTunnelConfig(data,config);
     }
 
+    switchFacility(config) {
+        this.main.switchFacility(config);
+    }
+
+    updateSubSystemInfo(info,status) { // 当前子系统的展示 主扇/局扇/风门/风窗/测风
+        this.currentSystem.updateDataInfo(info,status); // 更新当前子系统的数据
+    }
+
+    resetCamera() {
+        this.currentSystem.resetCamera();
+    }
+
     setTypeVisibleEx(config) {
         this.main.setTypeVisibleEx(config);
+    }
+
+    stopRender() {
+        this.setRenderState(false);
+        this.currentSystem.onLeave();
     }
 }

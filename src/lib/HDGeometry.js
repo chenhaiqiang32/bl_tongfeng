@@ -86,10 +86,6 @@ export class HDGeometry extends BufferGeometry {
         let lastPoints;
         for (let i = 0,count = pathPoints.count; i < count; i++) {
             //
-            // if (index === 22) {
-            //     debugger;
-
-            // }
             if (i === 0) {
                 const { position,direction,up,right,distance } = pathPoints.array[i];
                 normal.crossVectors(up,direction);

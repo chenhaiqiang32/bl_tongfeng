@@ -26,6 +26,7 @@ import { Reflector } from "../../../lib/Reflector";
 import { getBoxAndSphere } from "../../../utils";
 import BoxModel from "../../../lib/boxModel";
 import { fresnelChangeColor,fresnelColorBlue,fresnelLevelS } from "../../../shader/paramaters";
+import MemoryManager from "../../../lib/memoryManager";
 
 export const fan = Symbol();
 
@@ -43,16 +44,6 @@ const controlsParameters = {
     // enableZoom: false
 };
 
-const labelData = [
-    {
-        name: "1号通风机",
-        position: [-2.69,5.25,0]
-    },
-    {
-        name: "2号通风机",
-        position: [2.69,5.25,0]
-    }
-];
 
 /**@classdesc 包含场景，子系统特有的功能，系统的切换（包含主场景和子场景切换） */
 export class FanSubsystem extends Subsystem {
@@ -62,6 +53,7 @@ export class FanSubsystem extends Subsystem {
         this.boxModelObj = new BoxModel(core);
         this.postprocessing = core.postprocessing;
         this.elapsedTime = 0;
+        this.labelGroup = new THREE.Group();
 
         this.init();
 
@@ -78,6 +70,7 @@ export class FanSubsystem extends Subsystem {
             state: false,
             flowLights: [],
             object: [],
+            position: [0.427,8,-4.359]
 
         };
 
@@ -87,6 +80,7 @@ export class FanSubsystem extends Subsystem {
             state: false,
             flowLights: [],
             object: [],
+            position: [0.365,8,4.35]
         };
         this.shaderColor = {
             wall: new THREE.Color(0.4431,0.4784,0.502),
@@ -363,13 +357,17 @@ export class FanSubsystem extends Subsystem {
     }
 
     createLabel() {
-        const labelGroup = new THREE.Group();
-        labelData.forEach(data => {
-            const label = new LabelEntity(data.name);
-            label.position.set(...data.position);
-            labelGroup.add(label);
-        });
-        this._add(labelGroup);
+        if (this.labelGroup.children.length) {
+            MemoryManager.dispose(this.labelGroup);
+        }
+        const label = new LabelEntity(this.fanner1.name);
+        label.position.set(...this.fanner1.position);
+        this.labelGroup.add(label);
+        const label2 = new LabelEntity(this.fanner2.name);
+        label2.position.set(...this.fanner2.position);
+        this.labelGroup.add(label2);
+
+        this._add(this.labelGroup);
     }
 
     onLoaded() {
@@ -381,15 +379,30 @@ export class FanSubsystem extends Subsystem {
         this.postprocessing.bloomEffect.intensity = 15;
 
         this.onRenderQueue.set(fan,this.update);
-        this.test();
         this.box();
+        this.createLabel();
     }
-    test() {
-        this.setEquipmentState(true,1,"toOut");
-        setTimeout(() => {
-            this.setEquipmentState(false,1,"toIn");
-            this.setEquipmentState(true,2,"toIn");
-        },2000);
+    updateDataInfo(element,type) {
+        const { parts } = element;
+        if (type === "remove") { // 该风门删除了
+            this.setEquipmentState(false,1,"toOut"); // 开启动画
+            this.setEquipmentState(false,2,"toOut"); // 开启动画
+            this.fanner1.name = "暂无";
+            this.fanner2.name = "暂无";
+
+        } else { // 更新或者新增
+            parts.forEach((child,index) => {
+                const { name,status } = child;
+                let fanner = this.fanner1;
+                if (index === 1) {
+                    fanner = this.fanner2;
+                }
+                fanner.name = name;
+                fanner.state = status;
+                this.setEquipmentState(status,index + 1,"toOut"); // 开启动画
+            });
+        }
+        this.createLabel();
     }
     box() {
         const { center,radius } = getBoxAndSphere(this.ground).sphere;

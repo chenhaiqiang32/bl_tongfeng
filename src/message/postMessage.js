@@ -1,12 +1,12 @@
 export const onLoaded = () => {
     window.parent.postMessage({ cmd: "onLoaded" },"*");
 };
-export const postClickBoard = ({ id,type }) => {
+export const onClickCallBack = (type,data) => {
     window.parent.postMessage(
         {
             // 调用前端弹窗
             cmd: "onClickObject",
-            param: { id,type },
+            param: { data,type },
         },
         "*",
     );

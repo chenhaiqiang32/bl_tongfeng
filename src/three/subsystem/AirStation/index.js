@@ -53,6 +53,7 @@ export class AirStation extends Subsystem {
     /** @param {Core3D} core*/
     constructor(core) {
         super(core);
+        this.stationDom = null;
         this.boxModelObj = new BoxModel(core);
         this.postprocessing = core.postprocessing;
         this.css2d = null;
@@ -109,9 +110,17 @@ export class AirStation extends Subsystem {
             this.controls[key] = this.controls.data[key];
         });
     }
+
+    updateDataInfo(element,type) {
+        let info = element.info; // 显示文字
+        this.stationDom.innerText = info;
+    }
+
     initDom() {
         let changeDom = document.getElementById("windStation").cloneNode(true);
-        // changeDom.innerText = value; // dom元素赋值
+        let showDom = changeDom.getElementsByClassName("windStationWord")[0];
+        this.stationDom = showDom;
+        showDom.innerText = "暂无"; // dom元素赋值
         const css2d = createCSS3DObject(changeDom);
         css2d.scale.set(0.016,0.016,0.016);
         css2d.position.set(1,2,0);
@@ -209,7 +218,7 @@ export class AirStation extends Subsystem {
                 textureWidth: window.innerWidth * window.devicePixelRatio,
                 color: 0x000000,
             });
-            groundMirror.position.y = -2;
+            groundMirror.position.y = -1;
             groundMirror.rotateX(- Math.PI / 2);
             groundMirror.material.transparent = true;
             groundMirror.material.opacity = 0.001;

@@ -5,7 +5,7 @@ class BoxModel {
     constructor(core) {
         this.core = core;
         this.elapsedTime = { value: 0 };
-        this.boxModel = null;
+        this.boxModel = [];
         this.position = null;
         this.lightIndex = 0;
         this.lastRenderTime = 0; // 上次计算时间
@@ -13,10 +13,11 @@ class BoxModel {
         this.Lines = [];
         this.time = 0;
         this.images = [
+            "/shader/grid3.png"
             // "/shader/icon_20220311102510983_318887.png",
-            "/shader/icon_20210625174703331_294105.png",
+            // "/shader/icon_20210625174703331_294105.png",
             // "/shader/icon_20210625174822322_937383.png",
-            "/shader/icon_20210625175116741_958937.png",
+            // "/shader/icon_20210625175116741_958937.png",
             // "/shader/icon_20210625175205515_73731.png",
             // "/shader/icon_20210407163008223_378401.png",
             // "/shader/icon_20210418125256801_956034.png",
@@ -56,31 +57,32 @@ class BoxModel {
     }
     initModel(center,radius) {
         this.position = center;
-        if (this.boxModel) {
+        if (this.boxModel.length) {
             this.dispose();
         }
         for (let i = 0; i < this.images.length; i++) {
             var t = this._createMaterial(
                 this.images[i],
                 "/shader/光1.png",
-                0.26,
                 1,
-                "rgba(54,215,255,1)",
-                2.4,
+                1,
+                "rgba(0.6392, 0.6549, 0.8549,1)",
+                4.8,
                 0.5,
                 "rgba(18,208,255,1)",
                 false,
                 "flow",
                 5,
                 5,
-                i === 1 ? 48 : 12
+                188
             );
             var r = new THREE.PlaneGeometry(radius * 20,radius * 20);
-            this.boxModel = new THREE.Mesh(r,t);
-            this.boxModel.renderOrder = -1;
-            this.boxModel.rotation.x = -Math.PI / 2;
-            this.boxModel.position.set(this.position.x,this.position.y,this.position.z);
-            this.core.scene.add(this.boxModel);
+            let boxModel = new THREE.Mesh(r,t);
+            boxModel.renderOrder = -1;
+            boxModel.rotation.x = -Math.PI / 2;
+            boxModel.position.set(this.position.x,this.position.y,this.position.z);
+            this.boxModel.push(boxModel);
+            this.core.scene.add(boxModel);
         }
     }
     _createMaterial(e,t,r,i,n,o,s,a,l,h,c,u,repeatFactor) {
@@ -162,7 +164,11 @@ class BoxModel {
         return (y.roughness = l ? 0.1 : 1),y;
     }
     dispose() {
-        MemoryManager.dispose(this.boxModel);
+        if (this.boxModel.length) {
+            this.boxModel.forEach(element => {
+                MemoryManager.dispose(element);
+            });
+        }
     }
     update(value) {
         const relTime = value - this.lastRenderTime;

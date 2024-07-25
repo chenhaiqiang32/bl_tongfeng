@@ -19,7 +19,7 @@ export const fresnelChangeColor = {
         value: new THREE.Color(0.9451,0.9451,0.5725)
     },
 };
-export const fresnelColorBlue = {
+export const fresnelColorBlue_bei = {
     "深蓝偏紫": {
         value: new THREE.Color("#007BFF")
     },
@@ -37,6 +37,26 @@ export const fresnelColorBlue = {
     },
     "亮钢兰色": {
         value: new THREE.Color("#B0C4DE")
+    },
+};
+export const fresnelColorBlue = {
+    "深蓝偏紫": {
+        value: new THREE.Color(0.9765,0.5373,0.0392)
+    },
+    "道奇蓝": {
+        value: new THREE.Color(0.9765,0.5373,0.0392)
+    },
+    "天蓝": {
+        value: new THREE.Color(0.502,0.6647,0.8137)
+    },
+    "深天蓝": {
+        value: new THREE.Color(0.602,0.7647,0.8137)
+    },
+    "浅蓝绿色": {
+        value: new THREE.Color(0.702,0.8647,0.8137)
+    },
+    "亮钢兰色": {
+        value: new THREE.Color(0.802,0.9647,0.8137)
     },
 };
 export const fresnelLevelS = {

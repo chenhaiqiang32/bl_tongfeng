@@ -97,7 +97,7 @@ export const partFan_models = [
 ];
 export const air_door = [
     {
-        name: "positon",
+        name: "position",
         path: "./models/airdoor/position.glb",
         type: ".glb",
     },
@@ -109,13 +109,11 @@ export const air_door = [
     {
         name: "equip",
         path: "./models/airdoor/equip.glb",
-        // path: "./models/fan/HC_zhutongfengji_bei.glb",
         type: ".glb",
     },
     {
         name: "ground",
         path: "./models/airdoor/ground.glb",
-        // path: "./models/fan/HC_zhutongfengji_bei.glb",
         type: ".glb",
     },
     // {
@@ -133,7 +131,7 @@ export const air_door = [
 ];
 export const air_window_only = [
     {
-        name: "positon",
+        name: "position",
         path: "./models/airWindowOnly/position.glb",
         type: ".glb",
     },
@@ -162,7 +160,7 @@ export const air_window_only = [
 ];
 export const air_window_double = [
     {
-        name: "positon",
+        name: "position",
         path: "./models/airWindowDouble/position.glb",
         type: ".glb",
     },

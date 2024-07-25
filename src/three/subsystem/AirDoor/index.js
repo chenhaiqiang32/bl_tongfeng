@@ -24,6 +24,8 @@ import { fresnelColorBlue } from "../../../shader/paramaters";
 import { shaderModify } from "../../../shader/shaderModify";
 import { Reflector } from "../../../lib/Reflector";
 import BoxModel from "../../../lib/boxModel";
+import { createCSS3DObject } from "../../../lib/CSSObject";
+import MemoryManager from "../../../lib/memoryManager";
 
 export const _BoringMachineSubsystem = Symbol();
 
@@ -71,22 +73,32 @@ export class AirDoor extends Subsystem {
         this.bloomLights = [];
 
         this.fanner1 = {
-            name: "#1风门",
+            name: "暂无",
             actions: [],
-            state: false,
+            state: 2,
             object: [],
-            trueName: { 0: "#1门开门",1: "#1开到位" },
-            falseName: { 0: "#1门关门",1: "#1门关到位" },
+            dom: {
+                speed: null,
+                name: null,
+                status: null
+            },
+            typeName: { 0: "#1开到位",1: "#1门开门",2: "#1门关到位",3: "#1门关门" },
             actionName: "#1门关到位"
         };
 
+        this.domSpeed = "暂无";
+
         this.fanner2 = {
-            name: "#2风门",
+            name: "暂无",
             actions: [],
-            state: false,
+            state: 2,
             object: [],
-            trueName: { 0: "#2门开门",1: "#2开到位" },
-            falseName: { 0: "#2门关门",1: "#2门关到位" },
+            dom: {
+                speed: null,
+                name: null,
+                status: null
+            },
+            typeName: { 0: "#2开到位",1: "#2门开门",2: "#2门关到位",3: "#2门关门" },
             actionName: "#2门关到位"
         };
     }
@@ -182,10 +194,6 @@ export class AirDoor extends Subsystem {
                     child.renderOrder = 0;
                     child.material = child.material.clone();
                     child.material.transparent = true;
-                    child.material.onBeforeCompile = shader => {
-                        // shaderModify(shader,{ shader: "fresnel",color: color3.color,shaderName: "level3" });
-                    };
-                    // child.material.opacity = 0.68;
                 }
             });
         }
@@ -194,9 +202,12 @@ export class AirDoor extends Subsystem {
                 if (child instanceof THREE.Mesh) {
                     child.material = child.material.clone();
                     child.material.transparent = true;
-                    child.material.opacity = 0.68;
+                    child.material.opacity = 0.48;
                     if (child.material.name === "地面") {
                         child.material.map = null;
+                    }
+                    if (child.material.name === "TY-550") {
+                        child.material.map = new THREE.TextureLoader().load('./tietu/地面.png');
                     }
                 }
             });
@@ -210,49 +221,35 @@ export class AirDoor extends Subsystem {
                 textureWidth: window.innerWidth * window.devicePixelRatio,
                 color: 0x000000,
             });
-            groundMirror.position.y = -2;
+            groundMirror.position.y = -1;
             groundMirror.rotateX(- Math.PI / 2);
             groundMirror.material.transparent = true;
             groundMirror.material.opacity = 0.001;
             this.ground = gltf.scene;
             this.add(groundMirror);
         }
-        // if (name === "wind") {
-        //     let obj = {
-        //         shiLi: {
-        //             hui: null,
-        //             chu: null
-        //         },
-        //         position: [
-
-        //         ]
-        //     };
-        //     gltf.scene.traverse(child => {
-        //         if (child.name === "新风") {
-        //             obj.shiLi.chu = child;
-        //         }
-        //         if (child.name === "回风") {
-        //             obj.shiLi.hui = child;
-        //         }
-        //         if (child.name.includes("风流")) {
-        //             let wordPosition = new THREE.Vector3();
-        //             child.getWorldPosition(wordPosition);
-        //             obj.position.push(wordPosition);
-        //         }
-        //     });
-        //     gltf.scene.visible = false;
-        //     let currentObj = this.data.direction === 0 ? obj.shiLi.chu : obj.shiLi.hui;
-        //     for (let i = 0; i < obj.position.length; i++) {
-        //         let newObj = currentObj.clone();
-        //         newObj.position.copy(obj.position[i]);
-        //         newObj.visible = true;
-        //         newObj.material.onBeforeCompile = shader => {
-        //             // shaderModify(shader,{ shader: "pumpModify",color: color5.color,shaderName: "level4" });
-        //         };
-        //         this.add(newObj);
-        //     }
-        // }
-
+        if (name === "position") {
+            gltf.scene.traverse(child => {
+                if (child.name === "风速1") {
+                    this.createSpeedDom(child.position,"fanner1");
+                }
+                if (child.name === "风速2") {
+                    this.createSpeedDom(child.position,"fanner2");
+                }
+                if (child.name.includes("门牌1")) {
+                    this.createNameDom(child.position,"fanner1");
+                }
+                if (child.name.includes("门牌2")) {
+                    this.createNameDom(child.position,"fanner2");
+                }
+                if (child.name === "开闭状态1") {
+                    this.createStatusDom(child.position,"fanner1");
+                }
+                if (child.name === "开闭状态2") {
+                    this.createStatusDom(child.position,"fanner2");
+                }
+            });
+        }
         processingAnimations(gltf,this);
 
         this.actions.forEach(action => {
@@ -281,7 +278,7 @@ export class AirDoor extends Subsystem {
 
             const flowLight = new FlowLight(vertices,{
                 type: "line",
-                width: 2.4,
+                width: 0.8,
                 color1: new THREE.Vector3(0.3,0.3,0.6),
                 color2: new THREE.Vector3(0,0.8,0.4),
                 segments: 3,
@@ -322,6 +319,7 @@ export class AirDoor extends Subsystem {
         this.bloomLights.length = 0;
 
         this.onRenderQueue.delete(_BoringMachineSubsystem);
+        this.removeDom();
     }
 
     onLoaded() {
@@ -330,29 +328,47 @@ export class AirDoor extends Subsystem {
         this.onRenderQueue.set(_BoringMachineSubsystem,this.update);
 
         this.box();
-        this.test();
     }
-    test() {
-        this.setEquipmentState(true,1,0);
-        setTimeout(() => {
-            this.setEquipmentState(true,2,1);
-        },2000);
-        setTimeout(() => {
-            this.setEquipmentState(false,1,1);
-        },4000);
+    updateDataInfo(element,type) {
+        const { speed,parts } = element;
+        let statusToValue = { 0: "打开",1: "未开到位",2: "关闭",3: "未关到位" };
+        if (type === "remove") { // 该风门删除了
+            this.domSpeed = "暂无";
+            this.setEquipmentState(1,2); // 两个风门关闭
+            this.setEquipmentState(2,2); // 两个风门关闭
+
+        } else { // 更新或者新增
+            this.domSpeed = speed;
+            parts.forEach((child,index) => {
+                const { name,status } = child;
+                let fanner = this.fanner1;
+                if (index === 1) {
+                    fanner = this.fanner2;
+                }
+                fanner.name = name;
+                fanner.state = status;
+                fanner.actionName = fanner.typeName[status];
+                fanner.dom.speed.innerText = speed;
+                fanner.dom.name.innerText = name;
+                fanner.dom.status.innerText = statusToValue[status];
+                if (status === 1 || status === 3) {
+                    fanner.dom.status.style.color = "red";
+                }
+                this.setEquipmentState(index + 1,status); // 开启动画
+            });
+        }
     }
 
     box() {
         const { center,radius } = getBoxAndSphere(this.ground).sphere;
         const vec = new THREE.Vector3(radius,radius,radius).multiplyScalar(1.2);
-        const position = center.clone().add(vec);
         this.boxModelObj.initModel(center,radius);
     }
     /**
      * 设置设备状态
      * @param {boolean} state
      */
-    setEquipmentState(state,code,type) {
+    setEquipmentState(code,type) {
         let fanner;
         if (code === 1) {
             fanner = this.fanner1;
@@ -361,10 +377,10 @@ export class AirDoor extends Subsystem {
         } else {
             return;
         }
-        fanner.actionName = state ? fanner.trueName[type] : fanner.falseName[type];
+        fanner.actionName = fanner.typeName[type];
         // 通风机正在关闭的过程中开启通风机
         if (this.tweenCode) TWEEN.remove(this.tweenCode);
-        if (state === true) this.elapsedTime = 0;
+        if (type === 2) this.elapsedTime = 0;
 
         const actions = fanner.actions;
         const flowLights = this.flowLights;
@@ -402,8 +418,49 @@ export class AirDoor extends Subsystem {
                 action.loop = THREE.LoopOnce;
             }
 
-            fanner.state = state;
+            fanner.state = type;
         });
+    }
+
+    createSpeedDom(position,local) {
+        let changeDom = document.getElementById("speedBoard").cloneNode(true);
+        let arDoom = changeDom.getElementsByClassName("speedBoardInfo");
+        arDoom[0].innerText = '暂无'; // dom元素赋值
+        this[local].dom.speed = arDoom[0];
+        const css2d = createCSS3DObject(changeDom);
+        css2d.scale.set(0.0048,0.0048,0.0048);
+        css2d.position.copy(position);
+        css2d.rotation.y = -Math.PI / 2;
+        this.add(css2d);
+
+    }
+    createNameDom(position,local) {
+        let changeDom = document.getElementById("nameBoard").cloneNode(true);
+        changeDom.innerText = '暂无'; // dom元素赋值
+        this[local].dom.name = changeDom;
+        const css2d = createCSS3DObject(changeDom);
+        css2d.scale.set(0.0048,0.0048,0.0048);
+        css2d.position.copy(position);
+        this.add(css2d);
+    }
+
+    createStatusDom(position,local) {
+        let changeDom = document.getElementById("statusBoard").cloneNode(true);
+        changeDom.innerText = '暂无'; // dom元素赋值
+        this[local].dom.status = changeDom;
+        const css2d = createCSS3DObject(changeDom);
+        css2d.scale.set(0.0048,0.0048,0.0048);
+        css2d.position.copy(position);
+        this.add(css2d);
+
+    }
+    removeDom() {
+        if (this.fanner1.dom.speed) MemoryManager.dispose(this.fanner1.dom.speed);
+        if (this.fanner1.dom.name) MemoryManager.dispose(this.fanner1.dom.name);
+        if (this.fanner1.dom.status) MemoryManager.dispose(this.fanner1.dom.status);
+        if (this.fanner2.dom.speed) MemoryManager.dispose(this.fanner2.dom.speed);
+        if (this.fanner2.dom.name) MemoryManager.dispose(this.fanner2.dom.name);
+        if (this.fanner2.dom.status) MemoryManager.dispose(this.fanner2.dom.status);
     }
 
     /**@param {Core3D} core  */

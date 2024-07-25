@@ -13,10 +13,10 @@ import { TunnelCard } from "./utils";
 import MemoryManager from "../../../lib/memoryManager";
 import { FlowLight,FlowLight2 } from "../../../lib/blMeshes";
 import { getBoxAndSphere,getLengthFromVertices } from "../../../utils";
-import { TunnelPicture } from "./tunnelPicture";
 import { DeviceManger } from "./device";
 import BoxModel from "../../../lib/boxModel";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
+import { shaderModify } from "../../../shader/shaderModify";
 
 export const ground = Symbol();
 
@@ -24,8 +24,8 @@ const position = new THREE.Vector3(-370.885379032486,260.94104592491357,257.3977
 const target = new THREE.Vector3(...DEFAULT.controls.target);
 
 // camera limit SPHERE
-const SPHERE_CAMERA = new THREE.Sphere(new THREE.Vector3(),2000);
-const SPHERE_CONTROLS = new THREE.Sphere(new THREE.Vector3(),1900);
+let SPHERE_CAMERA = new THREE.Sphere(new THREE.Vector3(),2000);
+let SPHERE_CONTROLS = new THREE.Sphere(new THREE.Vector3(),1900);
 
 /**@type {OrbitControls} */
 const controlsParameters = {};
@@ -40,13 +40,12 @@ export class UnderGround extends Subsystem {
          * @type position vec3 坐标
          * @type name string 名称
          */
+        this.postprocessing = core.postprocessing;
         this.meshGroup = new THREE.Group();
         this.meshGroup.name = "tunnelGroup";
-        this.scene.add(this.meshGroup);
-        this.equipMentSystem = new DeviceManger(this); // 设备系统
+        this.scene._add(this.meshGroup);
         this.labelData = [];
         this.tweenControls = new TweenControls(this);
-        this.tunnelPicture = new TunnelPicture(this);
         this.boxModelObj = new BoxModel(core);
         this.core = core;
 
@@ -68,7 +67,10 @@ export class UnderGround extends Subsystem {
         this.tunnelCure = {};
         this.tunnelData = new Map(); // 巷道数据
         this.clearOutLine = null;
-
+        this.tunnelFlowBox = this.initTunnelFlowBox();
+        this.tunnelFollowPicture = {};
+        this.equipMentSystem = new DeviceManger(this); // 设备系统
+        this.createLine = null;
     }
     /**
    * 设置id数据
@@ -97,27 +99,33 @@ export class UnderGround extends Subsystem {
         this.tunnelData.delete(Number(id));
     }
 
-    onOBJProgress = (vertices,direction) => { // 流光
+    onOBJProgress = (vertices,direction,tunnelObj) => { // 流光
         let tunnelVertices = vertices;
-        let color = new THREE.Color(0.4275,0.7216,0.4863);
-        let color2 = new THREE.Color(0.0118,0.3216,0.0706);
+        let color = new THREE.Color(0.9922,0.0431,0.0431);
+        let color2 = new THREE.Color(0.9882,0.0235,0.0235);
         if (direction === 2) { // 巷道没风
             return false;
         }
         if (direction === 1) {
-            tunnelVertices = vertices.reverse();
-            color = new THREE.Color(0.1412,0.5922,0.8902);
-            color2 = new THREE.Color(0.0235,0.251,0.4039);
+            color = new THREE.Color(0.0196,0.0863,0.9765);
+            color2 = new THREE.Color(0.0157,0.0431,0.4431);
         }
         const flowLight = new FlowLight2(tunnelVertices,{
             type: "tube",
-            width: 2.5,
-            segments: getLengthFromVertices(tunnelVertices) / 12,
+            radius: 3.2,
+            segments: getLengthFromVertices(tunnelVertices) / 120,
             color1: color,
             color2: color2
         });
+        tunnelObj.traverse(res => {
+            if (res instanceof THREE.Mesh) {
+                res.material.onBeforeCompile = shader => {
+                    shaderModify(shader,{ shader: "pumpModify",color: new THREE.Color("#87CEEB"),shaderName: "levelN" });
+                };
+            }
+        });
         flowLight.renderOrder = 0;
-        flowLight.position.y = flowLight.position.y + 10;
+        flowLight.position.y = flowLight.position.y + 2;
         this.flowLights.push(flowLight);
         this.add(flowLight);
     };
@@ -149,23 +157,21 @@ export class UnderGround extends Subsystem {
     */
     initialized(ars) { // 生成巷道
         this.dispose();
-        // ars.length = 23;
         ars.forEach((child,index) => {
-            console.log(index);
             const { id,branchName,pList,direction,speed } = child;
             pList.forEach(child => {
-                // [child.y,child.z] = [child.z,child.y];
                 const temp = child.y;
                 child.y = child.z;
-                child.z = temp;
+                child.z = temp + Math.random() * 0.0001; // 防止两个点在同个直线
             });
             let points = pList.map(res => {
                 return new THREE.Vector3(res.x,res.y,res.z);
             });
-            this.initCurve(points,id);
-            console.log(points);
+            this.initCurve(points,id,direction,speed);
             child.points = points;
+
             let geometry = new HDGeometry({ points },index);
+
             this.material = new THREE.MeshStandardMaterial({
                 color: new THREE.Color(0.1,0.4,0.6),
                 side: THREE.DoubleSide,
@@ -187,10 +193,8 @@ export class UnderGround extends Subsystem {
             const mesh = new THREE.Mesh(geometry,this.material); // 巷道模型
             mesh.typeId = id;
             let labelPosition = this.getCurve(id).getPointAt(0.5);
-            // let pictureMesh = this.tunnelPicture.init(points,id,direction,speed);
             child.position = labelPosition;
             object.add(mesh);
-            // object.add(pictureMesh);
             child.object3d = object;
             this.set(id,child);
             this.eventsArray.push(mesh);
@@ -199,17 +203,28 @@ export class UnderGround extends Subsystem {
         this.addEvents();
         this.limit();
     }
+
     limit() {
         const { center,radius } = getBoxAndSphere(this.meshGroup).sphere;
-        const vec = new THREE.Vector3(radius,radius,radius).multiplyScalar(1.2);
-        const position = center.clone().add(vec);
         this.boxModelObj.initModel(center,radius);
+
+        this.resetCamera();
+        // 限制相机和控制器范围
+        this.controls.maxPolarAngle = Math.PI / 2;
+
+        SPHERE_CAMERA = new THREE.Sphere(center,radius * 2.4);
+        SPHERE_CONTROLS = new THREE.Sphere(center,radius * 2.4);
+        this.handleControls();
+    }
+    resetCamera() {
+        const { center,radius } = getBoxAndSphere(this.meshGroup).sphere;
+        const vec = new THREE.Vector3(radius,radius,radius).multiplyScalar(1);
+        const position = center.clone().add(vec);
 
         // 根据计算数据，设置动画
         this.tweenControls && this.tweenControls.flyToDelay(position,center,1000);
         this.tweenControls.start();
-        // 限制相机和控制器范围
-        this.controls.maxPolarAngle = Math.PI / 2;
+
     }
 
 
@@ -244,24 +259,12 @@ export class UnderGround extends Subsystem {
         const { objectData,typeName } = config;
         const type = { default: "巷道名称",direction: "风向",volume: "风量",speed: "风速",resistance: "阻力" };
 
-        // 恢复流光
-        this.flowLights.forEach(child => {
-            MemoryManager.dispose(child);
-        });
-        this.flowLights = [];
-
-        // 清除巷道牌子
-        this.labelManager.dispose();
-        this.labelData = [];
-
-        this.tunnelData.forEach((child,id) => {
-            this.resetTunnelColor(id);
-        });
+        this.disposeStyle();
 
 
         if (typeName === "direction") {
             this.tunnelData.forEach(child => {
-                this.onOBJProgress(child.points,child.direction);
+                this.onOBJProgress(child.points,child.direction,child.object3d);
             });
             return false;
         }
@@ -271,7 +274,7 @@ export class UnderGround extends Subsystem {
             let currentTunnelConfig = child[tunnelType]; // 当前巷道上的对应配置数据
             this.labelData.push({
                 name: type[typeName] + ":" + currentTunnelConfig,
-                position: child.position
+                position: new THREE.Vector3(child.position.x,child.position.y + 4.8,child.position.z)
             });
             if (hasConfig.includes(tunnelType)) { // 风量，风速，阻力显示巷道变色
                 let tunnelObj = this.filteredObjects(objectData,currentTunnelConfig)[0];
@@ -279,6 +282,7 @@ export class UnderGround extends Subsystem {
             }
         });
         this.labelManager.init(this.labelData);
+        this.updateVisibilityByCamera();
     }
 
     filteredObjects(k,b) { // 筛选出满足条件的对象
@@ -308,11 +312,81 @@ export class UnderGround extends Subsystem {
             tunnel[config] = data;
         });
     }
-    initCurve(points,id) { // 生成样条曲线
-        const curve = new THREE.CatmullRomCurve3(points);
+
+    initCurve(points,id,direction,speed) { // 生成样条曲线
+        let tunnelPoints = points;
+        if (direction === 1) { // 逆风
+            tunnelPoints = points.reverse();
+        }
+        const curve = new THREE.CatmullRomCurve3(tunnelPoints);
         curve.curveType = "catmullrom";
         curve.tension = 0;
         this.tunnelCure[id] = curve;
+        this.setTunnelFollow(id,curve,speed,direction);
+    }
+    setTunnelFollow(id,curve,speed,direction) {
+        if (direction !== 2) {
+            let Object3D = this.tunnelFlowBox.front.clone();
+            if (direction === 1) {
+                Object3D = this.tunnelFlowBox.back.clone();
+            }
+            this.tunnelFollowPicture[id] = {
+                object3d: Object3D,
+                time: 0,
+                speed,
+                direction,
+                curve,
+                id: id
+            };
+            this.add(Object3D);
+        }
+    }
+
+    initTunnelFlowBox() {
+        let frontUrl = "/tunnelTexture/front/"; // 进风
+        let backUrl = "/tunnelTexture/back/"; // 回风
+        let arr = [frontUrl,backUrl];
+        let obj = { front: null,back: null };
+        arr.forEach((child,index) => {
+            const geometry = new THREE.BoxGeometry(6.4,7.2,6.4);
+            const materialRight = new THREE.MeshBasicMaterial({
+                map: new THREE.TextureLoader().load(`${child}right.png`),
+                transparent: true,
+                opacity: 1.0,
+                side: THREE.DoubleSide,
+            });
+            const materialLeft = new THREE.MeshBasicMaterial({
+                map: new THREE.TextureLoader().load(`${child}left.png`),
+                transparent: true,
+                opacity: 1.0,
+                side: THREE.DoubleSide,
+            });
+            const materialTop = new THREE.MeshBasicMaterial({
+                map: new THREE.TextureLoader().load(`${child}down.png`),
+                transparent: true,
+                opacity: 1.0,
+                side: THREE.DoubleSide,
+            });
+            const materialOther = new THREE.MeshBasicMaterial({ transparent: true,opacity: 0.0 });
+            let tunnelFlowBox = new THREE.Mesh(geometry,[
+                materialLeft,
+                materialRight,
+                materialTop,
+                materialOther,
+                materialOther,
+                materialOther,
+            ]); // 假设左右面是贴图，其他面透明
+            let object3d = new THREE.Object3D();
+            object3d.add(tunnelFlowBox);
+            tunnelFlowBox.renderOrder = 10;
+            tunnelFlowBox.position.z = 0; // 偏移长度为半个矩形的长度
+            if (index === 0) {
+                obj.front = object3d;
+            } else {
+                obj.back = object3d;
+            }
+        });
+        return obj;
     }
 
     /**
@@ -321,6 +395,18 @@ export class UnderGround extends Subsystem {
     */
     deviceManage(ars) { // 设备管理
         this.equipMentSystem.deviceManger(ars);
+    }
+    spotDevice(obj) { // 设备管理
+        this.equipMentSystem.spotDevice(obj);
+    }
+    spotTunnel(id) {
+        let device = this.get(id);
+        if (device) {
+            let position = device.position;
+            this.tweenControls && this.tweenControls.flyToDelay({ x: position.x + 48,y: position.y + 48,z: position.z + 48 },position,1000);
+            this.tweenControls.start();
+            this.openTunnelBoard(id,position);
+        }
     }
 
     addEvents() {
@@ -338,10 +424,37 @@ export class UnderGround extends Subsystem {
             }
         });
         this.removes.push(moveClear);
+
+        this.addEventControlChange();
     }
+    addEventControlChange() {
+        this.controls.addEventListener('change',this.updateVisibilityByCamera);
+    }
+
+    removeControlChange() {
+        this.controls.removeEventListener('change',this.updateVisibilityByCamera);
+    }
+
+    updateVisibilityByCamera = () => { // 根据相机位置，控制显示隐藏
+        let camera = this.camera;
+        let canShowObj = [];
+        this.labelManager.dispose();
+        this.labelData.forEach(child => {
+            if (child.position) {
+                // 计算物体与相机的距离
+                var distance = camera.position.distanceTo(child.position);
+                // 判断距离，并设置物体的可见性
+                if (distance <= 480) {
+                    canShowObj.push(child);
+                }
+            }
+        });
+        this.labelManager.init(canShowObj);
+    };
 
     /** 显示巷道弹窗 */
     openTunnelBoard(id,position) {
+        MemoryManager.dispose(this.createLine);
         const item = this.get(id);
         const label = new TunnelCard(item);
         label.name = "board";
@@ -349,14 +462,18 @@ export class UnderGround extends Subsystem {
         label.setInnerText(this.get(id));
         label.visible = true;
         item.object3d.add(label);
-        position.y = position.y + 40;
-        label.position.copy(position);
-        console.log(label);
+        let startPosition = position;
+        let endPosition = position.clone();
+        // endPosition.y = endPosition.y + 40;
+        // endPosition.x = endPosition.x + 68;
+        label.position.copy(endPosition);
+        label.center = new THREE.Vector2(0,0.88);
     }
 
     /** 关闭巷道弹窗 */
     closeTunnelBoard() {
         const label = new TunnelCard();
+        MemoryManager.dispose(this.createLine);
         label.removeFromParent();
     }
 
@@ -366,8 +483,6 @@ export class UnderGround extends Subsystem {
     }
 
     handleControls() {
-        this.camera.position.copy(position);
-        this.controls.target.copy(target);
         this.controls.addEventListener("change",this.limitInSphere);
 
         Reflect.ownKeys(controlsParameters).forEach(key => {
@@ -384,17 +499,16 @@ export class UnderGround extends Subsystem {
         });
     }
     limitInSphere = () => {
-        // const position = this.camera.position;
-        // const target = this.controls.target;
-        // position.clampSphere(SPHERE_CAMERA);
-        // target.clampSphere(SPHERE_CONTROLS);
-        // position.y = position.y < 0 ? 0 : position.y;
-        // target.y = target.y < 0 ? 0 : target.y;
+        const position = this.camera.position;
+        const target = this.controls.target;
+        position.clampSphere(SPHERE_CAMERA);
+        target.clampSphere(SPHERE_CONTROLS);
+        position.y = position.y < 0 ? 0 : position.y;
+        target.y = target.y < 0 ? 0 : target.y;
     };
     async onEnter() {
 
         this.addEvents();
-        this.handleControls();
 
         this.onRenderQueue.set(ground,this.update);
 
@@ -416,6 +530,7 @@ export class UnderGround extends Subsystem {
         this.resetControls();
         this.clearMixers();
         this.setCameraState(false);
+        this.equipMentSystem.dispose();
         this.onRenderQueue.delete(ground);
     }
 
@@ -427,7 +542,28 @@ export class UnderGround extends Subsystem {
         this.onRenderQueue.set(ground,this.update);
         this.postprocessing.addBloom(this.flowLights);
     }
-
+    tunnelFollowUpdate = () => {
+        Object.values(this.tunnelFollowPicture).forEach(child => {
+            // 更新t值以沿着曲线移动
+            let { object3d,speed,direction,curve,id } = child;
+            let addLength = 0;
+            let t = (speed * 0.01 + addLength) / curve.getLength();
+            child.time = child.time + t;
+            if (child.time > 1) {
+                child.time = 0; // 当到达终点时重置t到起点(算上模型本身长度)
+            }
+            // 根据t值获取曲线上的点
+            const point = curve.getPointAt(child.time);
+            point.y = point.y + 2;
+            // 可以根据需要获取曲线的切线来控制BoxGeometry的方向
+            const tangent = curve.getTangentAt(child.time);
+            // tangent.y = 0;
+            object3d.position.copy(point);
+            let lookAtVet = tangent.add(point);
+            // 如果需要，可以根据切线设置BoxGeometry的方向
+            object3d.lookAt(lookAtVet);
+        });
+    };
     /**@param {Core3D} core  */
     update = core => {
         this.updateMixers(core.delta);
@@ -435,8 +571,8 @@ export class UnderGround extends Subsystem {
         this.elapseTime += core.delta;
 
         this.flowLights.forEach(flowLight => flowLight.update(this.elapseTime));
-        this.tunnelPicture.update();
         this.boxModelObj && this.boxModelObj.update(this.elapseTime);
+        this.tunnelFollowUpdate();
     };
 
     initLight() {
@@ -474,22 +610,47 @@ export class UnderGround extends Subsystem {
         this.directionalLight = directionalLight;
         this._add(this.directionalLight);
     }
+    disposeStyle() {
+        // 恢复流光
+        this.flowLights.forEach(child => {
+            MemoryManager.dispose(child);
+        });
+        this.flowLights = [];
+
+        // 清除巷道牌子
+        this.labelManager.dispose();
+        this.labelData = [];
+
+        this.tunnelData.forEach((child,id) => {
+            this.resetTunnelColor(id);
+        });
+    }
     dispose() {
+        if (this.boxModelObj) this.boxModelObj.dispose();
         let tunnelCureData = Object.keys(this.tunnelCure);
         for (var i = tunnelCureData.length - 1; i >= 0; i--) {
             let key = tunnelCureData[i]; // 巷道id
             MemoryManager.dispose(this.tunnelCure[key]);
+            if (this.tunnelFollowPicture[key]) {
+                MemoryManager.dispose(this.tunnelFollowPicture[key].object3d);
+                this.tunnelFollowPicture[key].object3d = null;
+                this.tunnelFollowPicture[key].time = 0;
+            }
             this.tunnelCure[key] = null;
             this.del(key); // 删除巷道数据
         }
-        this.tunnelPicture.dispose();
         this.tunnelCure = {};
+        this.tunnelFollowPicture = {};
         this.labelData = [];
         this.eventsArray = [];
         this.removeEvents();
+        this.disposeStyle();
         this.labelManager.dispose();
         if (this.clearOutLine) this.core.postprocessing.clearOutline(this.clearOutLine);
 
+    }
+    switchFacility(array) {
+        this.equipMentSystem.switchFacility(array);
     }
     setTypeVisibleEx(array) {
         this.equipMentSystem.setTypeVisibleEx(array);

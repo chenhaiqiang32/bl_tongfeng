@@ -2,6 +2,7 @@ import * as THREE from "three";
 import MemoryManager from "../../../lib/memoryManager";
 import { PersonCard } from "./utils";
 import { createCSS2DObject,createCSS3DObject,createCSS3DSprite,createDom } from "../../../lib/CSSObject";
+import { onClickCallBack } from "../../../message/postMessage";
 
 export class Device3D {
     constructor(device) {
@@ -11,9 +12,8 @@ export class Device3D {
 
         this.singleGroup = new THREE.Group();
         this.singleGroup.name = "singleGroup";
-        this.pointerArr = [];
+        this.removes = [];
         this.scene.add(this.singleGroup);
-
     }
 
     // add(item) {
@@ -79,8 +79,14 @@ export class Device3D {
                             let changeDom = container.getElementsByClassName(currentDom[i])[0];
                             changeDom.innerText = val; // dom元素赋值
                             if (i === "status") { // 修改dom颜色
-                                changeDom.innerText = val ? "开" : "关";
-                                val ? changeDom.classList.add("green") : changeDom.classList.add("grey");
+                                if (type === 203) { // 风门
+                                    let typeToValue = { 0: "打开",1: "未开到位",2: "关闭",3: "未关到位" };
+                                    changeDom.innerText = typeToValue[val];
+                                    val == 2 ? changeDom.classList.add("green") : changeDom.classList.add("grey");
+                                } else {
+                                    changeDom.innerText = val ? "开" : "关";
+                                    val ? changeDom.classList.add("green") : changeDom.classList.add("grey");
+                                }
                             }
                         }
                     }
@@ -92,7 +98,7 @@ export class Device3D {
                 let eventDom = container.getElementsByClassName(domEvent["定位"])[0];
                 eventDom.addEventListener('click',() => {
                     // 这里写点击事件发生时想要执行的代码
-                    alert(423423);
+                    this.device.spotDevice({ id,type });
                 });
 
             }
@@ -100,35 +106,44 @@ export class Device3D {
                 let eventDom = container.getElementsByClassName(domEvent["管控"])[0];
                 eventDom.addEventListener('click',() => {
                     // 这里写点击事件发生时想要执行的代码
-                    this.device.core.core.changeSystem(toSystem);
+                    this.device.core.core.changeSystem(toSystem,{ type,id,deviceInfo });
                 });
 
             }
         }
         const css2d = createCSS2DObject(container);
         css2d.scale.set(0.001,0.001,0.001);
-        css2d.center = new THREE.Vector2(0.5,1);
-        let toPosition = currentPosition.clone();
-        toPosition.y = toPosition.y + 20;
+        css2d.center = new THREE.Vector2(0.5,0.5);
         let startPosition = currentPosition.clone();
         startPosition.y = startPosition.y + 5.6;
-        css2d.position.copy(toPosition);
+        css2d.position.copy(startPosition);
         css2d.visible = false;
+        css2d.center = new THREE.Vector2(0,1);
         object.add(css2d);
 
 
-        // sprite
-        let spriteImg = `./icons/${type}_${deviceInfo.status ? 'onLine' : 'outLine'}.png`;
-        const map = new THREE.TextureLoader().load(spriteImg);
-        const material = new THREE.SpriteMaterial({ map: map,color: 0xffffff,depthTest: false,sizeAttenuation: false });
-        const sprite = new THREE.Sprite(material);
-        sprite.scale.set(0.04,0.04,0.04);
-        sprite.center = new THREE.Vector2(0.5,0);
-        sprite.renderOrder = 0;
-        sprite.position.copy(startPosition);
-        object.add(sprite);
+
+        // iconDom
+        let spriteImg = `./icons/${type}_${deviceInfo.status ? 'online' : 'outline'}.png`;
+        let dom = document.getElementById("serviceImg").cloneNode(true);
+        let domSrc = dom.getElementsByClassName("serviceImgUrl");
+        domSrc[0].src = spriteImg;
+        let iconCss2d = createCSS2DObject(dom);
+        iconCss2d.scale.set(0.012,0.012,0.012);
+        iconCss2d.center = new THREE.Vector2(0.5,1);
+        iconCss2d.renderOrder = 12;
+        iconCss2d.position.copy(startPosition);
+        iconCss2d.typeName = type;
+        iconCss2d.typeId = id;
+        dom.onclick = () => {
+            if (type === 207) {
+                onClickCallBack(1,{ id,type }); // 点击到了相机
+            }
+            this.device.spotDevice({ id,type });
+        };
+        object.add(iconCss2d);
         this.singleGroup.add(object);
-        return object;
+        return { obj3d: object,position: startPosition };
     }
 
     /**
@@ -152,36 +167,6 @@ export class Device3D {
         this.orientation.followModule.createPath(data);
 
     }
-
-    setPointerArr() { // 变小手的数组
-        this.singleGroup && this.singleGroup.children.forEach(child => {
-            this.pointerArr.push(child);
-        });
-        if (this.core.sceneType === 1) { // 室外
-            this.core.ground.pointerArr.forEach(child => {
-                this.pointerArr.push(child);
-            });
-        }
-    }
-
-    setAllPersonVisible(value) {
-        this.singleGroup.traverse(child => {
-            child.visible = value;
-        });
-
-    }
-
-    dispose = () => { // 销毁dom
-        this.singleGroup.children.forEach(child => {
-            child.removeFromParent();
-            child.traverse(childT => {
-                if (childT.element && childT.element.parentNode) {
-                    childT.element.parentNode.removeChild(childT.element);
-                }
-            });
-        });
-
-    };
 
     /** 搜索人员 */
     openDialog(id) {

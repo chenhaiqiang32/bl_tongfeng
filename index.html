@@ -49,6 +49,9 @@
                     </div>
                 </div>
             </div>
+            <div class="lineImgCommon">
+                <img src="/src/assets/line.png" alt="">
+            </div>
             <div class="bottom">
                 <div class="list">
                     <span class="deviceFirstName">1#风机</span>：
@@ -67,6 +70,9 @@
             <div class="top ellipsis">
                 <span class="measureName">XXXX测风名称</span>
                 <div class="shadow"></div>
+            </div>
+            <div class="lineImgCommon">
+                <img src="/src/assets/line.png" alt="">
             </div>
             <div class="middle">
                 <div class="left"><img src="" alt=""></div>
@@ -112,6 +118,9 @@
                 <span class="windowName">XXXX风窗名称</span>
                 <div class="shadow"></div>
             </div>
+            <div class="lineImgCommon">
+                <img src="/src/assets/line.png" alt="">
+            </div>
             <div class="middle">
                 <div class="left"><img src="" alt=""></div>
                 <div class="right">
@@ -145,6 +154,9 @@
             <div class="top ellipsis">
                 <span class="partName">XXXX局扇名称sadfasdgfasdgsdgsddgasdgsd</span>
                 <div class="shadow"></div>
+            </div>
+            <div class="lineImgCommon">
+                <img src="/src/assets/line.png" alt="">
             </div>
             <div class="middle">
                 <div class="left"><img src="" alt=""></div>
@@ -197,6 +209,9 @@
             <div class="top ellipsis">
                 <span class="doorName">XXXX风门名称</span>
                 <div class="shadow"></div>
+            </div>
+            <div class="lineImgCommon">
+                <img src="/src/assets/line.png" alt="">
             </div>
             <div class="middle">
                 <div class="left"><img src="" alt=""></div>
@@ -262,6 +277,9 @@
                     <span class="danwei">㎡</span>
                 </div>
             </div>
+            <div class="lineImgCommon">
+                <img src="/src/assets/line.png" alt="">
+            </div>
         </div>
     </div>
 
@@ -270,6 +288,9 @@
             <div class="top ellipsis">
                 <span class="tunnelName sensorName">传感器的名称</span>
                 <div class="shadow"></div>
+            </div>
+            <div class="lineImgCommon">
+                <img src="/src/assets/line.png" alt="">
             </div>
             <div class="middle">
                 <div class="list">
@@ -313,6 +334,9 @@
                 <span class="tunnelName stationName">控制器名称</span>
                 <div class="shadow"></div>
             </div>
+            <div class="lineImgCommon">
+                <img src="/src/assets/line.png" alt="">
+            </div>
             <div class="middle">
                 <div class="list">
                     <img src="/device/arrow.png" alt="">
@@ -350,12 +374,89 @@
     </div>
 
     <div id="windStation" style="display: none;">
-        <span>第三个发撒德国的是法国士大夫敢死队风格给多少给多少发给双方都感到十分反对撒发射点发射点发射点发方式打发手动阀手动阀发士大夫但是给发多少</span>
+        <span class="windStationWord">暂无</span>
     </div>
+    <div id="speedBoard" style="display: none;">
+        风速：<span class="speedBoardInfo" style="color: #1AE3FF;">暂无</span><span style="font-weight: 400;">m³/min</span>
+    </div>
+    <div id="nameBoard" style="display: none;">
+        暂无
+    </div>
+    <div id="statusBoard" style="display: none;">
+        暂无
+    </div>
+    <div id="serviceImg" style="display: none;">
+        <img class="serviceImgUrl" src="./icons/101_online.png" alt="">
+    </div>
+
 </body>
 
 </html>
 <style>
+    #serviceImg {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+
+        & img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    #speedBoard {
+        position: absolute;
+        width: 233px;
+        height: 59px;
+        color: #ffffff;
+        background: url('./device/speed.png') no-repeat center center;
+        background-size: cover;
+
+        font-family: SourceHanSansCN;
+        font-weight: bold;
+        font-size: 16px;
+        color: #A8CCEA;
+        line-height: 59px;
+        text-align: left;
+        font-style: normal;
+        text-align: center;
+
+        .speedBoardInfo {
+            margin-right: 8px
+        }
+    }
+
+    #statusBoard {
+        position: absolute;
+        width: 167px;
+        height: 60px;
+        background: url('./device/doorBg.png') no-repeat center center;
+        background-size: cover;
+        font-family: SourceHanSansCN;
+        font-weight: bold;
+        font-size: 20px;
+        text-align: center;
+        line-height: 60px;
+        color: #50D887;
+    }
+
+    #nameBoard {
+        position: absolute;
+        width: 189px;
+        height: 48px;
+        background: url('./device/doorName.png') no-repeat center center;
+        background-size: cover;
+        text-align: center;
+        line-height: 48px;
+
+        font-weight: bold;
+        font-size: 24px;
+        color: #FFFFFF;
+        text-align: center;
+        font-style: normal;
+    }
+
     #windStation {
         width: 200px;
         height: 100px;
@@ -1702,6 +1803,20 @@
                     }
                 }
             }
+        }
+    }
+
+    .lineImgCommon {
+        width: 112px;
+        height: 128px;
+        position: fixed;
+        left: -108px;
+        top: 50%;
+
+        img {
+            width: 100%;
+            height: 100%;
+
         }
     }
 </style>

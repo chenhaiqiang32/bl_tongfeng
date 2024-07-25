@@ -81,7 +81,7 @@ class FlowLight extends THREE.Mesh {
                     * https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US
                     */
 
-                    const float overallSpeed=12.8;
+                    const float overallSpeed=1.2;
                     const float gridSmoothWidth=.025;
                     const float axisWidth=.25;
                     uniform float uTime;
@@ -92,11 +92,11 @@ class FlowLight extends THREE.Mesh {
                     const vec4 gridColor=vec4(.5);
                     const float scale=.32;
                     // const vec4 lineColor=vec4(0.8314, 0.8902, 0.9529, 0.02);
-                    const vec4 lineColor=vec4(0.051, 0.9647, 0.6745, 0.02);
+                    const vec4 lineColor=vec4(0.8314, 0.9373, 0.8314, 0.02);
                     const float minLineWidth=.12;
                     const float maxLineWidth=.18;
                     const float lineSpeed=2.*overallSpeed;
-                    const float lineAmplitude=.002; // 线条振幅
+                    const float lineAmplitude=.12; // 线条振幅
                     const float lineFrequency=2.32;
                     const float warpSpeed=.82*overallSpeed;
                     const float warpFrequency=.85;
