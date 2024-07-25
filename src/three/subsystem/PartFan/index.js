@@ -61,6 +61,7 @@ export class PartFanSubsystem extends Subsystem {
         this.boxModelObj = new BoxModel(core);
         this.postprocessing = core.postprocessing;
         this.elapsedTime = 0;
+        this.labelGroup = new THREE.Group();
 
         this.init();
 
@@ -81,7 +82,7 @@ export class PartFanSubsystem extends Subsystem {
             tweenCode: null,
             flowLights: [],
             object: [],
-            position: [0.427,8,-4.359]
+            position: [0.785,2,-1.304]
         };
 
         this.fanner2 = {
@@ -91,7 +92,7 @@ export class PartFanSubsystem extends Subsystem {
             tweenCode: null,
             flowLights: [],
             object: [],
-            position: [0.427,8,-4.359]
+            position: [0.785,0.727,-1.304]
         };
         this.data = {
             direction: 0
@@ -381,7 +382,28 @@ export class PartFanSubsystem extends Subsystem {
 
         this.onRenderQueue.delete(fan);
     }
+    updateDataInfo(element,type) {
+        const { parts } = element;
+        if (type === "remove") { // 该风门删除了
+            this.setEquipmentState(false,1,"toOut"); // 开启动画
+            this.setEquipmentState(false,2,"toOut"); // 开启动画
+            this.fanner1.name = "暂无";
+            this.fanner2.name = "暂无";
 
+        } else { // 更新或者新增
+            parts.forEach((child,index) => {
+                const { name,status } = child;
+                let fanner = this.fanner1;
+                if (index === 1) {
+                    fanner = this.fanner2;
+                }
+                fanner.name = name;
+                fanner.state = status;
+                this.setEquipmentState(status,index + 1,"toOut"); // 开启动画
+            });
+        }
+        this.createLabel();
+    }
     createLabel() {
         if (this.labelGroup.children.length) {
             MemoryManager.dispose(this.labelGroup);
