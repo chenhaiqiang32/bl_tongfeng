@@ -204,6 +204,7 @@ export class DeviceManger {
 
     /** 获取id数据 */
     get(id,type) {
+        if (!this.device[type]) return null;
         return this.device[type].get(id);
     }
 
