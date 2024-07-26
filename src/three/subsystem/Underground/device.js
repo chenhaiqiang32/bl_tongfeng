@@ -183,7 +183,9 @@ export class DeviceManger {
             207: {
                 code: 207, // 视频
                 name: "视频",
-                dom: null
+                dom: () => {
+                    return null;
+                }
             }
         };
         this.device = {  // 按照设备类型和id存储的数据

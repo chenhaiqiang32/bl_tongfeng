@@ -47,7 +47,7 @@ export class Device3D {
             console.log("巷道id" + id + "不存在");
             return false;
         }
-
+        let startPosition = currentPosition.clone();
         // css2dDom
         let container = this.device.deviceCode[type].dom();
         let domObj = this.device.deviceCode[type].domToValue;
@@ -55,42 +55,39 @@ export class Device3D {
         let domEvent = this.device.deviceCode[type].domEvent;
         let statusShow = this.device.deviceCode[type].statusValue;
         let toSystem = this.device.deviceCode[type].systemName;
-        if (!container) {
-            console.log("巷道id" + id + "dom不存在");
-            return false;
-        }
-
-        for (let key in deviceInfo) {
-            let value = deviceInfo[key];
-            if (domObj[key]) { // 修改常规css3d展示dom数据
-                let changeDom = container.getElementsByClassName(domObj[key])[0];
-                changeDom.innerText = value; // dom元素赋值
-                if (key === "status") { // 修改dom颜色
-                    changeDom.innerText = statusShow[value + ""]; // dom元素赋值
-                    value ? changeDom.classList.add("green") : changeDom.classList.add("red");
+        if (container) {
+            for (let key in deviceInfo) {
+                let value = deviceInfo[key];
+                if (domObj[key]) { // 修改常规css3d展示dom数据
+                    let changeDom = container.getElementsByClassName(domObj[key])[0];
+                    changeDom.innerText = value; // dom元素赋值
+                    if (key === "status") { // 修改dom颜色
+                        changeDom.innerText = statusShow[value + ""]; // dom元素赋值
+                        value ? changeDom.classList.add("green") : changeDom.classList.add("red");
+                    }
                 }
-            }
-            if (key === "parts") { // 修改部件css3d展示dom数据
-                value.forEach((child,index) => {
-                    let currentDom = domObjParts[index];
-                    for (let i in child) {
-                        let val = child[i];
-                        if (currentDom[i]) { // 存在要修改的dom
-                            let changeDom = container.getElementsByClassName(currentDom[i])[0];
-                            changeDom.innerText = val; // dom元素赋值
-                            if (i === "status") { // 修改dom颜色
-                                if (type === 203) { // 风门
-                                    let typeToValue = { 0: "打开",1: "未开到位",2: "关闭",3: "未关到位" };
-                                    changeDom.innerText = typeToValue[val];
-                                    val == 2 ? changeDom.classList.add("green") : changeDom.classList.add("grey");
-                                } else {
-                                    changeDom.innerText = val ? "开" : "关";
-                                    val ? changeDom.classList.add("green") : changeDom.classList.add("grey");
+                if (key === "parts") { // 修改部件css3d展示dom数据
+                    value.forEach((child,index) => {
+                        let currentDom = domObjParts[index];
+                        for (let i in child) {
+                            let val = child[i];
+                            if (currentDom[i]) { // 存在要修改的dom
+                                let changeDom = container.getElementsByClassName(currentDom[i])[0];
+                                changeDom.innerText = val; // dom元素赋值
+                                if (i === "status") { // 修改dom颜色
+                                    if (type === 203) { // 风门
+                                        let typeToValue = { 0: "打开",1: "未开到位",2: "关闭",3: "未关到位" };
+                                        changeDom.innerText = typeToValue[val];
+                                        val == 2 ? changeDom.classList.add("green") : changeDom.classList.add("grey");
+                                    } else {
+                                        changeDom.innerText = val ? "开" : "关";
+                                        val ? changeDom.classList.add("green") : changeDom.classList.add("grey");
+                                    }
                                 }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
         if (domEvent) {
@@ -112,14 +109,26 @@ export class Device3D {
 
             }
         }
-        const css2d = createCSS2DObject(container);
-        css2d.center = new THREE.Vector2(-0.28,1.2);
-        let startPosition = currentPosition.clone();
-        startPosition.y = startPosition.y + 5.6;
-        css2d.position.copy(startPosition);
-        css2d.visible = false;
-        object.add(css2d);
+        if (container) {
+            const css2d = createCSS2DObject(container);
+            css2d.center = new THREE.Vector2(-0.28,1.2);
+            startPosition.y = startPosition.y + 5.6;
+            css2d.position.copy(startPosition);
+            css2d.visible = false;
+            object.add(css2d);
+        }
 
+        if (!container) {
+            let div = document.createElement("div");
+            div.style.display = "none";
+            const css2d = createCSS2DObject(div);
+            css2d.center = new THREE.Vector2(-0.28,1.2);
+            let startPosition = currentPosition.clone();
+            startPosition.y = startPosition.y + 5.6;
+            css2d.position.copy(startPosition);
+            css2d.visible = false;
+            object.add(css2d);
+        }
 
 
         // iconDom
