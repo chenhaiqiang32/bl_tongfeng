@@ -100,7 +100,7 @@ export class UnderGround extends Subsystem {
         this.tunnelData.delete(Number(id));
     }
 
-    onOBJProgress = (vertices,direction,tunnelObj) => { // 流光
+    onOBJProgress = (vertices,direction,tunnelObj,speed) => { // 流光
         let tunnelVertices = vertices;
         let color = new THREE.Color(0.9922,0.0431,0.0431);
         let color2 = new THREE.Color(0.9882,0.0235,0.0235);
@@ -116,7 +116,8 @@ export class UnderGround extends Subsystem {
             radius: 3.2,
             segments: getLengthFromVertices(tunnelVertices) / 80,
             color1: color,
-            color2: color2
+            color2: color2,
+            speed: speed || 0
         });
         tunnelObj.traverse(res => {
             if (res instanceof THREE.Mesh) {
@@ -265,7 +266,7 @@ export class UnderGround extends Subsystem {
 
         if (typeName === "direction") {
             this.tunnelData.forEach(child => {
-                this.onOBJProgress(child.points,child.direction,child.object3d);
+                this.onOBJProgress(child.points,child.direction,child.object3d,child.speed);
             });
             return false;
         }

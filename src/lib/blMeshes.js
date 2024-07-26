@@ -295,13 +295,14 @@ class FlowLight2 extends THREE.Mesh {
         uniform vec3 uColor1;
         uniform vec3 uColor2;
         uniform float uOpacity;
+        uniform float speed;
         varying vec2 vUv;
         #include <logdepthbuf_pars_fragment>
 
         void main() {
 
             float p = uCount; //线段段数
-            float al = fract(vUv.x * p - uElapseTime);
+            float al = fract(vUv.x * p - uElapseTime * speed*0.2);
 
             vec3 color = mix(uColor2,uColor1,pow(al,4.));
 
@@ -321,6 +322,7 @@ class FlowLight2 extends THREE.Mesh {
                 uColor1: { value: config.color1 },
                 uColor2: { value: config.color2 },
                 uOpacity: this.uOpacity,
+                speed: { value: config.speed }
             },
             vertexShader,
             fragmentShader,

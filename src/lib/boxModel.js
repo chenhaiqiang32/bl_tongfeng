@@ -98,7 +98,7 @@ class BoxModel {
             },
             time: this.elapsedTime,
             opacity: {
-                value: 0.48,
+                value: 1,
             },
             alpha: {
                 value: r,
