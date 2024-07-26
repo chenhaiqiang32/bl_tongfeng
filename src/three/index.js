@@ -127,6 +127,19 @@ export class Core3D extends CoreExtensions {
         this.scene = scene;
     }
 
+    onMessageChange(info) {
+        const { id,type,system } = info;
+        let typeToName = { 201: "fanSubsystem",202: "partFanSubsystem",203: "airDoor",204: "airWindow",205: "airStation" };
+        let toSystem = "main";
+        let deviceInfo = null;
+        if (system === "main") {
+            toSystem = "main";
+        } else {
+            toSystem = typeToName[type];
+            deviceInfo = this.main.equipMentSystem.get(id,type) && this.main.equipMentSystem.get(id,type).deviceInfo;
+        }
+        this.changeSystem(toSystem,{ type,id,deviceInfo });
+    }
     /**
      * 处理用户数组的函数
      * @param {initialized[]} ars - 初始化巷道/更新巷道

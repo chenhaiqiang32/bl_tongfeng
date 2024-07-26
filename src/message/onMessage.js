@@ -37,7 +37,7 @@ export const openMessage = Core3D => {
                     break;
                 }
                 case "changeScene": {
-                    Core3D.changeSystem(event.data.param);
+                    Core3D.onMessageChange(event.data.param);
                     break;
                 }
                 case "switchFacility": {

@@ -148,7 +148,7 @@ export class FanSubsystem extends Subsystem {
         if (this.core.scene !== this.scene) return;
         let group;
         let color1 = {
-            data: ["#1通风机电机人孔门_1","#1通风机电机人孔门_2","#2通风机电机人孔门_1","#2通风机电机人孔门_2","#1通风机_1","#2通风机_1"],
+            data: ["#1通风机电机人孔门","#2通风机电机人孔门","#1通风机_1","#2通风机_1"],
             color: fresnelColorBlue["深蓝偏紫"].value
         };
         let JSkin = ["#1通风机","#2通风机","#1通风机电机人孔门","#2通风机电机人孔门"];

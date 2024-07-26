@@ -10,5 +10,15 @@ export const onClickCallBack = (type,data) => {
         },
         "*",
     );
+};
+export const postChangeScene = (id,type) => {
+    window.parent.postMessage(
+        {
+            // 调用前端弹窗
+            cmd: "changeSceneWeb",
+            param: { id,type },
+        },
+        "*",
+    );
 }
 

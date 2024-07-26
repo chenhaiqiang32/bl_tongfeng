@@ -2,7 +2,7 @@ import * as THREE from "three";
 import MemoryManager from "../../../lib/memoryManager";
 import { PersonCard } from "./utils";
 import { createCSS2DObject,createCSS3DObject,createCSS3DSprite,createDom } from "../../../lib/CSSObject";
-import { onClickCallBack } from "../../../message/postMessage";
+import { onClickCallBack,postChangeScene } from "../../../message/postMessage";
 
 export class Device3D {
     constructor(device) {
@@ -106,7 +106,8 @@ export class Device3D {
                 let eventDom = container.getElementsByClassName(domEvent["管控"])[0];
                 eventDom.addEventListener('click',() => {
                     // 这里写点击事件发生时想要执行的代码
-                    this.device.core.core.changeSystem(toSystem,{ type,id,deviceInfo });
+                    postChangeScene(id,type);
+                    // this.device.core.core.changeSystem(toSystem,{ type,id,deviceInfo });
                 });
 
             }

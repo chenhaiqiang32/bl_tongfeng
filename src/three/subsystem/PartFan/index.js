@@ -211,24 +211,13 @@ export class PartFanSubsystem extends Subsystem {
             gltf.scene.name = "fenJi";
             this.fenJi = gltf.scene;
             gltf.scene.traverse(child => {
-                if (child.name === "舱盖1" || child.name === "舱盖2") {
-                    child.traverse(res => {
-                        if (res instanceof THREE.Mesh) {
-                            res.material.onBeforeCompile = shader => {
-                                shaderModify(shader,{ shader: "pumpModify",color: color1.color,shaderName: "levelN" });
-                            };
-                        }
-                    });
-                }
                 if (child instanceof THREE.Mesh && child.material.name.includes("TY-145")) {
-                    child.visible = false;
-                    // child.material.transparent = false;
-                    child.material.side = THREE.DoubleSide;
+                    // child.material.side = THREE.DoubleSide;
                     child.material.map = null;
-                    child.material.alphaTest = 0.02;
-                    child.material.color = new THREE.Color(0.4275,0.7216,0.4863);
+                    child.material.transparent = true;
+                    // child.material.color = new THREE.Color(0.4275,0.7216,0.4863);
                     child.material.onBeforeCompile = shader => {
-                        shaderModify(shader,{ shader: "fresnel",color: color1.color,shaderName: "level4" });
+                        shaderModify(shader,{ shader: "fresnel",color: color4.color,shaderName: "level4" });
                     };
                 }
                 if (child instanceof THREE.Mesh) {
