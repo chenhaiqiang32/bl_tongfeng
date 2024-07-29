@@ -64,8 +64,6 @@ export class Core3D extends CoreExtensions {
         this.airWindow = new AirWindow(this);
         this.airStation = new AirStation(this);
         this.partFanSubsystem = new PartFanSubsystem(this);
-        this.changeSystem("main");
-        this.currentSystemName = "main";
         this.onRenderQueue.set(timeUpdate,scope => updateTime(scope.delta));
     }
 
