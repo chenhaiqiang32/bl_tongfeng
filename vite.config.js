@@ -32,7 +32,6 @@ const _dirname = path.dirname(fileName);
 // https://vitejs.dev/config/
 export default defineConfig({
     base: "./", //公共路径配置
-    outputDir: "projectNameV" + v + "R" + r,
     resolve: {
         alias: {
             "@": path.resolve(_dirname, "./src"),
@@ -44,7 +43,6 @@ export default defineConfig({
     build: {
         manifest: false,
         sourcemap: false, // 构建后是否生成 source map 文件。如果为 true，将会创建一个独立的 source map 文件
-        outDir: "docker/nginx/dist",
         rollupOptions: {
             input: {
                 main: path.resolve(__dirname, "index.html"),
