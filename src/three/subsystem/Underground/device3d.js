@@ -198,7 +198,6 @@ export class Device3D {
 
     dispose() {
         [...this.singleGroup.children].forEach(child => {
-            child.removeFromParent();
             child.traverse(childT => {
                 if (childT.element && childT.element.parentNode) {
                     childT.element.parentNode.removeChild(childT.element);

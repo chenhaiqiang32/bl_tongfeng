@@ -206,7 +206,7 @@ export class DeviceManger {
 
     /** 获取id数据 */
     get(id,type) {
-        if (!this.device[type]) return null;
+        if (id === null || (!this.device[type])) return null;
         return this.device[type].get(id);
     }
 
@@ -219,6 +219,7 @@ export class DeviceManger {
      * @param {deviceManage} ars - deviceManage对象，包含add、update、remove三个数组
     */
     deviceManger(ars) {
+        this.removeControlChange();
         this.addEvents();
         const { add,update,remove } = ars;
         add.forEach(element => {
@@ -245,7 +246,11 @@ export class DeviceManger {
         });
         this.updateVisibilityByCamera();
     }
-    needUpdateSubsystem(type,id,info,statusName) { // 需要更新子系统的
+    onLoadedReset() { // 初始化的数据重置
+        this.addEvents();
+        this.updateVisibilityByCamera();
+    }
+    needUpdateSubsystem(type,id,info,statusName) { // 需要更新子系统的数据
         let currentSystemName = this.core.core.currentSystemName;
         let currentSystemInfo = this.core.core.currentSystemInfo;
         if (currentSystemInfo.type && currentSystemName && currentSystemName !== "main" && type === currentSystemInfo.type && id === currentSystemInfo.id) { // 在子系统

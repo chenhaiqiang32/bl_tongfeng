@@ -513,13 +513,7 @@ export class UnderGround extends Subsystem {
     };
     async onEnter() {
 
-        this.addEvents();
-
-        this.onRenderQueue.set(ground,this.update);
-
         if (this !== this.core.currentSystem) return;
-
-        this.setCameraState(true);
 
         this.onLoaded();
     }
@@ -531,20 +525,25 @@ export class UnderGround extends Subsystem {
      */
 
     onLeave() {
-        this.removeEvents();
-        this.resetControls();
-        this.clearMixers();
-        this.setCameraState(false);
-        this.onRenderQueue.delete(ground);
-        this.dispose();
+        this.removeEvents(); //  移除射线
+        this.resetControls(); // 恢复控制器的默认效果
+        this.onRenderQueue.delete(ground); // 移除更新事件
+        this.postprocessing.clearBloom(this.flowLights);
+        this.commonDispose();
     }
 
     onLoaded() {
         // 当前系统模型未加载完成时切换其他系统,将不会给前端发送信息,由目标系统发送信息。
         if (this.scene !== this.core.scene) return;
-        this.onRenderQueue.set(ground,this.update);
+        if (Object.values(this.tunnelCure).length) {
+            this.limit();
+            this.addEvents();
+        }
         this.postprocessing.addBloom(this.flowLights);
-        
+        this.onRenderQueue.set(ground,this.update);
+        if (this.equipMentSystem) {
+            this.equipMentSystem.onLoadedReset();
+        }
     }
     tunnelFollowUpdate = () => {
         Object.values(this.tunnelFollowPicture).forEach(child => {
@@ -630,29 +629,30 @@ export class UnderGround extends Subsystem {
         });
     }
     dispose() {
-        if (this.boxModelObj) this.boxModelObj.dispose();
-        let tunnelCureData = Object.keys(this.tunnelCure);
+        if (this.boxModelObj) this.boxModelObj.dispose(); // 销毁地面盒子效果
+        let tunnelCureData = Object.keys(this.tunnelCure); // 巷道id数组
         for (var i = tunnelCureData.length - 1; i >= 0; i--) {
             let key = tunnelCureData[i]; // 巷道id
-            MemoryManager.dispose(this.tunnelCure[key]);
+            MemoryManager.dispose(this.tunnelCure[key]); // 清除样条曲线
             if (this.tunnelFollowPicture[key]) {
-                MemoryManager.dispose(this.tunnelFollowPicture[key].object3d);
+                MemoryManager.dispose(this.tunnelFollowPicture[key].object3d); // 清除流动箭头
                 this.tunnelFollowPicture[key].object3d = null;
                 this.tunnelFollowPicture[key].time = 0;
             }
             this.tunnelCure[key] = null;
             this.del(key); // 删除巷道数据
         }
-        this.tunnelCure = {};
-        this.tunnelFollowPicture = {};
-        this.labelData = [];
-        this.eventsArray = [];
-        this.removeEvents();
-        this.disposeStyle();
-        this.equipMentSystem.dispose();
-        this.labelManager.dispose();
-        if (this.clearOutLine) this.core.postprocessing.clearOutline(this.clearOutLine);
-
+        this.eventsArray = []; // 射线循环数组滞空
+        this.tunnelCure = {}; // 样条曲线数据
+        this.tunnelFollowPicture = {}; // 流动箭头
+        this.commonDispose();
+    }
+    commonDispose() { // 离开页面和更新巷道都需要执行的方法
+        this.disposeStyle(); // 重置风格样式
+        this.removeEvents(); // 移除事件
+        this.elapseTime = 0;
+        this.equipMentSystem.dispose(); // 销毁设备的事件监听  从地图中剔除设备
+        if (this.clearOutLine) this.core.postprocessing.clearOutline(this.clearOutLine); // 清除轮廓发光
     }
     switchFacility(array) {
         this.equipMentSystem.switchFacility(array);

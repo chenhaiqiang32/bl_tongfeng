@@ -247,7 +247,6 @@ export class AirStation extends Subsystem {
         MemoryManager.dispose(this.css2d);
         this.removeEvents();
         this.resetControls();
-        this.clearMixers();
         this.postprocessing.clearBloom(this.bloomLights);
 
         this.bloomLights.length = 0;

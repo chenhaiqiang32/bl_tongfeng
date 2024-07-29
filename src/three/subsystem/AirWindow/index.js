@@ -378,7 +378,6 @@ export class AirWindow extends Subsystem {
     onLeave() {
         this.removeEvents();
         this.resetControls();
-        this.clearMixers();
         this.postprocessing.clearBloom(this.bloomLights);
 
         this.bloomLights.length = 0;

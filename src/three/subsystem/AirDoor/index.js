@@ -270,6 +270,18 @@ export class AirDoor extends Subsystem {
         group.castShadow = false;
         group && this.add(group);
     };
+
+    actionsAnimateInit() { // 动画模型初始
+        processingAnimations(gltf,this);
+
+        this.actions.forEach(action => {
+            if (action._clip.name.includes("#1")) {
+                this.fanner1.actions.push(action);
+            } else if (action._clip.name.includes("#2")) {
+                this.fanner2.actions.push(action);
+            }
+        });
+    }
     /**
      * @param {{name:string;vertices:Vector3[];}[]} object
      * @param {string} name
@@ -313,7 +325,6 @@ export class AirDoor extends Subsystem {
     onLeave() {
         this.removeEvents();
         this.resetControls();
-        this.clearMixers();
         this.postprocessing.clearBloom(this.bloomLights);
 
         this.bloomLights.length = 0;

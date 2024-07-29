@@ -354,7 +354,7 @@ export class PartFanSubsystem extends Subsystem {
     onLeave() {
         this.removeEvents();
         this.resetControls();
-        this.clearMixers();
+
         this.postprocessing.clearBloom(this.bloomLights);
         this.postprocessing.clearBloom(this.flowLights);
 

@@ -349,7 +349,6 @@ export class FanSubsystem extends Subsystem {
     onLeave() {
         this.removeEvents();
         this.resetControls();
-        this.clearMixers();
 
         this.flowLights.length = 0;
         this.bloomLights.length = 0;
