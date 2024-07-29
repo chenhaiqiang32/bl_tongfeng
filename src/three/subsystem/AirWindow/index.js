@@ -25,7 +25,7 @@ import MemoryManager from "../../../lib/memoryManager";
 export const _BoringMachineSubsystem = Symbol();
 
 const position = new THREE.Vector3(-320,120,80);
-const target = new THREE.Vector3(0,0,0);
+const target = new THREE.Vector3(0,0,-2);
 
 // camera limit SPHERE
 const SPHERE_CAMERA = new THREE.Sphere(new THREE.Vector3(),80);
@@ -40,7 +40,7 @@ const controlsParameters = {
     maxPolarAngle: Math.PI / 2.1,
     maxAzimuthAngle: 0, // 右侧
     minAzimuthAngle: Math.PI, // 左侧
-    maxDistance: 15,
+    maxDistance: 18,
     enableDamping: true,
 };
 

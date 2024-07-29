@@ -217,11 +217,6 @@ export const air_station = [
         type: ".glb",
     },
     {
-        name: "skin",
-        path: "./models/airStation/skin.glb",
-        type: ".glb",
-    },
-    {
         name: "wall",
         path: "./models/airStation/wall.glb",
         type: ".glb",

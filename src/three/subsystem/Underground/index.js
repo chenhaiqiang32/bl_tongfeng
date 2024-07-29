@@ -542,10 +542,9 @@ export class UnderGround extends Subsystem {
     onLoaded() {
         // 当前系统模型未加载完成时切换其他系统,将不会给前端发送信息,由目标系统发送信息。
         if (this.scene !== this.core.scene) return;
-        this.playActions();
-
         this.onRenderQueue.set(ground,this.update);
         this.postprocessing.addBloom(this.flowLights);
+        
     }
     tunnelFollowUpdate = () => {
         Object.values(this.tunnelFollowPicture).forEach(child => {

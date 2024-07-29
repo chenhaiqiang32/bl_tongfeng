@@ -123,7 +123,7 @@ export class AirStation extends Subsystem {
         showDom.innerText = "暂无"; // dom元素赋值
         const css2d = createCSS3DObject(changeDom);
         css2d.scale.set(0.016,0.016,0.016);
-        css2d.position.set(1,2,0);
+        css2d.position.set(1.36,1.84,0.28);
         css2d.rotation.y = -Math.PI / 2;
         this.css2d = css2d;
         this.add(this.css2d);
