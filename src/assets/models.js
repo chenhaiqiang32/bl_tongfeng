@@ -40,12 +40,6 @@ export const fan_models = [
         // path: "./models/fan/HC_zhutongfengji_bei.glb",
         type: ".glb",
     },
-    {
-        name: "wind",
-        path: "./models/fan/wind.glb",
-        // path: "./models/fan/HC_zhutongfengji_bei.glb",
-        type: ".glb",
-    },
 ];
 export const partFan_models = [
     {

@@ -213,6 +213,8 @@ export class DeviceManger {
 
     /**删除id数据 */
     del(id,type) {
+        let object3d = this.device[type].get(id).object3d;
+        MemoryManager.dispose(object3d);
         this.device[type].delete(id);
     }
     /**
@@ -245,7 +247,7 @@ export class DeviceManger {
         remove.forEach(element => {
             const { id,type } = element;
             this.del(id,type);
-            this.needUpdateSubsystem(type,id,element,"update");
+            this.needUpdateSubsystem(type,id,element,"remove");
         });
         this.updateVisibilityByCamera();
     }

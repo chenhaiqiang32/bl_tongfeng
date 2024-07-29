@@ -10,3 +10,9 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+    font-family: "SIMHEI";
+    src: url("./SIMHEI.TTF");
+    font-weight: normal;
+    font-style: normal;
+}

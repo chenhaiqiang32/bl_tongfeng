@@ -268,7 +268,20 @@ export class AirWindow extends Subsystem {
     updateDataInfo(element,type) {
         const { speed,parts } = element;
         if (type === "remove") { // 该风门删除了
-            this.domSpeed = "暂无";
+            this.fanner1.angle = "0";
+            this.fanner2.angle = "0";
+            this.fanner1.name = "暂无";
+            this.fanner2.name = "暂无";
+            this.fanner1.angle = "0";
+            this.fanner2.angle = "0";
+            this.fanner1.actionName = this.fanner1.falseName;
+            this.fanner2.actionName = this.fanner2.falseName;
+            this.fanner1.dom.speed.innerText = "暂无";
+            this.fanner2.dom.speed.innerText = "暂无";
+            this.fanner1.dom.name.innerText = "暂无";
+            this.fanner2.dom.name.innerText = "暂无";
+            this.fanner1.dom.status.innerText = "0度";
+            this.fanner2.dom.status.innerText = "0度";
             this.setEquipmentState(1,"0"); // 两个风门关闭
             this.setEquipmentState(2,"0"); // 两个风门关闭
 
@@ -397,19 +410,6 @@ export class AirWindow extends Subsystem {
 
         this.onRenderQueue.set(_BoringMachineSubsystem,this.update);
         this.box();
-        this.test();
-    }
-
-    test() {
-        setTimeout(() => {
-            this.setEquipmentState(true,1,0);
-        },2000);
-        setTimeout(() => {
-            this.setEquipmentState(true,2,1);
-        },4000);
-        setTimeout(() => {
-            this.setEquipmentState(false,1,1);
-        },6000);
     }
     box() {
         const { center,radius } = getBoxAndSphere(this.ground).sphere;

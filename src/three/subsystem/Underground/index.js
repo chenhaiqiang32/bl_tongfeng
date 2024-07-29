@@ -204,7 +204,6 @@ export class UnderGround extends Subsystem {
             this.meshGroup.add(object);
         });
         if (this.core.currentSystemName === "main") { // 当前就在地面场景
-            console.log(4444);
             this.addEvents();
             this.limit();
         }

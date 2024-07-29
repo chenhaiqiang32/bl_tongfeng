@@ -108,7 +108,7 @@ export class Core3D extends CoreExtensions {
 
         // 当前系统执行进入事件，返回Promise。
         await targetSystem.onEnter();
-        if (info && info.id && info.deviceInfo) {
+        if (info && info.id !== null && info.deviceInfo) {
             this.currentSystemInfo = {
                 type: info.type,
                 id: info.id,
@@ -193,7 +193,11 @@ export class Core3D extends CoreExtensions {
     }
 
     updateSubSystemInfo(info,status) { // 当前子系统的展示 主扇/局扇/风门/风窗/测风
-        this.currentSystem.updateDataInfo(info,status); // 更新当前子系统的数据
+        if (status === "remove") {
+            this.currentSystem.updateDataInfo(info,status); // 更新当前子系统的数据
+        } else {
+            this.currentSystem.updateDataInfo(info.deviceInfo,status); // 更新当前子系统的数据
+        }
     }
 
     resetCamera() {
