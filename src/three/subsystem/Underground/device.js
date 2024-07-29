@@ -228,9 +228,10 @@ export class DeviceManger {
         add.forEach(element => {
             const { id,type } = element;
             const { obj3d,position } = this.device3d.create(element);
-            if (!obj3d) return false;
-            element.object3d = obj3d;
-            element.position = position;
+            if (obj3d) {
+                element.object3d = obj3d;
+                element.position = position;
+            }
             this.set(id,element,type);
             this.needUpdateSubsystem(type,id,element,"add");
         });
@@ -238,9 +239,10 @@ export class DeviceManger {
             const { id,type } = element;
             this.del(id,type);
             const { obj3d,position } = this.device3d.create(element);
-            if (!obj3d) return false;
-            element.object3d = obj3d;
-            element.position = position;
+            if (obj3d) {
+                element.object3d = obj3d;
+                element.position = position;
+            }
             this.set(id,element,type);
             this.needUpdateSubsystem(type,id,element,"update");
         });
@@ -269,6 +271,7 @@ export class DeviceManger {
         let clickEquipId = this.showObjectById.id;
         Object.entries(this.device).forEach(([index,children]) => {
             children.forEach((child,key) => {
+                if (!child.object3d) return false;
                 let sprite = child.object3d.children[1];
                 let dom = child.object3d.children[0]; // css2dDom
 
