@@ -1,3 +1,4 @@
+import MemoryManager from "../../../lib/memoryManager";
 import { Device3D } from "./device3d";
 import { Camera } from 'three';
 
@@ -225,6 +226,7 @@ export class DeviceManger {
         add.forEach(element => {
             const { id,type } = element;
             const { obj3d,position } = this.device3d.create(element);
+            if (!obj3d) return false;
             element.object3d = obj3d;
             element.position = position;
             this.set(id,element,type);
@@ -234,6 +236,7 @@ export class DeviceManger {
             const { id,type } = element;
             this.del(id,type);
             const { obj3d,position } = this.device3d.create(element);
+            if (!obj3d) return false;
             element.object3d = obj3d;
             element.position = position;
             this.set(id,element,type);
@@ -342,8 +345,23 @@ export class DeviceManger {
         });
         this.updateVisibilityByCamera();
     }
-    dispose() {
+    disposeEquip() { // 销毁设备
         this.removeControlChange();
-        this.device3d.dispose();
+        // this.device3d.disposeEquip();
+        let keys = Object.entries(this.device);
+
+        [...keys].forEach(([key,value]) => {
+            let values = this.device[key];
+            values.forEach(child => {
+                MemoryManager.dispose(child.object3d);
+            });
+        }
+        );
+        this.device = {};
+        console.log(this.device3d);
+    }
+    disposeDom() {
+        this.removeControlChange();
+        this.device3d.removeDom();
     }
 }

@@ -65,6 +65,7 @@ export class Core3D extends CoreExtensions {
         this.airStation = new AirStation(this);
         this.partFanSubsystem = new PartFanSubsystem(this);
         this.changeSystem("main");
+        this.currentSystemName = "main";
         this.onRenderQueue.set(timeUpdate,scope => updateTime(scope.delta));
     }
 
@@ -74,7 +75,6 @@ export class Core3D extends CoreExtensions {
      */
     async changeSystem(systemType,info) {
         /**@type {Subsystem} 目标系统 */
-        this.currentSystemName = "";
         this.currentSystemInfo = {
             type: null,
             id: null,

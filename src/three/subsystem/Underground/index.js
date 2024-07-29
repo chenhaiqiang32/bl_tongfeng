@@ -203,8 +203,11 @@ export class UnderGround extends Subsystem {
             this.eventsArray.push(mesh);
             this.meshGroup.add(object);
         });
-        this.addEvents();
-        this.limit();
+        if (this.core.currentSystemName === "main") { // 当前就在地面场景
+            console.log(4444);
+            this.addEvents();
+            this.limit();
+        }
     }
 
     limit() {
@@ -643,6 +646,7 @@ export class UnderGround extends Subsystem {
             this.del(key); // 删除巷道数据
         }
         this.eventsArray = []; // 射线循环数组滞空
+        this.equipMentSystem.disposeEquip(); // 销毁设备
         this.tunnelCure = {}; // 样条曲线数据
         this.tunnelFollowPicture = {}; // 流动箭头
         this.commonDispose();
@@ -651,7 +655,7 @@ export class UnderGround extends Subsystem {
         this.disposeStyle(); // 重置风格样式
         this.removeEvents(); // 移除事件
         this.elapseTime = 0;
-        this.equipMentSystem.dispose(); // 销毁设备的事件监听  从地图中剔除设备
+        this.equipMentSystem.disposeDom(); // 销毁设备的事件监听  从地图中剔除设备
         if (this.clearOutLine) this.core.postprocessing.clearOutline(this.clearOutLine); // 清除轮廓发光
     }
     switchFacility(array) {
