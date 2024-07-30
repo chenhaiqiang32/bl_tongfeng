@@ -132,7 +132,7 @@ export class Device3D {
 
 
         // iconDom
-        let spriteImg = `./icons/${type}_${deviceInfo.status ? 'online' : 'outline'}.png`;
+        let spriteImg = `./icon/${type}_${deviceInfo.status ? 'online' : 'outline'}.png`;
         let dom = document.getElementById("serviceImg").cloneNode(true);
         let domSrc = dom.getElementsByClassName("serviceImgUrl");
         domSrc[0].src = spriteImg;

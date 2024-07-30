@@ -281,7 +281,7 @@ export class UnderGround extends Subsystem {
                 position: new THREE.Vector3(child.position.x,child.position.y + 4.8,child.position.z)
             });
             if (hasConfig.includes(tunnelType)) { // 风量，风速，阻力显示巷道变色
-                let tunnelObj = this.filteredObjects(objectData,currentTunnelConfig)[0];
+                let tunnelObj = this.filteredObjects(objectData,Math.abs(currentTunnelConfig))[0];
                 this.changeTunnelColor(child.id,tunnelObj.color);
             }
         });
@@ -653,6 +653,7 @@ export class UnderGround extends Subsystem {
     commonDispose() { // 离开页面和更新巷道都需要执行的方法
         this.disposeStyle(); // 重置风格样式
         this.removeEvents(); // 移除事件
+        this.closeTunnelBoard();
         this.elapseTime = 0;
         this.equipMentSystem.disposeDom(); // 销毁设备的事件监听  从地图中剔除设备
         if (this.clearOutLine) this.core.postprocessing.clearOutline(this.clearOutLine); // 清除轮廓发光

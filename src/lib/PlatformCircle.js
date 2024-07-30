@@ -36,12 +36,12 @@ export class PlatformCircle extends THREE.Group {
      * @param {number} width
      * @param {number} height
      */
-    constructor(width, height) {
+    constructor(width,height) {
         super();
 
-        const geometry = new THREE.PlaneGeometry(width, height);
+        const geometry = new THREE.PlaneGeometry(width,height);
         geometry.applyMatrix4(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
-        this.createChild_1(geometry);
+        // this.createChild_1(geometry);
         this.createChild_2(geometry);
     }
 
@@ -81,7 +81,7 @@ export class PlatformCircle extends THREE.Group {
             fragmentShader,
         });
 
-        this.children.push(new THREE.Mesh(geometry, this.shaderMaterial));
+        this.children.push(new THREE.Mesh(geometry,this.shaderMaterial));
     }
 
     createChild_2(geometry) {
@@ -96,7 +96,7 @@ export class PlatformCircle extends THREE.Group {
             vertexShader,
             fragmentShader: bgFragment,
         });
-        const mesh = new THREE.Mesh(geometry, bgShaderMaterial);
+        const mesh = new THREE.Mesh(geometry,bgShaderMaterial);
         this.children.push(mesh);
     }
 
