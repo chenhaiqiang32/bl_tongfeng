@@ -60,6 +60,7 @@ export class Device3D {
                 let value = deviceInfo[key];
                 if (domObj[key]) { // 修改常规css3d展示dom数据
                     let changeDom = container.getElementsByClassName(domObj[key])[0];
+                    changeDom.title = value;
                     changeDom.innerText = value; // dom元素赋值
                     if (key === "status") { // 修改dom颜色
                         changeDom.innerText = statusShow[value + ""]; // dom元素赋值
@@ -74,6 +75,7 @@ export class Device3D {
                             if (currentDom[i]) { // 存在要修改的dom
                                 let changeDom = container.getElementsByClassName(currentDom[i])[0];
                                 changeDom.innerText = val; // dom元素赋值
+                                changeDom.title = val;
                                 if (i === "status") { // 修改dom颜色
                                     if (type === 203) { // 风门
                                         let typeToValue = { 0: "打开",1: "未开到位",2: "关闭",3: "未关到位" };

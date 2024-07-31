@@ -454,7 +454,7 @@ export class UnderGround extends Subsystem {
                 // 计算物体与相机的距离
                 var distance = camera.position.distanceTo(child.position);
                 // 判断距离，并设置物体的可见性
-                if (distance <= 480) {
+                if (distance <= 880) {
                     canShowObj.push(child);
                 }
             }

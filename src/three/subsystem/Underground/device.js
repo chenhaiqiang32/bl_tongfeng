@@ -7,7 +7,7 @@ export class DeviceManger {
         this.core = core;
         this.tweenControls = core.tweenControls;
         this.scene = core.scene;
-        this.cameraNear = 480; // 相机显示距离
+        this.cameraNear = 880; // 相机显示距离
         this.underGround = core;
         this.showBoardDom = []; // 要显示弹窗的设备
         this.hideObjectIcon = []; // 筛选隐藏的图标

@@ -443,7 +443,7 @@ export class AirDoor extends Subsystem {
         arDoom[0].innerText = '暂无'; // dom元素赋值
         this[local].dom.speed = arDoom[0];
         const css2d = createCSS3DObject(changeDom);
-        css2d.scale.set(0.0088,0.0088,0.0088);
+        css2d.scale.set(0.016,0.016,0.016);
         css2d.position.copy(position);
         css2d.rotation.y = -Math.PI / 2;
         this.css2ds.push(css2d);
