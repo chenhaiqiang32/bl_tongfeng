@@ -19,30 +19,30 @@ export const fresnelChangeColor = {
         value: new THREE.Color(0.9451,0.9451,0.5725)
     },
 };
-// export const fresnelColorBlue = {
-//     "深蓝偏紫": {
-//         // value: new THREE.Color("#007BFF")
-//         value: new THREE.Color(0.1176,0.7333,0.9961)
-//     },
-//     "道奇蓝": {
-//         value: new THREE.Color("#1E90FF")
-//     },
-//     "天蓝": {
-//         // value: new THREE.Color("#87CEEB")
-//         value: new THREE.Color(0.0,0.1098,0.3686)
-//     },
-//     "深天蓝": {
-//         value: new THREE.Color("#00BFFF")
-//         // value: new THREE.Color(0.5647,0.0353,0.451)
-//     },
-//     "浅蓝绿色": {
-//         value: new THREE.Color("#ADD8E6")
-//     },
-//     "亮钢兰色": {
-//         value: new THREE.Color("#B0C4DE")
-//     },
-// };
 export const fresnelColorBlue = {
+    "深蓝偏紫": {
+        // value: new THREE.Color("#007BFF")
+        value: new THREE.Color(0.1176,0.7333,0.9961)
+    },
+    "道奇蓝": {
+        value: new THREE.Color("#1E90FF")
+    },
+    "天蓝": {
+        // value: new THREE.Color("#87CEEB")
+        value: new THREE.Color(0.0,0.1098,0.3686)
+    },
+    "深天蓝": {
+        value: new THREE.Color("#00BFFF")
+        // value: new THREE.Color(0.5647,0.0353,0.451)
+    },
+    "浅蓝绿色": {
+        value: new THREE.Color("#ADD8E6")
+    },
+    "亮钢兰色": {
+        value: new THREE.Color("#B0C4DE")
+    },
+};
+export const fresnelColorBlue_chen = {
     "深蓝偏紫": {
         value: new THREE.Color(0.9725,0.302,0.0157)
     },

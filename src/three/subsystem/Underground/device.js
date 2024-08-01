@@ -10,7 +10,7 @@ export class DeviceManger {
         this.cameraNear = 880; // 相机显示距离
         this.underGround = core;
         this.showBoardDom = []; // 要显示弹窗的设备
-        this.hideObjectIcon = []; // 筛选隐藏的图标
+        this.chooseShowObjectIcon = [201,202,203,204,205,206,207,101,102,103,104,105,106,107,108,109,110]; // 筛选显示的图标
         this.showObjectById = { type: null,id: null }; // 需要单个显示的设备
         this.deviceCode = {
             101: {
@@ -279,7 +279,7 @@ export class DeviceManger {
                 var distance = camera.position.distanceTo(sprite.position);
                 sprite.visible = true; // 默认显示
                 dom.visible = false; // 默认隐藏
-                if (this.hideObjectIcon.includes(Number(index))) { // 该类型的需要筛选隐藏,优先级是1
+                if (!this.chooseShowObjectIcon.includes(Number(index))) { // 该类型的需要筛选隐藏,优先级是1
                     sprite.visible = false;
                     dom.visible = false;
                     return false;
@@ -342,12 +342,7 @@ export class DeviceManger {
         this.updateVisibilityByCamera();
     }
     setTypeVisibleEx(arrays) { // 筛选
-        this.hideObjectIcon.length = 0;
-        Object.keys(this.device).forEach(child => {
-            if (!arrays.includes(Number(child))) {
-                this.hideObjectIcon.push(Number(child));
-            }
-        });
+        this.chooseShowObjectIcon = arrays;
         this.updateVisibilityByCamera();
     }
     disposeEquip() { // 销毁设备

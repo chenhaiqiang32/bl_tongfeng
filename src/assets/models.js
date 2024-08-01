@@ -142,14 +142,32 @@ export const air_window_only = [
     {
         name: "direction",
         path: "./models/airWindowOnly/direction.glb",
-        // path: "./models/fan/HC_zhutongfengji_bei.glb",
         type: ".glb",
     },
     {
         name: "wall",
         path: "./models/airWindowOnly/wall.glb",
-        // path: "./models/fan/HC_zhutongfengji_bei.glb",
         type: ".glb",
+    },
+    {
+        name: "f1",
+        path: "./models/airWindowDouble/f1.obj",
+        type: ".obj",
+    },
+    {
+        name: "f2",
+        path: "./models/airWindowDouble/f2.obj",
+        type: ".obj",
+    },
+    {
+        name: "f3",
+        path: "./models/airWindowDouble/f3.obj",
+        type: ".obj",
+    },
+    {
+        name: "f4",
+        path: "./models/airWindowDouble/f4.obj",
+        type: ".obj",
     },
 ];
 export const air_window_double = [
@@ -188,11 +206,6 @@ export const air_window_double = [
         path: "./models/airWindowDouble/f4.obj",
         type: ".obj",
     },
-    // {
-    //     name: "direction",
-    //     path: "./models/airWindowDouble/direction.glb",
-    //     type: ".glb",
-    // },
     {
         name: "wall",
         path: "./models/airWindowDouble/wall.glb",
