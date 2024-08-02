@@ -340,6 +340,7 @@ export class AirWindow extends Subsystem {
         css2d.scale.set(0.0088,0.0088,0.0088);
         css2d.position.copy(position);
         this.css2ds.push(css2d);
+        css2d.rotation.y = -Math.PI / 2;
         this.add(css2d);
 
     }

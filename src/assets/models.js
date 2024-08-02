@@ -140,33 +140,28 @@ export const air_window_only = [
         type: ".glb",
     },
     {
-        name: "direction",
-        path: "./models/airWindowOnly/direction.glb",
-        type: ".glb",
-    },
-    {
         name: "wall",
         path: "./models/airWindowOnly/wall.glb",
         type: ".glb",
     },
     {
         name: "f1",
-        path: "./models/airWindowDouble/f1.obj",
+        path: "./models/airWindowOnly/f1.obj",
         type: ".obj",
     },
     {
         name: "f2",
-        path: "./models/airWindowDouble/f2.obj",
+        path: "./models/airWindowOnly/f2.obj",
         type: ".obj",
     },
     {
         name: "f3",
-        path: "./models/airWindowDouble/f3.obj",
+        path: "./models/airWindowOnly/f3.obj",
         type: ".obj",
     },
     {
         name: "f4",
-        path: "./models/airWindowDouble/f4.obj",
+        path: "./models/airWindowOnly/f4.obj",
         type: ".obj",
     },
 ];

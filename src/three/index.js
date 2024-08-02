@@ -15,6 +15,7 @@ import { AirWindow } from "./subsystem/AirWindow";
 import { PartFanSubsystem } from "./subsystem/partFan";
 import { AirStation } from "./subsystem/AirStation";
 import * as THREE from "three";
+import { AirWindowSingle } from "./subsystem/AirWindowSingle";
 
 const timeUpdate = Symbol("timeUpdate");
 
@@ -63,6 +64,7 @@ export class Core3D extends CoreExtensions {
         this.airDoor = new AirDoor(this);
         this.airWindow = new AirWindow(this);
         this.airStation = new AirStation(this);
+        this.airWindowSingle = new AirWindowSingle(this);
         this.partFanSubsystem = new PartFanSubsystem(this);
         this.onRenderQueue.set(timeUpdate,scope => updateTime(scope.delta));
     }
@@ -135,6 +137,9 @@ export class Core3D extends CoreExtensions {
         } else {
             toSystem = typeToName[type];
             deviceInfo = this.main.equipMentSystem.get(id,type) && this.main.equipMentSystem.get(id,type).deviceInfo;
+            if (type === 204 && deviceInfo.parts.length === 1) { // 单风窗的场景
+                toSystem = "airWindowSingle";
+            }
         }
         this.changeSystem(toSystem,{ type,id,deviceInfo });
     }

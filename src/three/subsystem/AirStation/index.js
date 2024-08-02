@@ -28,8 +28,8 @@ import MemoryManager from "../../../lib/memoryManager";
 
 export const _BoringMachineSubsystem = Symbol();
 
-const position = new THREE.Vector3(-320,120,80);
-const target = new THREE.Vector3(0,0,0);
+const position = new THREE.Vector3(-4.8,2,2);
+const target = new THREE.Vector3(1.5,1.791,2.8);
 
 // camera limit SPHERE
 const SPHERE_CAMERA = new THREE.Sphere(new THREE.Vector3(),80);
@@ -44,7 +44,7 @@ const controlsParameters = {
     maxPolarAngle: Math.PI / 2.1,
     maxAzimuthAngle: 0, // 右侧
     minAzimuthAngle: Math.PI, // 左侧
-    maxDistance: 15,
+    maxDistance: 12,
     enableDamping: true,
 };
 
@@ -122,8 +122,8 @@ export class AirStation extends Subsystem {
         this.stationDom = showDom;
         showDom.innerText = "暂无"; // dom元素赋值
         const css2d = createCSS3DObject(changeDom);
-        css2d.scale.set(0.016,0.016,0.016);
-        css2d.position.set(1.36,1.84,0.28);
+        css2d.scale.set(0.008,0.008,0.008);
+        css2d.position.set(1.48,1.804,0.76);
         css2d.rotation.y = -Math.PI / 2;
         this.css2d = css2d;
         this.add(this.css2d);
