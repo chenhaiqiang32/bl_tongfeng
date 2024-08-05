@@ -265,6 +265,7 @@ export class UnderGround extends Subsystem {
     */
     switchTunnelStyle(config) { // 切换巷道风格
         const { objectData,typeName } = config;
+        const typeToWei = { volume: " m³/min",speed: " m/s",resistance: "Pa" };
         const type = { default: "巷道名称",direction: "风向",volume: "风量",speed: "风速",resistance: "阻力" };
 
         this.disposeStyle();
@@ -280,7 +281,7 @@ export class UnderGround extends Subsystem {
         this.tunnelData.forEach(child => {
             let currentTunnelConfig = child[tunnelType]; // 当前巷道上的对应配置数据
             this.labelData.push({
-                name: type[typeName] + ":" + currentTunnelConfig,
+                name: type[typeName] + ":" + currentTunnelConfig + (typeToWei[typeName] || ""),
                 position: new THREE.Vector3(child.position.x,child.position.y + 4.8,child.position.z)
             });
             if (hasConfig.includes(tunnelType)) { // 风量，风速，阻力显示巷道变色
