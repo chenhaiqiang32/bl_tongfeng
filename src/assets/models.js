@@ -223,4 +223,9 @@ export const air_station = [
         path: "./models/airStation/wall.glb",
         type: ".glb",
     },
+    {
+        name: "f1",
+        path: "./models/airStation/f1.obj",
+        type: ".obj",
+    },
 ];

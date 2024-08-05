@@ -164,8 +164,9 @@ export class FanSubsystem extends Subsystem {
             data: ["#1通风机_2","#1通风机_5","#1通风机_6","#2通风机_2","#2通风机_5","#2通风机_6"],
             color: fresnelColorBlue["深天蓝"].value
         };
-        let color5Includes = { data: ["电机风扇"],color: fresnelColorBlue["浅蓝绿色"].value };
+        let color5Includes = { data: ["电机风扇_2","电机风扇_3"],color: fresnelColorBlue["浅蓝绿色"].value };
         let color6Includes = { data: ["通风水平风门扇叶","通风垂直风门扇叶","#1机立式风门","#2机立式风门"],color: fresnelColorBlue["亮钢兰色"].value };
+        let color7Includes = { data: ["电机风扇_1"],color: fresnelColorBlue["浅蓝绿色"].value };
         gltf.scene.traverse(child => {
             if (color1.data.includes(child.name)) {
                 child.material = child.material.clone();
@@ -224,10 +225,22 @@ export class FanSubsystem extends Subsystem {
                             shaderModify(shader,{ shader: "fresnel",color: color2.color,shaderName: "base" });
                         };
                     }
+
                     color5Includes.data.forEach(res => {
                         if (child.name.includes(res)) {
+                            child.side = THREE.BackSide;
+                            child.material = child.material.clone();
                             child.material.onBeforeCompile = shader => {
-                                shaderModify(shader,{ shader: "fresnel",color: color5Includes.color,shaderName: "base" });
+                                shaderModify(shader,{ shader: "pumpModify",color: color2.color,shaderName: "base" });
+                            };
+                        }
+                    });
+                    color7Includes.data.forEach(res => {
+                        if (child.name.includes(res)) {
+                            child.side = THREE.BackSide;
+                            child.material = child.material.clone();
+                            child.material.onBeforeCompile = shader => {
+                                shaderModify(shader,{ shader: "fresnel",color: color7Includes.color,shaderName: "level0" });
                             };
                         }
                     });

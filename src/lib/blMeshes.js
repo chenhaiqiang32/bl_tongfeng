@@ -23,12 +23,13 @@ class FlowLight extends THREE.Mesh {
 
         config.width = config.width || 1;
         config.radius = config.radius || 1;
+        config.commonOpacity = config.commonOpacity || 0.32;
+        config.lineAmplitude = config.lineAmplitude || .12; // 振幅
         config.type = config.type || "line";
         config.segments = config.segments || 2;
         config.color1 = config.color1 || new THREE.Vector3(1,1,0);
         config.color2 = config.color2 || new THREE.Vector3(0.95,0.39,0.22);
         config.depthTest = config.depthTest || false;
-
         this.uOpacity = { value: config.opacity === undefined ? 0 : config.opacity };
 
         if (Array.isArray(vertices)) {
@@ -97,7 +98,8 @@ class FlowLight extends THREE.Mesh {
                     const float minLineWidth=.12;
                     const float maxLineWidth=.18;
                     const float lineSpeed=2.*overallSpeed;
-                    const float lineAmplitude=.12; // 线条振幅
+                    uniform float lineAmplitude; // 线条振幅
+                    uniform float commonOpacity; // 透明度
                     const float lineFrequency=2.32;
                     const float warpSpeed=.82*overallSpeed;
                     const float warpFrequency=.85;
@@ -190,7 +192,7 @@ class FlowLight extends THREE.Mesh {
                       float alpha = 1. - smoothstep(0.0000001, 0.99999, dist);
                     //   float alpha = 1.0;
                       gl_FragColor+=lines;
-                      gl_FragColor.a = gl_FragColor.a * alpha * 0.32 * (pow(sin(uTime),2.0) + 0.12 );
+                      gl_FragColor.a = gl_FragColor.a * alpha * commonOpacity * (pow(sin(uTime),2.) + .48 );
                       #include <logdepthbuf_fragment>
                     }
                   `,
@@ -202,6 +204,12 @@ class FlowLight extends THREE.Mesh {
                 uIndex: {
                     value: 2,
                 },
+                lineAmplitude: {
+                    value: config.lineAmplitude
+                },
+                commonOpacity: {
+                    value: config.commonOpacity
+                }
             },
         });
         // this.material_bei = new THREE.ShaderMaterial({
@@ -240,6 +248,7 @@ class FlowLight2 extends THREE.Mesh {
         config.segments = config.segments || 2;
         config.color1 = config.color1 || new THREE.Vector3(1,1,0);
         config.color2 = config.color2 || new THREE.Vector3(0.95,0.39,0.22);
+        this.renderOrder = 1;
 
         this.uOpacity = { value: config.opacity === undefined ? 1 : config.opacity };
 
@@ -302,7 +311,7 @@ class FlowLight2 extends THREE.Mesh {
         void main() {
 
             float p = uCount; //线段段数
-            float al = fract(vUv.x * p - uElapseTime * speed*0.2);
+            float al = fract(vUv.x * p - uElapseTime * speed*0.04);
 
             vec3 color = mix(uColor2,uColor1,pow(al,4.));
 
@@ -329,7 +338,8 @@ class FlowLight2 extends THREE.Mesh {
             transparent: true,
             side: THREE.DoubleSide,
             forceSinglePass: true,
-            depthTest: false
+            depthTest: false,
+            depthWrite: false
         });
     }
     update(elapseTime) {

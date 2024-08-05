@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { Subsystem } from "../Subsystem";
+import * as TWEEN from "three/examples/jsm/libs/tween.module";
 import { loadGLTF,loadOBJ } from "../../loader";
 import { air_station } from "@/assets/models";
 import { Core3D } from "../..";
@@ -241,6 +242,43 @@ export class AirStation extends Subsystem {
      * @param {string} name
      */
     onOBJProgress = (object,name) => {
+        object.forEach(line => {
+            const vertices = line.vertices;
+
+            const flowLight = new FlowLight(vertices,{
+                type: "line",
+                width: 1.2,
+                color1: new THREE.Vector3(0.3,0.3,0.6),
+                color2: new THREE.Vector3(0,0.8,0.4),
+                segments: 3,
+                up: new THREE.Vector3(1,0,0),
+                depthTest: true,
+                commonOpacity: 0.04, // 整体的透明度
+                lineAmplitude: .32 // 振幅
+            });
+            flowLight.renderOrder = 2;
+            flowLight.visible = false;
+            this.flowLights.push(flowLight);
+            this.add(flowLight);
+
+
+
+            const flowLight2 = new FlowLight(vertices,{
+                type: "line",
+                width: 1.2,
+                color1: new THREE.Vector3(0.3,0.3,0.6),
+                color2: new THREE.Vector3(0,0.8,0.4),
+                segments: 3,
+                up: new THREE.Vector3(0,1,0),
+                depthTest: true,
+                commonOpacity: 0.04, // 整体的透明度
+                lineAmplitude: .32 // 振幅
+            });
+            flowLight2.renderOrder = 2;
+            flowLight2.visible = false;
+            this.flowLights.push(flowLight2);
+            this.add(flowLight2);
+        });
     };
 
     onLeave() {
@@ -268,6 +306,7 @@ export class AirStation extends Subsystem {
         this.onRenderQueue.set(_BoringMachineSubsystem,this.update);
         this.box();
         this.initDom();
+        this.setEquipmentState();
     }
     box() {
         const { center,radius } = getBoxAndSphere(this.ground).sphere;
@@ -280,8 +319,25 @@ export class AirStation extends Subsystem {
      * 设置设备状态
      * @param {boolean} state
      */
-    setEquipmentState(state) {
-        this.actions.forEach(action => (action.paused = !state));
+    setEquipmentState() {
+        let toValue = 1;
+        const flowLights = this.flowLights;
+        const begin = { value: flowLights[0].uOpacity.value };
+        const end = { value: toValue };
+        this.tweenCode = new TWEEN.Tween(begin)
+            .to(end,40)
+            .onUpdate((object) => {
+
+                flowLights.forEach((flowLight) => {
+                    flowLight.uOpacity.value = object.value;
+                    flowLight.visible = !(flowLight.uOpacity.value === 0);
+                });
+
+            })
+            .onComplete(() => {
+                this.tweenCode = null;
+            })
+            .start();
     }
 
     /**@param {Core3D} core  */

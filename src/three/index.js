@@ -137,7 +137,7 @@ export class Core3D extends CoreExtensions {
         } else {
             toSystem = typeToName[type];
             deviceInfo = this.main.equipMentSystem.get(id,type) && this.main.equipMentSystem.get(id,type).deviceInfo;
-            if (type === 204 && deviceInfo.parts.length === 1) { // 单风窗的场景
+            if (type === 204 && deviceInfo && deviceInfo.parts.length === 1) { // 单风窗的场景
                 toSystem = "airWindowSingle";
             }
         }

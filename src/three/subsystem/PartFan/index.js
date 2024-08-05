@@ -201,9 +201,16 @@ export class PartFanSubsystem extends Subsystem {
                     child.renderOrder = 1;
                     child.material = child.material.clone();
                     child.material.transparent = true;
-                    child.material.onBeforeCompile = shader => {
-                        shaderModify(shader,{ shader: "pumpModify",color: color5.color,shaderName: "level2" });
-                    };
+                    if (child.material.name === "TY-09") {
+                        child.material.onBeforeCompile = shader => {
+                            shaderModify(shader,{ shader: "fresnel",color: color5.color,shaderName: "level0" });
+                        };
+                    }
+                    if (child.material.name === "TY-02") {
+                        child.material.onBeforeCompile = shader => {
+                            shaderModify(shader,{ shader: "pumpModify",color: color5.color,shaderName: "level2" });
+                        };
+                    }
                 }
             });
         }

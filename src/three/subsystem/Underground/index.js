@@ -15,9 +15,6 @@ import { FlowLight,FlowLight2 } from "../../../lib/blMeshes";
 import { getBoxAndSphere,getLengthFromVertices } from "../../../utils";
 import { DeviceManger } from "./device";
 import BoxModel from "../../../lib/boxModel";
-import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
-import { shaderModify } from "../../../shader/shaderModify";
-import { Reflector } from "../../../lib/Reflector";
 
 export const ground = Symbol();
 
@@ -101,30 +98,36 @@ export class UnderGround extends Subsystem {
     }
 
     onOBJProgress = (vertices,direction,tunnelObj,speed) => { // 流光
+
         let tunnelVertices = vertices;
-        let color = new THREE.Color(0.9922,0.0431,0.0431);
-        let color2 = new THREE.Color(0.9882,0.0235,0.0235);
+        let color = new THREE.Color(0.0627,0.9412,0.9412);
+        let color2 = new THREE.Color(0.0627,0.4,0.9412);
         if (direction === 2) { // 巷道没风
             return false;
         }
         if (direction === 1) {
-            color = new THREE.Color(0.0196,0.0863,0.9765);
-            color2 = new THREE.Color(0.0157,0.0431,0.4431);
+            color = new THREE.Color(0.1216,0.8784,0.0824);
+            color2 = new THREE.Color(0.0471,0.3373,0.0314);
         }
         const flowLight = new FlowLight2(tunnelVertices,{
             type: "tube",
-            radius: 3.2,
+            radius: 4.8,
             segments: getLengthFromVertices(tunnelVertices) / 80,
             color1: color,
             color2: color2,
-            speed: speed || 0
+            speed: speed || 0,
+            opacity: 1.0
         });
         tunnelObj.traverse(res => {
             if (res instanceof THREE.Mesh) {
                 res.oldMaterial = res.material.clone();
-                res.material.onBeforeCompile = shader => {
-                    shaderModify(shader,{ shader: "pumpModify",color: new THREE.Color("#87CEEB"),shaderName: "levelN" });
-                };
+                // res.material.onBeforeCompile = shader => {
+                //     shaderModify(shader,{ shader: "fresnel",color: color2,shaderName: "level0" });
+                // };
+                res.material.alphaTest = 0.8;
+                res.material.transparent = false;
+                res.renderOrder = 0;
+                res.material.color = color2;
             }
         });
         flowLight.renderOrder = 0;

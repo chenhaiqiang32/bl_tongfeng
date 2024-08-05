@@ -103,26 +103,32 @@ class _TunnelCard extends CSS2DObject {
         let targetElements = labelEleOut.getElementsByClassName("tunnelName"); // 巷道名称
         // 遍历这些子元素，并修改它们的文本内容
         targetElements[0].innerText = branchName;
+        targetElements[0].title = branchName;
 
         let volumeValue = labelEleOut.getElementsByClassName("volume"); // 风量
         // 遍历这些子元素，并修改它们的文本内容
         volumeValue[0].innerText = volume;
+        volumeValue[0].title = volume;
 
         let speedValue = labelEleOut.getElementsByClassName("speed"); // 风速
         // 遍历这些子元素，并修改它们的文本内容
         speedValue[0].innerText = speed;
+        speedValue[0].title = speed;
 
         let resistanceValue = labelEleOut.getElementsByClassName("resistance"); // 阻力
         // 遍历这些子元素，并修改它们的文本内容
         resistanceValue[0].innerText = resistance;
+        resistanceValue[0].title = resistance;
 
         let lengthValue = labelEleOut.getElementsByClassName("length"); // 长度
         // 遍历这些子元素，并修改它们的文本内容
         lengthValue[0].innerText = length;
+        lengthValue[0].title = length;
 
         let crossSectionalValue = labelEleOut.getElementsByClassName("crossSectional"); // 断面积
         // 遍历这些子元素，并修改它们的文本内容
         crossSectionalValue[0].innerText = crossSectional;
+        crossSectionalValue[0].title = crossSectional;
     }
 
 }

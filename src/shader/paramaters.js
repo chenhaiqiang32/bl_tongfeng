@@ -66,6 +66,9 @@ export const fresnelLevelS = {
     "base": {
         value: 2.8
     },
+    "level0": {
+        value: 0
+    },
     "level2": {
         value: 1.8
     },

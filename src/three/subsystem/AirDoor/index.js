@@ -297,7 +297,9 @@ export class AirDoor extends Subsystem {
                 color2: new THREE.Vector3(0,0.8,0.4),
                 segments: 3,
                 up: new THREE.Vector3(1,0,0),
-                depthTest: true
+                depthTest: true,
+                commonOpacity: 0.08, // 整体的透明度
+                lineAmplitude: .32 // 振幅
             });
             flowLight.renderOrder = 2;
             flowLight.visible = false;
@@ -313,7 +315,9 @@ export class AirDoor extends Subsystem {
                 color2: new THREE.Vector3(0,0.8,0.4),
                 segments: 3,
                 up: new THREE.Vector3(0,1,0),
-                depthTest: true
+                depthTest: true,
+                commonOpacity: 0.08, // 整体的透明度
+                lineAmplitude: .32 // 振幅
             });
             flowLight2.renderOrder = 2;
             flowLight2.visible = false;
