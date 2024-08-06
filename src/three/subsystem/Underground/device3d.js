@@ -68,6 +68,93 @@ export class Device3D {
                     }
                 }
                 if (key === "parts") { // 修改部件css3d展示dom数据
+                    const partsChangeBg = [201,202,203,204];
+                    const partsChangeObj = {
+                        201: {
+                            "00": "/bgDom/fan_first0_second0.png",
+                            "11": "/bgDom/fan_first1_second1.png",
+                            "01": "/bgDom/fan_first0_second1.png",
+                            "10": "/bgDom/fan_first1_second0.png"
+                        },
+                        202: {
+                            "00": "/bgDom/parfan_first0_second0.png",
+                            "11": "/bgDom/parfan_first1_second1.png",
+                            "01": "/bgDom/parfan_first0_second1.png",
+                            "10": "/bgDom/parfan_first1_second0.png",
+                        },
+                        203: {
+                            "00": "/bgDom/door_first0_second0.png",
+                            "11": "/bgDom/door_first1_second1.png",
+                            "01": "/bgDom/door_first0_second1.png",
+                            "10": "/bgDom/door_first1_second0.png"
+                        },
+                        204: {
+                            "00": "/bgDom/window_first0_second0.png",
+                            "11": "/bgDom/window_first1_second1.png",
+                            "01": "/bgDom/window_first0_second1.png",
+                            "10": "/bgDom/window_first1_second0.png",
+                            "1": "/bgDom/window_1.png",
+                            "0": "/bgDom/window_0.png"
+                        }
+                    };
+
+                    let domBgImg = container.getElementsByClassName("deviceImgDom")[0];
+                    if (partsChangeBg.includes(type)) {
+                        let key = "";
+                        if (type === 201 || type === 202) { // 主风机局部风机
+                            if (!value[0].status && !value[1].status) {
+                                key = "00";
+                            }
+                            if (value[0].status && value[1].status) {
+                                key = "11";
+                            }
+                            if (!value[0].status && value[1].status) {
+                                key = "01";
+                            }
+                            if (value[0].status && !value[1].status) {
+                                key = "10";
+                            }
+                        }
+                        if (type === 203) { // 风门
+                            if (value[0].status === 2 && value[1].status === 2) {
+                                key = "00";
+                            }
+                            if (value[0].status !== 2 && value[1].status !== 2) {
+                                key = "11";
+                            }
+                            if (value[0].status === 2 && value[1].status !== 2) {
+                                key = "01";
+                            }
+                            if (value[0].status !== 2 && value[1].status === 2) {
+                                key = "10";
+                            }
+                        }
+                        if (type === 204) { // 风窗
+                            if (value.length === 2) {
+                                if (value[0].angle === "0" && value[1].angle === "0") {
+                                    key = "00";
+                                }
+                                if (value[0].angle !== "0" && value[1].angle !== "0") {
+                                    key = "11";
+                                }
+                                if (value[0].angle === "0" && value[1].angle !== "0") {
+                                    key = "01";
+                                }
+                                if (value[0].angle !== "0" && value[1].angle === "0") {
+                                    key = "10";
+                                }
+                            }
+                            if (value.length === 1) {
+                                if (value[0].angle === "0") {
+                                    key = "0";
+                                }
+                                if (value[0].angle !== "0") {
+                                    key = "1";
+                                }
+                            }
+                        }
+                        domBgImg.src = partsChangeObj[type][key];
+                    }
                     value.forEach((child,index) => {
                         let currentDom = domObjParts[index];
                         for (let i in child) {
@@ -90,6 +177,13 @@ export class Device3D {
                         }
                     });
                 }
+            }
+            let closeDom = container.getElementsByClassName("closeDialog")[0]; // 关闭dom
+            if (closeDom) {
+                closeDom.addEventListener('click',() => {
+                    // 这里写点击事件发生时想要执行的代码
+                    this.device.closeDialog({ id,type });
+                });
             }
         }
         if (domEvent) {

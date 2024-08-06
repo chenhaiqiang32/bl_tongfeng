@@ -1,6 +1,7 @@
 import MemoryManager from "../../../lib/memoryManager";
 import { Device3D } from "./device3d";
 import { Camera } from 'three';
+import { Object3D } from 'three';
 
 export class DeviceManger {
     constructor(core) {
@@ -299,10 +300,10 @@ export class DeviceManger {
                 }
 
                 if (clickEquipType && clickEquipType === Number(index) && clickEquipId === key) { // 点了设备，优先级是2'
-                    if (distance > this.cameraNear) { // 被选中的物体离开相机范围
-                        this.showObjectById.type = null;
-                        this.showObjectById.id = null;
-                    }
+                    // if (distance > this.cameraNear) { // 被选中的物体离开相机范围
+                    //     this.showObjectById.type = null;
+                    //     this.showObjectById.id = null;
+                    // }
                     if (distance <= this.cameraNear) { // 被选中的物体进入相机范围
                         dom.visible = true;
                     }
@@ -330,6 +331,19 @@ export class DeviceManger {
                 this.showObjectById.id = id;
                 this.updateVisibilityByCamera();
             },1000);
+        }
+    }
+    closeDialog(objData) {
+        const { id,type } = objData;
+        let obj = this.get(id,type);
+        if (obj) {
+            let object3d = obj.object3d;
+            let dom = object3d.children[0];
+            dom.visible = false;
+        }
+        if (this.showObjectById.type === type && this.showObjectById.id === id) { // 关闭了点击出来的弹窗
+            this.showObjectById.type = null;
+            this.showObjectById.id = null;
         }
     }
     switchFacility(arrays) { // 切换设备

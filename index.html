@@ -15,13 +15,14 @@
     <script src="/config.js"></script>
     <div id="deviceFan" style="display: none;">
         <div class="deviceDialog">
+            <div class="closeDialog"></div>
             <div class="top ellipsis">
                 <span class="IdentifyDomName" title="">XXXX主风机名称sadfasdgfasdgsdgsddgasdgsd</span>
 
                 <div class="shadow"></div>
             </div>
             <div class="middle">
-                <div class="left"><img src="./public/device/fan.png" alt=""></div>
+                <div class="left"><img class="deviceImgDom" src="./public/device/fan.png" alt=""></div>
                 <div class="right">
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
@@ -67,6 +68,7 @@
 
     <div id="deviceWindStation" style="display: none;">
         <div class="deviceDialog">
+            <div class="closeDialog"></div>
             <div class="top ellipsis">
                 <span class="measureName">XXXX测风名称测试名字长度测试名字长度测试名字长度测试名字长度</span>
                 <div class="shadow"></div>
@@ -75,7 +77,7 @@
                 <img src="/src/assets/line.png" alt="">
             </div>
             <div class="middle">
-                <div class="left"><img src="./public/device/ce.png" alt=""></div>
+                <div class="left"><img class="deviceImgDom" src="./public/device/ce.png" alt=""></div>
                 <div class="right">
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
@@ -114,6 +116,7 @@
 
     <div id="deviceWindWindow" style="display: none;">
         <div class="deviceDialog">
+            <div class="closeDialog"></div>
             <div class="top ellipsis ">
                 <span class="windowName">XXXX风窗名称测试名字长度测试名字长度</span>
                 <div class="shadow"></div>
@@ -122,7 +125,7 @@
                 <img src="/src/assets/line.png" alt="">
             </div>
             <div class="middle">
-                <div class="left"><img src="./public/device/window.png" alt=""></div>
+                <div class="left"><img class="deviceImgDom" src="./public/device/window.png" alt=""></div>
                 <div class="right">
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
@@ -153,6 +156,7 @@
 
     <div id="partFan" style="display: none;">
         <div class="deviceDialog">
+            <div class="closeDialog"></div>
             <div class="top ellipsis">
                 <span class="partName">XXXX局扇名称sadfasdgfasdgsdgsddgasdgsd测试名字长度测试名字长度</span>
                 <div class="shadow"></div>
@@ -161,7 +165,7 @@
                 <img src="/src/assets/line.png" alt="">
             </div>
             <div class="middle">
-                <div class="left"><img src="./public/device/part.png" alt=""></div>
+                <div class="left"><img class="deviceImgDom" src="./public/device/part.png" alt=""></div>
                 <div class="right">
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
@@ -210,6 +214,7 @@
 
     <div id="deviceWindDoor" style="display: none;">
         <div class="deviceDialog">
+            <div class="closeDialog"></div>
             <div class="top ellipsis">
                 <span class="doorName">XXXX风门名称测试名字长度测试名字长度测试名字长度测试名字长度</span>
                 <div class="shadow"></div>
@@ -218,7 +223,7 @@
                 <img src="/src/assets/line.png" alt="">
             </div>
             <div class="middle">
-                <div class="left"><img src="./public/device/door.png" alt=""></div>
+                <div class="left"><img class="deviceImgDom" src="./public/device/door.png" alt=""></div>
                 <div class="right">
                     <div class="list">
                         <img src="/device/arrow.png" alt="">
@@ -293,6 +298,7 @@
 
     <div id="sensor" style="display: none;">
         <div class="deviceDialog">
+            <div class="closeDialog"></div>
             <div class="top ellipsis">
                 <span class="tunnelName sensorName">传感器的名称测试名字长度测试名字长度测试名字长度测试名字长度</span>
                 <div class="shadow"></div>
@@ -329,7 +335,7 @@
                 </div>
             </div>
             <div class="bottom">
-                <div class="button">
+                <div class="button" style="display: none;">
                     <div class="buttonIcon gradient-border-radius changeToLocal"><img src="/device/cameraIcon.png"
                             alt=""><span>定位</span></div>
                 </div>
@@ -338,6 +344,7 @@
     </div>
     <div id="station" style="display: none;">
         <div class="deviceDialog">
+            <div class="closeDialog"></div>
             <div class="top ellipsis">
                 <span class="tunnelName stationName">控制器名称测试名字长度测试名字长度测试名字长度测试名字长度</span>
                 <div class="shadow"></div>
@@ -372,7 +379,7 @@
                     <span class="green stationLocal  ellipsis neiWidth">XXXXXX测试名字长度测试名字长度</span>
                 </div>
             </div>
-            <div class="bottom">
+            <div class="bottom" style="display: none;">
                 <div class="button">
                     <div class="buttonIcon gradient-border-radius changeToLocal"><img src="/device/cameraIcon.png"
                             alt=""><span>定位</span></div>
@@ -485,7 +492,7 @@
         .deviceDialog {
             background: url('./device/bg.png') no-repeat center center;
             background-size: contain;
-            width: 385px;
+            width: 406px;
             height: 232px;
             display: flex;
             flex-direction: column;
@@ -494,7 +501,7 @@
             box-sizing: border-box;
 
             .top {
-                width: 320px;
+                width: 300px;
                 height: auto;
                 font-family: SourceHanSansCN;
                 font-weight: bold;
@@ -648,7 +655,7 @@
                 line-height: 21px;
                 text-align: left;
                 font-style: normal;
-                margin-top: 16px;
+                margin-top: 12px;
 
                 .list {
                     margin-right: 32px;
@@ -673,7 +680,7 @@
         .deviceDialog {
             background: url('./device/bg.png') no-repeat center center;
             background-size: contain;
-            width: 385px;
+            width: 406px;
             height: 232px;
             display: flex;
             flex-direction: column;
@@ -682,7 +689,7 @@
             box-sizing: border-box;
 
             .top {
-                width: 320px;
+                width: 300px;
                 height: auto;
                 font-family: SourceHanSansCN;
                 font-weight: bold;
@@ -836,7 +843,7 @@
                 line-height: 21px;
                 text-align: left;
                 font-style: normal;
-                margin-top: 16px;
+                margin-top: 12px;
 
                 .list {
                     margin-right: 32px;
@@ -861,7 +868,7 @@
         .deviceDialog {
             background: url('./device/bg.png') no-repeat center center;
             background-size: contain;
-            width: 385px;
+            width: 406px;
             height: 232px;
             display: flex;
             flex-direction: column;
@@ -870,7 +877,7 @@
             box-sizing: border-box;
 
             .top {
-                width: 320px;
+                width: 300px;
                 height: auto;
                 font-family: SourceHanSansCN;
                 font-weight: bold;
@@ -1021,7 +1028,7 @@
         .deviceDialog {
             background: url('./device/bg.png') no-repeat center center;
             background-size: contain;
-            width: 385px;
+            width: 406px;
             height: 232px;
             display: flex;
             flex-direction: column;
@@ -1030,7 +1037,7 @@
             box-sizing: border-box;
 
             .top {
-                width: 320px;
+                width: 300px;
                 height: auto;
                 font-family: SourceHanSansCN;
                 font-weight: bold;
@@ -1184,7 +1191,7 @@
                 line-height: 21px;
                 text-align: left;
                 font-style: normal;
-                margin-top: 16px;
+                margin-top: 12px;
 
                 .list {
                     margin-right: 32px;
@@ -1209,7 +1216,7 @@
         .deviceDialog {
             background: url('./device/bg.png') no-repeat center center;
             background-size: contain;
-            width: 385px;
+            width: 406px;
             height: 232px;
             display: flex;
             flex-direction: column;
@@ -1218,7 +1225,7 @@
             box-sizing: border-box;
 
             .top {
-                width: 320px;
+                width: 300px;
                 height: auto;
                 font-family: SourceHanSansCN;
                 font-weight: bold;
@@ -1372,7 +1379,7 @@
                 line-height: 21px;
                 text-align: left;
                 font-style: normal;
-                margin-top: 16px;
+                margin-top: 12px;
 
                 .list {
                     margin-right: 32px;
@@ -1393,18 +1400,17 @@
             background: url('./device/deviceIconTunnel.png') no-repeat center center;
             background-size: contain;
             width: 387px;
-            height: 204px;
+            height: 184px;
             display: flex;
             flex-direction: column;
             padding-top: 28px;
             padding-left: 36px;
             padding-bottom: 28px;
-            padding-right: 41px;
             box-sizing: border-box;
             justify-content: space-between;
 
             .top {
-                width: 320px;
+                width: 300px;
                 height: auto;
                 font-family: SourceHanSansCN;
                 font-weight: bold;
@@ -1539,18 +1545,17 @@
             background: url('./device/deviceIconTunnel.png') no-repeat center center;
             background-size: contain;
             width: 387px;
-            height: 204px;
+            height: 184px;
             display: flex;
             flex-direction: column;
             padding-top: 28px;
             padding-left: 36px;
             padding-bottom: 28px;
-            padding-right: 41px;
             box-sizing: border-box;
             justify-content: space-between;
 
             .top {
-                width: 320px;
+                width: 300px;
                 height: auto;
                 font-family: SourceHanSansCN;
                 font-weight: bold;
@@ -1685,18 +1690,17 @@
             background: url('./device/deviceIconTunnel.png') no-repeat center center;
             background-size: contain;
             width: 387px;
-            height: 204px;
+            height: 184px;
             display: flex;
             flex-direction: column;
             padding-top: 28px;
             padding-left: 36px;
             padding-bottom: 28px;
-            padding-right: 41px;
             box-sizing: border-box;
             justify-content: space-between;
 
             .top {
-                width: 320px;
+                width: 300px;
                 height: auto;
                 font-family: SourceHanSansCN;
                 font-weight: bold;
@@ -1845,5 +1849,37 @@
     .diWidth {
         float: left;
         max-width: 100px !important;
+    }
+
+    .closeDialog {
+        width: 24px;
+        height: 24px;
+        background: url('./dom/closeBlue.png') no-repeat center center;
+        background-size: contain;
+        position: absolute;
+        top: 28px;
+        right: 22px;
+
+        &:hover {
+            background: url('./dom/closeHover.png') no-repeat center center;
+            width: 24px;
+            height: 24px;
+            background-size: contain;
+            position: absolute;
+            top: 28px;
+            right: 22px;
+            cursor: pointer;
+        }
+
+        &:active {
+            background: url('./dom/closeOn.png') no-repeat center center;
+            width: 24px;
+            height: 24px;
+            background-size: contain;
+            position: absolute;
+            top: 28px;
+            right: 22px;
+            cursor: pointer;
+        }
     }
 </style>

@@ -214,7 +214,8 @@ export class UnderGround extends Subsystem {
 
     limit() {
         const { center,radius } = getBoxAndSphere(this.meshGroup).sphere;
-        this.boxModelObj.initModel(center,radius);
+        const { min } = getBoxAndSphere(this.meshGroup).box;
+        this.boxModelObj.initModel(new THREE.Vector3(center.x,min.y,center.z),radius);
 
         this.resetCamera();
         // 限制相机和控制器范围

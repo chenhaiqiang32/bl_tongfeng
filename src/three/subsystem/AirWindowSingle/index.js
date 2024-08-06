@@ -25,7 +25,7 @@ import MemoryManager from "../../../lib/memoryManager";
 export const _BoringMachineSubsystem = Symbol();
 
 const position = new THREE.Vector3(-320,120,80);
-const target = new THREE.Vector3(0,0,-2);
+const target = new THREE.Vector3(0,0,0);
 
 // camera limit SPHERE
 const SPHERE_CAMERA = new THREE.Sphere(new THREE.Vector3(),80);
