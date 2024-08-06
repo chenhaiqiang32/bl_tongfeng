@@ -100,8 +100,8 @@ export class UnderGround extends Subsystem {
     onOBJProgress = (vertices,direction,tunnelObj,speed) => { // 流光
 
         let tunnelVertices = vertices;
-        let color = new THREE.Color(0.0627,0.9412,0.9412);
-        let color2 = new THREE.Color(0.0627,0.4,0.9412);
+        let color = new THREE.Color(0.0235,0.9647,0.9333);
+        let color2 = new THREE.Color(0.0196,0.3373,0.4824);
         if (direction === 2) { // 巷道没风
 
             tunnelObj.traverse(res => {
@@ -123,7 +123,7 @@ export class UnderGround extends Subsystem {
         const flowLight = new FlowLight2(tunnelVertices,{
             type: "tube",
             radius: 4.8,
-            segments: getLengthFromVertices(tunnelVertices) / 80,
+            segments: getLengthFromVertices(tunnelVertices) / 200,
             color1: color,
             color2: color2,
             speed: speed || 0,
