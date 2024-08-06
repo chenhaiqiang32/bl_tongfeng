@@ -103,11 +103,22 @@ export class UnderGround extends Subsystem {
         let color = new THREE.Color(0.0627,0.9412,0.9412);
         let color2 = new THREE.Color(0.0627,0.4,0.9412);
         if (direction === 2) { // 巷道没风
+
+            tunnelObj.traverse(res => {
+                if (res instanceof THREE.Mesh) {
+                    res.oldMaterial = res.material.clone();
+                    res.material.alphaTest = 0.8;
+                    res.material.transparent = false;
+                    res.renderOrder = 0;
+                    res.material.color = new THREE.Color(0.4745,0.6667,0.902);
+                }
+            });
+
             return false;
         }
         if (direction === 1) {
             color = new THREE.Color(0.1216,0.8784,0.0824);
-            color2 = new THREE.Color(0.0471,0.3373,0.0314);
+            color2 = new THREE.Color(0.0196,0.2353,0.102);
         }
         const flowLight = new FlowLight2(tunnelVertices,{
             type: "tube",
