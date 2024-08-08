@@ -152,7 +152,7 @@ body {
     color: #ffffff;
     text-align: center;
     line-height: 24px;
-    background-image: url("/textures/building.png");
+    background-image: url("./textures/building.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     cursor: pointer;

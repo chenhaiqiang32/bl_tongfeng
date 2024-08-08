@@ -14,7 +14,7 @@ import {
 } from "three";
 
 class Reflector extends Mesh {
-    constructor(geometry, options = {}) {
+    constructor(geometry,options = {}) {
         super(geometry);
 
         this.isReflector = true;
@@ -40,7 +40,7 @@ class Reflector extends Mesh {
         const reflectorWorldPosition = new Vector3();
         const cameraWorldPosition = new Vector3();
         const rotationMatrix = new Matrix4();
-        const lookAtPosition = new Vector3(0, 0, -1);
+        const lookAtPosition = new Vector3(0,0,-1);
         const clipPlane = new Vector4();
 
         const view = new Vector3();
@@ -52,9 +52,9 @@ class Reflector extends Mesh {
 
         // 纹理
         const textureLoader = new TextureLoader();
-        // const patternTexture = textureLoader.load("/textures/ground.png");
+        // const patternTexture = textureLoader.load("./textures/ground.png");
 
-        const renderTarget = new WebGLRenderTarget(textureWidth, textureHeight, {
+        const renderTarget = new WebGLRenderTarget(textureWidth,textureHeight,{
             samples: multisample,
         });
 
@@ -74,16 +74,16 @@ class Reflector extends Mesh {
 
         this.material = material;
 
-        this.onBeforeRender = function (renderer, scene, camera) {
+        this.onBeforeRender = function (renderer,scene,camera) {
             reflectorWorldPosition.setFromMatrixPosition(scope.matrixWorld);
             cameraWorldPosition.setFromMatrixPosition(camera.matrixWorld);
 
             rotationMatrix.extractRotation(scope.matrixWorld);
 
-            normal.set(0, 0, 1);
+            normal.set(0,0,1);
             normal.applyMatrix4(rotationMatrix);
 
-            view.subVectors(reflectorWorldPosition, cameraWorldPosition);
+            view.subVectors(reflectorWorldPosition,cameraWorldPosition);
 
             // Avoid rendering when reflector is facing away
 
@@ -94,16 +94,16 @@ class Reflector extends Mesh {
 
             rotationMatrix.extractRotation(camera.matrixWorld);
 
-            lookAtPosition.set(0, 0, -1);
+            lookAtPosition.set(0,0,-1);
             lookAtPosition.applyMatrix4(rotationMatrix);
             lookAtPosition.add(cameraWorldPosition);
 
-            target.subVectors(reflectorWorldPosition, lookAtPosition);
+            target.subVectors(reflectorWorldPosition,lookAtPosition);
             target.reflect(normal).negate();
             target.add(reflectorWorldPosition);
 
             virtualCamera.position.copy(view);
-            virtualCamera.up.set(0, 1, 0);
+            virtualCamera.up.set(0,1,0);
             virtualCamera.up.applyMatrix4(rotationMatrix);
             virtualCamera.up.reflect(normal);
             virtualCamera.lookAt(target);
@@ -114,14 +114,14 @@ class Reflector extends Mesh {
             virtualCamera.projectionMatrix.copy(camera.projectionMatrix);
 
             // Update the texture matrix
-            textureMatrix.set(0.5, 0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0, 1.0);
+            textureMatrix.set(0.5,0.0,0.0,0.5,0.0,0.5,0.0,0.5,0.0,0.0,0.5,0.5,0.0,0.0,0.0,1.0);
             textureMatrix.multiply(virtualCamera.projectionMatrix);
             textureMatrix.multiply(virtualCamera.matrixWorldInverse);
             textureMatrix.multiply(scope.matrixWorld);
 
             // Now update projection matrix with new clip plane, implementing code from: http://www.terathon.com/code/oblique.html
             // Paper explaining this technique: http://www.terathon.com/lengyel/Lengyel-Oblique.pdf
-            reflectorPlane.setFromNormalAndCoplanarPoint(normal, reflectorWorldPosition);
+            reflectorPlane.setFromNormalAndCoplanarPoint(normal,reflectorWorldPosition);
             reflectorPlane.applyMatrix4(virtualCamera.matrixWorldInverse);
 
             clipPlane.set(
@@ -166,7 +166,7 @@ class Reflector extends Mesh {
             renderer.state.buffers.depth.setMask(true); // make sure the depth buffer is writable so it can be properly cleared, see #18897
 
             if (renderer.autoClear === false) renderer.clear();
-            renderer.render(scene, virtualCamera);
+            renderer.render(scene,virtualCamera);
 
             renderer.xr.enabled = currentXrEnabled;
             renderer.shadowMap.autoUpdate = currentShadowAutoUpdate;
@@ -209,7 +209,7 @@ Reflector.ReflectorShader = {
             value: null,
         },
         textureSize: {
-            value: new Vector2(400, 400),
+            value: new Vector2(400,400),
         },
         patternTexture: {
             value: null,

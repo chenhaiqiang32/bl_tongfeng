@@ -13,7 +13,7 @@ class BoxModel {
         this.Lines = [];
         this.time = 0;
         this.images = [
-            "/shader/grid3.png"
+            "./shader/grid3.png"
             // "/shader/icon_20220311102510983_318887.png",
             // "/shader/icon_20210625174703331_294105.png",
             // "/shader/icon_20210625174822322_937383.png",
@@ -63,7 +63,7 @@ class BoxModel {
         for (let i = 0; i < this.images.length; i++) {
             var t = this._createMaterial(
                 this.images[i],
-                "/shader/光1.png",
+                "./shader/光1.png",
                 1,
                 1,
                 "rgba(0.6392, 0.6549, 0.8549,1)",

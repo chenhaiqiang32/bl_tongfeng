@@ -159,7 +159,7 @@ export class UnderGround extends Subsystem {
 
     initMaterial() {
         let loader = new THREE.TextureLoader();
-        let texture = loader.load("/textures/uv.jpg");
+        let texture = loader.load("./textures/uv.jpg");
         texture.colorSpace = THREE.SRGBColorSpace;
 
         texture.wrapS = texture.wrapT = THREE.MirroredRepeatWrapping;
@@ -369,8 +369,8 @@ export class UnderGround extends Subsystem {
     }
 
     initTunnelFlowBox() {
-        let frontUrl = "/tunnelTexture/front/"; // 进风
-        let backUrl = "/tunnelTexture/back/"; // 回风
+        let frontUrl = "./tunnelTexture/front/"; // 进风
+        let backUrl = "./tunnelTexture/back/"; // 回风
         let arr = [frontUrl,backUrl];
         let obj = { front: null,back: null };
         arr.forEach((child,index) => {

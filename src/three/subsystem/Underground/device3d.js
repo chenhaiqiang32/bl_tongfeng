@@ -71,30 +71,30 @@ export class Device3D {
                     const partsChangeBg = [201,202,203,204];
                     const partsChangeObj = {
                         201: {
-                            "00": "/bgDom/fan_first0_second0.png",
-                            "11": "/bgDom/fan_first1_second1.png",
-                            "01": "/bgDom/fan_first0_second1.png",
-                            "10": "/bgDom/fan_first1_second0.png"
+                            "00": "./bgDom/fan_first0_second0.png",
+                            "11": "./bgDom/fan_first1_second1.png",
+                            "01": "./bgDom/fan_first0_second1.png",
+                            "10": "./bgDom/fan_first1_second0.png"
                         },
                         202: {
-                            "00": "/bgDom/parfan_first0_second0.png",
-                            "11": "/bgDom/parfan_first1_second1.png",
-                            "01": "/bgDom/parfan_first0_second1.png",
-                            "10": "/bgDom/parfan_first1_second0.png",
+                            "00": "./bgDom/parfan_first0_second0.png",
+                            "11": "./bgDom/parfan_first1_second1.png",
+                            "01": "./bgDom/parfan_first0_second1.png",
+                            "10": "./bgDom/parfan_first1_second0.png",
                         },
                         203: {
-                            "00": "/bgDom/door_first0_second0.png",
-                            "11": "/bgDom/door_first1_second1.png",
-                            "01": "/bgDom/door_first0_second1.png",
-                            "10": "/bgDom/door_first1_second0.png"
+                            "00": "./bgDom/door_first0_second0.png",
+                            "11": "./bgDom/door_first1_second1.png",
+                            "01": "./bgDom/door_first0_second1.png",
+                            "10": "./bgDom/door_first1_second0.png"
                         },
                         204: {
-                            "00": "/bgDom/window_first0_second0.png",
-                            "11": "/bgDom/window_first1_second1.png",
-                            "01": "/bgDom/window_first0_second1.png",
-                            "10": "/bgDom/window_first1_second0.png",
-                            "1": "/bgDom/window_1.png",
-                            "0": "/bgDom/window_0.png"
+                            "00": "./bgDom/window_first0_second0.png",
+                            "11": "./bgDom/window_first1_second1.png",
+                            "01": "./bgDom/window_first0_second1.png",
+                            "10": "./bgDom/window_first1_second0.png",
+                            "1": "./bgDom/window_1.png",
+                            "0": "./bgDom/window_0.png"
                         }
                     };
 
