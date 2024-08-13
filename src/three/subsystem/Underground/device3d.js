@@ -151,6 +151,8 @@ export class Device3D {
                                 if (value[0].angle !== "0") {
                                     key = "1";
                                 }
+                                let changeDom = container.getElementsByClassName("secondWindowHas")[0]; // 单风窗只显示一个
+                                changeDom.style.display = "none";
                             }
                         }
                         domBgImg.src = partsChangeObj[type][key];
