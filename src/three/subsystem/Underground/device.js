@@ -240,13 +240,23 @@ export class DeviceManger {
             const { id,type } = element;
             this.del(id,type);
             const { obj3d,position } = this.device3d.create(element);
+            let obj = {
+                info: element
+            };
             if (obj3d) {
-                element.object3d = obj3d;
-                element.position = position;
+                obj.object3d = obj3d;
+                obj.position = position;
             }
-            this.set(id,element,type);
+            this.set(id,obj,type);
             this.needUpdateSubsystem(type,id,element,"update");
         });
+        // update.forEach(element => {
+        //     const { id,type } = element;
+        //     if (this.has(id,type)) {
+        //         let object = this.get(id,type);
+        //         this.device3d.update(object,element);
+        //     }
+        // });
         remove.forEach(element => {
             const { id,type } = element;
             this.del(id,type);

@@ -54,6 +54,7 @@ export class Device3D {
         let domObjParts = this.device.deviceCode[type].domToValueParts;
         let domEvent = this.device.deviceCode[type].domEvent;
         let statusShow = this.device.deviceCode[type].statusValue;
+        let domValue = {};
         let toSystem = this.device.deviceCode[type].systemName;
         if (container) {
             for (let key in deviceInfo) {
@@ -66,6 +67,7 @@ export class Device3D {
                         changeDom.innerText = statusShow[value + ""]; // dom元素赋值
                         value ? changeDom.classList.add("green") : changeDom.classList.add("red");
                     }
+                    domValue[key] = changeDom;
                 }
                 if (key === "parts") { // 修改部件css3d展示dom数据
                     const partsChangeBg = [201,202,203,204];
@@ -213,6 +215,7 @@ export class Device3D {
             startPosition.y = startPosition.y + 5.6;
             css2d.position.copy(startPosition);
             css2d.visible = false;
+            css2d.category = "iconTitle";
             object.add(css2d);
         }
 
@@ -225,6 +228,7 @@ export class Device3D {
             startPosition.y = startPosition.y + 5.6;
             css2d.position.copy(startPosition);
             css2d.visible = false;
+            css2d.category = "iconTitle";
             object.add(css2d);
         }
 
@@ -239,6 +243,7 @@ export class Device3D {
         iconCss2d.center = new THREE.Vector2(0.5,1);
         iconCss2d.renderOrder = 12;
         iconCss2d.position.copy(startPosition);
+        iconCss2d.category = "iconImg";
         iconCss2d.typeName = type;
         iconCss2d.typeId = id;
         dom.onclick = () => {
@@ -251,7 +256,39 @@ export class Device3D {
         this.singleGroup.add(object);
         return { obj3d: object,position: startPosition };
     }
+    changeDomObj(changeDom,value) {
+        let statusShow = this.device.deviceCode[type].statusValue;
+        changeDom.title = value;
+        changeDom.innerText = value; // dom元素赋值
+        if (key === "status") { // 修改dom颜色
+            changeDom.innerText = statusShow[value + ""]; // dom元素赋值
+            value ? changeDom.classList.add("green") : changeDom.classList.add("red");
+        }
+    }
+    vectorsEqual(v1,v2) {
+        return v1.x === v2.x && v1.y === v2.y && v1.z === v2.z;
+    }
 
+    update(object,element) {
+        const { position,object3d,info } = object;
+        const { id,type,tunnelId,distance,deviceInfo } = element;
+        let currentPosition = this.underGround.getPosition(tunnelId,distance);
+        currentPosition.y = currentPosition.y + 5.6;
+        if (!this.vectorsEqual(currentPosition,position)) { // 位置不等
+            object3d.traverse(child => {
+                if (child.category && child.category === "iconImg") { // 图标
+                    child.position.copy(currentPosition);
+                }
+                if (child.category && child.category === "iconTitle") { // 牌子
+                    child.position.copy(currentPosition);
+                }
+            });
+            object.position = currentPosition;
+        }
+
+
+        object.info = element;
+    }
     /**
      * @param {T2} data
      */
