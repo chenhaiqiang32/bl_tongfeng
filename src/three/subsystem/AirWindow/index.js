@@ -78,7 +78,9 @@ export class AirWindow extends Subsystem {
             angle: "0", // 角度
             trueName: "#1风窗开窗",
             falseName: "#1风窗关窗",
-            actionName: "#1风窗关窗"
+            actionName: "#1风窗关窗",
+            shan: [],
+            rotationX: 1.745329230955414
         };
         this.domSpeed = "暂无";
 
@@ -86,7 +88,7 @@ export class AirWindow extends Subsystem {
             name: "暂无",
             actions: [],
             object: [],
-            angle: "0", // 角度
+            angle: "0", // 角度 100相当于0
             dom: {
                 speed: null,
                 name: null,
@@ -94,7 +96,9 @@ export class AirWindow extends Subsystem {
             },
             trueName: "#2风窗开窗",
             falseName: "#2风窗关窗",
-            actionName: "#2风窗关窗"
+            actionName: "#2风窗关窗",
+            shan: [],
+            rotationX: 1.745329230955414
         };
     }
 
@@ -213,6 +217,12 @@ export class AirWindow extends Subsystem {
                     child.material.onBeforeCompile = shader => {
                     };
                 }
+                if (child.name.includes("#1风窗叶片")) {
+                    this.fanner1.shan.push(child);
+                }
+                if (child.name.includes("#2风窗叶片")) {
+                    this.fanner2.shan.push(child);
+                }
             });
         }
         if (name === "ground") {
@@ -268,12 +278,9 @@ export class AirWindow extends Subsystem {
     updateDataInfo(element,type) {
         const { speed,parts } = element;
         if (type === "remove") { // 该风门删除了
-            this.fanner1.angle = "0";
-            this.fanner2.angle = "0";
             this.fanner1.name = "暂无";
             this.fanner2.name = "暂无";
-            this.fanner1.angle = "0";
-            this.fanner2.angle = "0";
+
             this.fanner1.actionName = this.fanner1.falseName;
             this.fanner2.actionName = this.fanner2.falseName;
             this.fanner1.dom.speed.innerText = "暂无";
@@ -282,8 +289,12 @@ export class AirWindow extends Subsystem {
             this.fanner2.dom.name.innerText = "暂无";
             this.fanner1.dom.status.innerText = "0度";
             this.fanner2.dom.status.innerText = "0度";
-            this.setEquipmentState(1,"0"); // 两个风门关闭
-            this.setEquipmentState(2,"0"); // 两个风门关闭
+            if (this.fanner1.angle !== '0') {
+                this.setEquipmentState(1,"0"); // 两个风门关闭
+            }
+            if (this.fanner2.angle !== '0') {
+                this.setEquipmentState(2,"0"); // 两个风门关闭
+            }
 
         } else { // 更新或者新增
             this.domSpeed = speed;
@@ -299,7 +310,6 @@ export class AirWindow extends Subsystem {
                 } else {
                     fanner.actionName = fanner.trueName;
                 }
-                fanner.angle = angle;
                 fanner.dom.speed.innerText = speed;
                 fanner.dom.name.innerText = name;
                 fanner.dom.status.innerText = angle + "度";
@@ -400,6 +410,8 @@ export class AirWindow extends Subsystem {
 
         this.bloomLights.length = 0;
         this.removes.length = 0;
+        this.fanner1.shan.length = 0;
+        this.fanner2.shan.length = 0;
         this.glasses.length = 0;
         this.flowLights.length = 0;
         this.bloomLights.length = 0;
@@ -463,15 +475,22 @@ export class AirWindow extends Subsystem {
                 this.tweenCode = null;
             })
             .start();
-        actions.forEach(action => {
-            action.stop();
-            if (action._clip.name === fanner.actionName) {
-                action.play();
-                action.paused = false;
-                action.clampWhenFinished = true;
-                action.loop = THREE.LoopOnce;
-            }
-        });
+        let startRotation = fanner.rotationX;
+        new TWEEN.Tween({ rotationX: startRotation })
+            .to({ rotationX: 1.745329230955414 - (1.745329230955414 / 90) * type },1000)
+            .onUpdate(function (e) {
+                // 每次动画更新时，都会调用这个函数
+                // 更新mesh的rotation.x属性
+                fanner.shan.map((child,index) => {
+                    child.rotation.x = e.rotationX;
+                });
+
+                fanner.rotationX = e.rotationX;
+            })
+            .onComplete(() => {
+                fanner.angle = type;
+            })
+            .start();
     }
 
     /**@param {Core3D} core  */

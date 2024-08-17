@@ -78,7 +78,9 @@ export class AirWindowSingle extends Subsystem {
             angle: "0", // 角度
             trueName: "风窗开窗",
             falseName: "风窗关窗",
-            actionName: "风窗关窗"
+            actionName: "风窗关窗",
+            shan: [],
+            rotationX: 1.745329230955414
         };
         this.domSpeed = "暂无";
     }
@@ -189,6 +191,9 @@ string} name
                     child.material.onBeforeCompile = shader => {
                     };
                 }
+                if (child.name.includes("#1风窗叶片")) {
+                    this.fanner1.shan.push(child);
+                }
             });
         }
         if (name === "ground") {
@@ -238,7 +243,6 @@ string} name
     updateDataInfo(element,type) {
         const { speed,parts } = element;
         if (type === "remove") { // 该风门删除了
-            this.fanner1.angle = "0";
             this.fanner1.name = "暂无";
             this.fanner1.actionName = this.fanner1.falseName;
             this.fanner1.dom.speed.innerText = "暂无";
@@ -257,7 +261,6 @@ string} name
                 } else {
                     fanner.actionName = fanner.trueName;
                 }
-                fanner.angle = angle;
                 fanner.dom.speed.innerText = speed;
                 fanner.dom.name.innerText = name;
                 fanner.dom.status.innerText = angle + "度";
@@ -354,6 +357,7 @@ string} name
 
         this.bloomLights.length = 0;
         this.removes.length = 0;
+        this.fanner1.shan.length = 0;
         this.glasses.length = 0;
         this.flowLights.length = 0;
         this.bloomLights.length = 0;
@@ -412,15 +416,22 @@ string} name
                 this.tweenCode = null;
             })
             .start();
-        actions.forEach(action => {
-            action.stop();
-            if (action._clip.name === fanner.actionName) {
-                action.play();
-                action.paused = false;
-                action.clampWhenFinished = true;
-                action.loop = THREE.LoopOnce;
-            }
-        });
+        let startRotation = fanner.rotationX;
+        new TWEEN.Tween({ rotationX: startRotation })
+            .to({ rotationX: 1.745329230955414 - (1.745329230955414 / 90) * type },1000)
+            .onUpdate(function (e) {
+                // 每次动画更新时，都会调用这个函数
+                // 更新mesh的rotation.x属性
+                fanner.shan.map((child,index) => {
+                    child.rotation.x = e.rotationX;
+                });
+
+                fanner.rotationX = e.rotationX;
+            })
+            .onComplete(() => {
+                fanner.angle = type;
+            })
+            .start();
     }
 
     /**@param {Core3D} core  */

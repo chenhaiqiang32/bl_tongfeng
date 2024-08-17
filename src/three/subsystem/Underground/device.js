@@ -228,35 +228,26 @@ export class DeviceManger {
         const { add,update,remove } = ars;
         add.forEach(element => {
             const { id,type } = element;
-            const { obj3d,position } = this.device3d.create(element);
-            if (obj3d) {
-                element.object3d = obj3d;
-                element.position = position;
-            }
-            this.set(id,element,type);
-            this.needUpdateSubsystem(type,id,element,"add");
-        });
-        update.forEach(element => {
-            const { id,type } = element;
-            this.del(id,type);
-            const { obj3d,position } = this.device3d.create(element);
+            const { obj3d,position,doms } = this.device3d.create(element);
             let obj = {
-                info: element
+                infos: element
             };
             if (obj3d) {
                 obj.object3d = obj3d;
                 obj.position = position;
+                obj.doms = doms;
             }
             this.set(id,obj,type);
+            this.needUpdateSubsystem(type,id,element,"add");
+        });
+        update.forEach(element => {
+            const { id,type } = element;
+            if (this.has(id,type)) {
+                let object = this.get(id,type);
+                this.device3d.update(object,element);
+            }
             this.needUpdateSubsystem(type,id,element,"update");
         });
-        // update.forEach(element => {
-        //     const { id,type } = element;
-        //     if (this.has(id,type)) {
-        //         let object = this.get(id,type);
-        //         this.device3d.update(object,element);
-        //     }
-        // });
         remove.forEach(element => {
             const { id,type } = element;
             this.del(id,type);

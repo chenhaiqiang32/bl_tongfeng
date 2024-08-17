@@ -54,110 +54,33 @@ export class Device3D {
         let domObjParts = this.device.deviceCode[type].domToValueParts;
         let domEvent = this.device.deviceCode[type].domEvent;
         let statusShow = this.device.deviceCode[type].statusValue;
-        let domValue = {};
+        let domValue = {
+            domObjContent: { // 主体部分dom
+            },
+            domDeviceImg: null, // 图片dom,
+            domParts: { // 底部 parts部分dom
+                0: {},
+                1: {}
+            },
+            domIcon: null, // 设备图标dom
+            windowDomSecond: null // 风窗第二个部分dom
+        };
         let toSystem = this.device.deviceCode[type].systemName;
         if (container) {
             for (let key in deviceInfo) {
                 let value = deviceInfo[key];
                 if (domObj[key]) { // 修改常规css3d展示dom数据
                     let changeDom = container.getElementsByClassName(domObj[key])[0];
-                    changeDom.title = value;
-                    changeDom.innerText = value; // dom元素赋值
-                    if (key === "status") { // 修改dom颜色
-                        changeDom.innerText = statusShow[value + ""]; // dom元素赋值
-                        value ? changeDom.classList.add("green") : changeDom.classList.add("red");
-                    }
-                    domValue[key] = changeDom;
+                    this.changeDomObj(changeDom,value,type,key); //
+                    domValue.domObjContent[key] = changeDom; // 存储dom
                 }
                 if (key === "parts") { // 修改部件css3d展示dom数据
-                    const partsChangeBg = [201,202,203,204];
-                    const partsChangeObj = {
-                        201: {
-                            "00": "./bgDom/fan_first0_second0.png",
-                            "11": "./bgDom/fan_first1_second1.png",
-                            "01": "./bgDom/fan_first0_second1.png",
-                            "10": "./bgDom/fan_first1_second0.png"
-                        },
-                        202: {
-                            "00": "./bgDom/parfan_first0_second0.png",
-                            "11": "./bgDom/parfan_first1_second1.png",
-                            "01": "./bgDom/parfan_first0_second1.png",
-                            "10": "./bgDom/parfan_first1_second0.png",
-                        },
-                        203: {
-                            "00": "./bgDom/door_first0_second0.png",
-                            "11": "./bgDom/door_first1_second1.png",
-                            "01": "./bgDom/door_first0_second1.png",
-                            "10": "./bgDom/door_first1_second0.png"
-                        },
-                        204: {
-                            "00": "./bgDom/window_first0_second0.png",
-                            "11": "./bgDom/window_first1_second1.png",
-                            "01": "./bgDom/window_first0_second1.png",
-                            "10": "./bgDom/window_first1_second0.png",
-                            "1": "./bgDom/window_1.png",
-                            "0": "./bgDom/window_0.png"
-                        }
-                    };
-
-                    let domBgImg = container.getElementsByClassName("deviceImgDom")[0];
-                    if (partsChangeBg.includes(type)) {
-                        let key = "";
-                        if (type === 201 || type === 202) { // 主风机局部风机
-                            if (!value[0].status && !value[1].status) {
-                                key = "00";
-                            }
-                            if (value[0].status && value[1].status) {
-                                key = "11";
-                            }
-                            if (!value[0].status && value[1].status) {
-                                key = "01";
-                            }
-                            if (value[0].status && !value[1].status) {
-                                key = "10";
-                            }
-                        }
-                        if (type === 203) { // 风门
-                            if (value[0].status === 2 && value[1].status === 2) {
-                                key = "00";
-                            }
-                            if (value[0].status !== 2 && value[1].status !== 2) {
-                                key = "11";
-                            }
-                            if (value[0].status === 2 && value[1].status !== 2) {
-                                key = "01";
-                            }
-                            if (value[0].status !== 2 && value[1].status === 2) {
-                                key = "10";
-                            }
-                        }
-                        if (type === 204) { // 风窗
-                            if (value.length === 2) {
-                                if (value[0].angle === "0" && value[1].angle === "0") {
-                                    key = "00";
-                                }
-                                if (value[0].angle !== "0" && value[1].angle !== "0") {
-                                    key = "11";
-                                }
-                                if (value[0].angle === "0" && value[1].angle !== "0") {
-                                    key = "01";
-                                }
-                                if (value[0].angle !== "0" && value[1].angle === "0") {
-                                    key = "10";
-                                }
-                            }
-                            if (value.length === 1) {
-                                if (value[0].angle === "0") {
-                                    key = "0";
-                                }
-                                if (value[0].angle !== "0") {
-                                    key = "1";
-                                }
-                                let changeDom = container.getElementsByClassName("secondWindowHas")[0]; // 单风窗只显示一个
-                                changeDom.style.display = "none";
-                            }
-                        }
-                        domBgImg.src = partsChangeObj[type][key];
+                    let domBgImg = container.getElementsByClassName("deviceImgDom");
+                    let windowDomSecond = container.getElementsByClassName("secondWindowHas")[0]; // 单风窗只显示一个
+                    if (domBgImg && domBgImg.length > 0) { // 图片dom
+                        this.changeDomDeviceImg(domBgImg[0],type,value,windowDomSecond);
+                        domValue.domDeviceImg = domBgImg[0];
+                        domValue.windowDomSecond = windowDomSecond;
                     }
                     value.forEach((child,index) => {
                         let currentDom = domObjParts[index];
@@ -165,18 +88,8 @@ export class Device3D {
                             let val = child[i];
                             if (currentDom[i]) { // 存在要修改的dom
                                 let changeDom = container.getElementsByClassName(currentDom[i])[0];
-                                changeDom.innerText = val; // dom元素赋值
-                                changeDom.title = val;
-                                if (i === "status") { // 修改dom颜色
-                                    if (type === 203) { // 风门
-                                        let typeToValue = { 0: "打开",1: "未开到位",2: "关闭",3: "未关到位" };
-                                        changeDom.innerText = typeToValue[val];
-                                        val == 2 ? changeDom.classList.add("green") : changeDom.classList.add("grey");
-                                    } else {
-                                        changeDom.innerText = val ? "开" : "关";
-                                        val ? changeDom.classList.add("green") : changeDom.classList.add("grey");
-                                    }
-                                }
+                                this.changeDomParts(changeDom,val,type,i);
+                                domValue.domParts[index][i] = changeDom;
                             }
                         }
                     });
@@ -234,10 +147,10 @@ export class Device3D {
 
 
         // iconDom
-        let spriteImg = `./icon/${type}_${deviceInfo.status ? 'online' : 'outline'}.png`;
         let dom = document.getElementById("serviceImg").cloneNode(true);
-        let domSrc = dom.getElementsByClassName("serviceImgUrl");
-        domSrc[0].src = spriteImg;
+        let domSrc = dom.getElementsByClassName("serviceImgUrl")[0];
+        this.changeDomIcon(domSrc,type,deviceInfo.status);
+        domValue.domIcon = domSrc;
         let iconCss2d = createCSS2DObject(dom);
         iconCss2d.scale.set(0.012,0.012,0.012);
         iconCss2d.center = new THREE.Vector2(0.5,1);
@@ -254,23 +167,162 @@ export class Device3D {
         };
         object.add(iconCss2d);
         this.singleGroup.add(object);
-        return { obj3d: object,position: startPosition };
+        return { obj3d: object,position: startPosition,doms: domValue };
     }
-    changeDomObj(changeDom,value) {
-        let statusShow = this.device.deviceCode[type].statusValue;
+    changeDomObj(changeDom,value,type,key) { // 修改dom数组，并且根据状态更改颜色
+        // changeDom 当前要修改的dom元素
+        // value 要修改成的结果
+        // type 设备编码
+        // key 数据deviceInfo的所有字段
+        let statusShow = this.device.deviceCode[type].statusValue; // 当前设备状态数组
         changeDom.title = value;
         changeDom.innerText = value; // dom元素赋值
         if (key === "status") { // 修改dom颜色
-            changeDom.innerText = statusShow[value + ""]; // dom元素赋值
-            value ? changeDom.classList.add("green") : changeDom.classList.add("red");
+            changeDom.innerText = statusShow[value + ""]; // 状态字段下显示的文字
+            value ? this.changeColor('red','green',changeDom) : this.changeColor('green','red',changeDom); // 状态字段下，true显示绿色，false显示红色
         }
+    }
+    changeColor(fromColor,toColor,changeDom) {
+        if (!changeDom.classList.contains(toColor)) {
+            changeDom.classList.add(toColor);
+        }
+        if (changeDom.classList.contains(fromColor)) {
+            // 如果有，就移除'red'类
+            changeDom.classList.remove(fromColor);
+        }
+    }
+    getImgUrl(type,value) {  // 获取图片地址
+        const partsChangeBg = [201,202,203,204];
+        const partsChangeObj = {
+            201: {
+                "00": "./bgDom/fan_first0_second0.png",
+                "11": "./bgDom/fan_first1_second1.png",
+                "01": "./bgDom/fan_first0_second1.png",
+                "10": "./bgDom/fan_first1_second0.png"
+            },
+            202: {
+                "00": "./bgDom/parfan_first0_second0.png",
+                "11": "./bgDom/parfan_first1_second1.png",
+                "01": "./bgDom/parfan_first0_second1.png",
+                "10": "./bgDom/parfan_first1_second0.png",
+            },
+            203: {
+                "00": "./bgDom/door_first0_second0.png",
+                "11": "./bgDom/door_first1_second1.png",
+                "01": "./bgDom/door_first0_second1.png",
+                "10": "./bgDom/door_first1_second0.png"
+            },
+            204: {
+                "00": "./bgDom/window_first0_second0.png",
+                "11": "./bgDom/window_first1_second1.png",
+                "01": "./bgDom/window_first0_second1.png",
+                "10": "./bgDom/window_first1_second0.png",
+                "1": "./bgDom/window_1.png",
+                "0": "./bgDom/window_0.png"
+            }
+        };
+
+        if (partsChangeBg.includes(type)) {
+            let key = "";
+            if (type === 201 || type === 202) { // 主风机局部风机
+                if (!value[0].status && !value[1].status) {
+                    key = "00";
+                }
+                if (value[0].status && value[1].status) {
+                    key = "11";
+                }
+                if (!value[0].status && value[1].status) {
+                    key = "01";
+                }
+                if (value[0].status && !value[1].status) {
+                    key = "10";
+                }
+            }
+            if (type === 203) { // 风门
+                if (value[0].status === 2 && value[1].status === 2) {
+                    key = "00";
+                }
+                if (value[0].status !== 2 && value[1].status !== 2) {
+                    key = "11";
+                }
+                if (value[0].status === 2 && value[1].status !== 2) {
+                    key = "01";
+                }
+                if (value[0].status !== 2 && value[1].status === 2) {
+                    key = "10";
+                }
+            }
+            if (type === 204) { // 风窗
+                if (value.length === 2) {
+                    if (value[0].angle === "0" && value[1].angle === "0") {
+                        key = "00";
+                    }
+                    if (value[0].angle !== "0" && value[1].angle !== "0") {
+                        key = "11";
+                    }
+                    if (value[0].angle === "0" && value[1].angle !== "0") {
+                        key = "01";
+                    }
+                    if (value[0].angle !== "0" && value[1].angle === "0") {
+                        key = "10";
+                    }
+                }
+                if (value.length === 1) {
+                    if (value[0].angle === "0") {
+                        key = "0";
+                    }
+                    if (value[0].angle !== "0") {
+                        key = "1";
+                    }
+                }
+            }
+            return partsChangeObj[type][key];
+        }
+
+    }
+    changeDomDeviceImg(domBgImg,type,value,windowSecondDom) { // key parts 修改dom显示设备图片
+        // domBgImg 图片dom
+        // type 设备类型
+        // value 数值
+        let imgUrl = this.getImgUrl(type,value);
+        domBgImg.src = imgUrl;
+        if (type === 204) { // 风窗
+            if (value.length === 1) {
+                windowSecondDom.style.display = "none";
+            }
+        }
+    }
+    changeDomParts(changeDom,val,type,key) { // 修改底部状态部分dom 底部 part 部分内容
+        // changeDom 需要改的dom
+        // val 当前的值
+        // 字段名称
+        // type 商品类型
+        changeDom.innerText = val; // dom元素赋值
+        changeDom.title = val;
+        if (key === "status") { // 修改dom颜色
+            if (type === 203) { // 风门
+                let typeToValue = { 0: "打开",1: "未开到位",2: "关闭",3: "未关到位",4: "打开中",5: "关闭中" };
+                changeDom.innerText = typeToValue[val];
+                // val == 2 ? changeDom.classList.add("green") : changeDom.classList.add("grey");
+            } else {
+                changeDom.innerText = val ? "开" : "关";
+                // val ? changeDom.classList.add("green") : changeDom.classList.add("grey");
+            }
+            changeDom.classList.add("green");
+        }
+    }
+    changeDomIcon(domSrc,type,status) { // 地图图标dom
+        let spriteImg = `./icon/${type}_${status ? 'online' : 'outline'}.png`;
+        domSrc.src = spriteImg;
     }
     vectorsEqual(v1,v2) {
         return v1.x === v2.x && v1.y === v2.y && v1.z === v2.z;
     }
 
     update(object,element) {
-        const { position,object3d,info } = object;
+        // object 本地数据
+        // element 传入数据
+        const { position,object3d,infos,doms } = object;
         const { id,type,tunnelId,distance,deviceInfo } = element;
         let currentPosition = this.underGround.getPosition(tunnelId,distance);
         currentPosition.y = currentPosition.y + 5.6;
@@ -285,9 +337,38 @@ export class Device3D {
             });
             object.position = currentPosition;
         }
+        for (let key in deviceInfo) {
+            let value = deviceInfo[key]; // 最新的值
+            let oldValue = infos.deviceInfo[key]; // 旧的数据
+            if (key !== "parts") { // 不是部件
+                if (value !== oldValue) { //  数据变了
+                    if (doms.domObjContent[key])
+                        this.changeDomObj(doms.domObjContent[key],value,type,key);
+                    if (value !== deviceInfo.status) // 修改图标
+                        this.changeDomIcon(doms.domIcon,type,deviceInfo.status);
+                }
+            } else {
+                let currentImgUrl = this.getImgUrl(type,value);
+                let oldImgUrl = doms.domDeviceImg.getAttribute('src');
+                if (currentImgUrl !== oldImgUrl) {
+                    this.changeDomDeviceImg(doms.domDeviceImg,type,value,doms.windowDomSecond); // 修改图片deviceDom
+                }
+
+                value.forEach((child,index) => {
+                    for (let i in child) {
+                        let val = child[i]; // 当前数值
+                        let oldVal = oldValue[index][i];
+                        let currentDom = doms.domParts[index][i];
+                        if (val !== oldVal) {
+                            this.changeDomParts(currentDom,val,type,i);
+                        }
+                    }
+                });
+            }
+        }
 
 
-        object.info = element;
+        object.infos = element;
     }
     /**
      * @param {T2} data

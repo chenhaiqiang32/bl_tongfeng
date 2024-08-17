@@ -377,8 +377,14 @@ export class PartFanSubsystem extends Subsystem {
     updateDataInfo(element,type) {
         const { parts } = element;
         if (type === "remove") { // 该风门删除了
-            this.setEquipmentState(false,1,"toOut"); // 开启动画
-            this.setEquipmentState(false,2,"toOut"); // 开启动画
+            if (this.fanner1.state !== false) {
+                this.setEquipmentState(false,1,"toOut"); // 开启动画
+                this.fanner1.state = false;
+            }
+            if (this.fanner2.state !== false) {
+                this.setEquipmentState(false,2,"toOut"); // 开启动画
+                this.fanner2.state = false;
+            }
             this.fanner1.name = "暂无";
             this.fanner2.name = "暂无";
 
@@ -389,9 +395,12 @@ export class PartFanSubsystem extends Subsystem {
                 if (index === 1) {
                     fanner = this.fanner2;
                 }
+                if (fanner.state !== status) {
+                    this.setEquipmentState(status,index + 1,"toOut"); // 开启动画
+                    fanner.state = status;
+                }
                 fanner.name = name;
-                fanner.state = status;
-                this.setEquipmentState(status,index + 1,"toOut"); // 开启动画
+
             });
         }
         this.createLabel();

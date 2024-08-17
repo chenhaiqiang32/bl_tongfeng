@@ -83,7 +83,7 @@ export class AirDoor extends Subsystem {
                 name: null,
                 status: null
             },
-            typeName: { 0: "#1开到位",1: "#1门开门",2: "#1门关到位",3: "#1门关门" },
+            typeName: { 0: "#1开到位",1: "#1门开门",2: "#1门关到位",3: "#1门关门",4: "#1门开门",5: "#1门关门" },
             actionName: "#1门关到位"
         };
 
@@ -99,7 +99,7 @@ export class AirDoor extends Subsystem {
                 name: null,
                 status: null
             },
-            typeName: { 0: "#2开到位",1: "#2门开门",2: "#2门关到位",3: "#2门关门" },
+            typeName: { 0: "#2开到位",1: "#2门开门",2: "#2门关到位",3: "#2门关门",4: "#2门开门",5: "#2门关门" },
             actionName: "#2门关到位"
         };
     }
@@ -350,11 +350,17 @@ export class AirDoor extends Subsystem {
     }
     updateDataInfo(element,type) {
         const { speed,parts } = element;
-        let statusToValue = { 0: "打开",1: "未开到位",2: "关闭",3: "未关到位" };
+        let statusToValue = { 0: "打开",1: "未开到位",2: "关闭",3: "未关到位",4: "打开中",5: "关闭中" };
         if (type === "remove") { // 该风门删除了
             this.domSpeed = "暂无";
-            this.setEquipmentState(1,2); // 两个风门关闭
-            this.setEquipmentState(2,2); // 两个风门关闭
+            if (this.fanner1.state !== 2) {
+                this.setEquipmentState(1,2); // 两个风门关闭
+            }
+            if (this.fanner2.state !== 2) {
+                this.setEquipmentState(2,2); // 两个风门关闭
+            }
+            this.fanner1.state = 2;
+            this.fanner2.state = 2;
 
         } else { // 更新或者新增
             this.domSpeed = speed;
@@ -364,16 +370,20 @@ export class AirDoor extends Subsystem {
                 if (index === 1) {
                     fanner = this.fanner2;
                 }
+                if (status !== fanner.state) {
+                    this.setEquipmentState(index + 1,status); // 开启动画
+                    fanner.state = status;
+                }
                 fanner.name = name;
-                fanner.state = status;
                 fanner.actionName = fanner.typeName[status];
                 fanner.dom.speed.innerText = speed;
                 fanner.dom.name.innerText = name;
                 fanner.dom.status.innerText = statusToValue[status];
-                if (status === 1 || status === 3) {
+                if (status === 1 || status === 3 || status === 4 || status === 5) {
                     fanner.dom.status.style.color = "red";
+                } else {
+                    fanner.dom.status.style.color = "#50D887";
                 }
-                this.setEquipmentState(index + 1,status); // 开启动画
             });
         }
     }
