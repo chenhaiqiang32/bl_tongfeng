@@ -93,7 +93,7 @@ export class Core3D extends CoreExtensions {
 
         if (currentSystem) {
             // 如果目标系统和当前系统相同，直接返回。
-            if (targetSystem === currentSystem) return;
+            // if (targetSystem === currentSystem) return; // 会有同场景数据变化情况
 
             // 当前系统执行离开事件。
             currentSystem.onLeave();
@@ -114,8 +114,10 @@ export class Core3D extends CoreExtensions {
                 id: info.id,
                 deviceInfo: info.deviceInfo
             };
-            if (info.deviceInfo)
+            if (info.deviceInfo) {
                 targetSystem.updateDataInfo(info.deviceInfo,"add");
+            }
+
         }
 
         // openMessage(this);
