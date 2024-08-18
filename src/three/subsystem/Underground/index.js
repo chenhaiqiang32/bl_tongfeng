@@ -38,6 +38,10 @@ export class UnderGround extends Subsystem {
          * @type position vec3 坐标
          * @type name string 名称
          */
+        this.currentTunnelStyleData = {
+            styleName: "",
+            styleData: null
+        };
         this.postprocessing = core.postprocessing;
         this.meshGroup = new THREE.Group();
         this.meshGroup.name = "tunnelGroup";
@@ -281,17 +285,24 @@ export class UnderGround extends Subsystem {
         const type = { default: "巷道名称",direction: "风向",volume: "风量",speed: "风速",resistance: "阻力" };
 
         this.disposeStyle();
-
+        let tunnelType = typeName === "default" ? "branchName" : typeName;
+        this.currentTunnelStyleData.styleName = tunnelType;
+        this.currentTunnelStyleData.styleData = objectData;
         if (typeName === "direction") {
             this.tunnelData.forEach(child => {
                 this.onOBJProgress(child.points,child.direction,child.object3d,child.speed);
             });
             return false;
         }
-        let tunnelType = typeName === "default" ? "branchName" : typeName;
+
+
+
         const hasConfig = ['volume','speed','resistance'];
         this.tunnelData.forEach(child => {
             let currentTunnelConfig = child[tunnelType]; // 当前巷道上的对应配置数据
+            if (tunnelType === "branchName" && !currentTunnelConfig) { // 没有巷道名字
+                return false;
+            }
             this.labelData.push({
                 name: type[typeName] + ":" + currentTunnelConfig + (typeToWei[typeName] || ""),
                 position: new THREE.Vector3(child.position.x,child.position.y + 4.8,child.position.z)
@@ -302,6 +313,7 @@ export class UnderGround extends Subsystem {
             }
         });
         this.labelManager.init(this.labelData);
+
         this.updateVisibilityByCamera();
     }
 
@@ -337,6 +349,10 @@ export class UnderGround extends Subsystem {
             let tunnel = this.get(id);
             tunnel[config] = data;
         });
+        if (config === this.currentTunnelStyleData.styleName && this.core.currentSystemName === "main") { // 当前就在风格场景
+            this.switchTunnelStyle({ objectData: this.currentTunnelStyleData.styleData,typeName: config === "branchName" ? "default" : config });
+
+        }
     }
 
     initCurve(points,id,direction,speed) { // 生成样条曲线
@@ -637,7 +653,10 @@ export class UnderGround extends Subsystem {
             MemoryManager.dispose(child);
         });
         this.flowLights = [];
-
+        this.currentTunnelStyleData = { // 清除记录的巷道风格信息
+            styleName: "",
+            styleData: null
+        };
         // 清除巷道牌子
         this.labelManager.dispose();
         this.labelData = [];
