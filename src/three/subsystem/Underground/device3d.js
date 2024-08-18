@@ -132,6 +132,7 @@ export class Device3D {
             css2d.position.copy(startPosition);
             css2d.visible = false;
             css2d.category = "iconTitle";
+            css2d.renderOrder = 12;
             object.add(css2d);
         }
 
@@ -157,7 +158,7 @@ export class Device3D {
         let iconCss2d = createCSS2DObject(dom);
         iconCss2d.scale.set(0.012,0.012,0.012);
         iconCss2d.center = new THREE.Vector2(0.5,1);
-        iconCss2d.renderOrder = 12;
+        iconCss2d.renderOrder = -1;
         iconCss2d.position.copy(startPosition);
         iconCss2d.category = "iconImg";
         iconCss2d.typeName = type;
