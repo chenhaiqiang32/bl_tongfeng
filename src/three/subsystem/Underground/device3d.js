@@ -42,10 +42,13 @@ export class Device3D {
         const { id,type,tunnelId,distance,deviceInfo } = data;
         const object = new THREE.Object3D();
         object.name = id;
+        let hasTunnel = true; // 是否绑定巷道
         let currentPosition = this.underGround.getPosition(tunnelId,distance);
         if (!currentPosition) {
+            currentPosition = new THREE.Vector3(0,0,0);
             console.log("巷道id" + id + "不存在");
-            return false;
+            // return false;
+            hasTunnel = false;
         }
         let startPosition = currentPosition.clone();
         // css2dDom
@@ -167,7 +170,7 @@ export class Device3D {
         };
         object.add(iconCss2d);
         this.singleGroup.add(object);
-        return { obj3d: object,position: startPosition,doms: domValue };
+        return { obj3d: object,position: startPosition,doms: domValue,hasTunnel };
     }
     changeDomObj(changeDom,value,type,key) { // 修改dom数组，并且根据状态更改颜色
         // changeDom 当前要修改的dom元素
@@ -325,17 +328,22 @@ export class Device3D {
         const { position,object3d,infos,doms } = object;
         const { id,type,tunnelId,distance,deviceInfo } = element;
         let currentPosition = this.underGround.getPosition(tunnelId,distance);
-        currentPosition.y = currentPosition.y + 5.6;
-        if (!this.vectorsEqual(currentPosition,position)) { // 位置不等
-            object3d.traverse(child => {
-                if (child.category && child.category === "iconImg") { // 图标
-                    child.position.copy(currentPosition);
-                }
-                if (child.category && child.category === "iconTitle") { // 牌子
-                    child.position.copy(currentPosition);
-                }
-            });
-            object.position = currentPosition;
+        if (!currentPosition) {
+            console.log('更新设备的时候，巷道没有加载');
+        }
+        if (currentPosition) {
+            currentPosition.y = currentPosition.y + 5.6;
+            if (!this.vectorsEqual(currentPosition,position)) { // 位置不等
+                object3d.traverse(child => {
+                    if (child.category && child.category === "iconImg") { // 图标
+                        child.position.copy(currentPosition);
+                    }
+                    if (child.category && child.category === "iconTitle") { // 牌子
+                        child.position.copy(currentPosition);
+                    }
+                });
+                object.position = currentPosition;
+            }
         }
         for (let key in deviceInfo) {
             let value = deviceInfo[key]; // 最新的值

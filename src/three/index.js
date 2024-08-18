@@ -108,13 +108,14 @@ export class Core3D extends CoreExtensions {
 
         // 当前系统执行进入事件，返回Promise。
         await targetSystem.onEnter();
-        if (info && info.id !== null && info.deviceInfo) {
+        if (info && info.id !== null) {
             this.currentSystemInfo = {
                 type: info.type,
                 id: info.id,
                 deviceInfo: info.deviceInfo
             };
-            targetSystem.updateDataInfo(info.deviceInfo,"add");
+            if (info.deviceInfo)
+                targetSystem.updateDataInfo(info.deviceInfo,"add");
         }
 
         // openMessage(this);

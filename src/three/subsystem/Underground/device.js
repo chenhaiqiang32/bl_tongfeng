@@ -8,6 +8,7 @@ export class DeviceManger {
         this.core = core;
         this.tweenControls = core.tweenControls;
         this.scene = core.scene;
+        this.noTunnelDevice = {}; // 没有绑定巷道的设备
         this.cameraNear = 880; // 相机显示距离
         this.underGround = core;
         this.showBoardDom = []; // 要显示弹窗的设备
@@ -227,8 +228,8 @@ export class DeviceManger {
         this.addEvents();
         const { add,update,remove } = ars;
         add.forEach(element => {
-            const { id,type } = element;
-            const { obj3d,position,doms } = this.device3d.create(element);
+            const { id,type,tunnelId } = element;
+            const { obj3d,position,doms,hasTunnel } = this.device3d.create(element);
             let obj = {
                 infos: element
             };
@@ -236,6 +237,13 @@ export class DeviceManger {
                 obj.object3d = obj3d;
                 obj.position = position;
                 obj.doms = doms;
+                obj.hasTunnel = hasTunnel;
+            }
+            if (!hasTunnel) {
+                if (!this.noTunnelDevice[tunnelId]) {
+                    this.noTunnelDevice[tunnelId] = {};
+                }
+                this.noTunnelDevice[tunnelId][type + "_" + id] = obj;
             }
             this.set(id,obj,type);
             this.needUpdateSubsystem(type,id,element,"add");

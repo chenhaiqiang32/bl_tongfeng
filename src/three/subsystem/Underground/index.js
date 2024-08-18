@@ -220,6 +220,19 @@ export class UnderGround extends Subsystem {
             this.set(id,child);
             this.eventsArray.push(mesh);
             this.meshGroup.add(object);
+            if (this.equipMentSystem.noTunnelDevice[id]) {
+                if (Object.values(this.equipMentSystem.noTunnelDevice[id]).length === 0) {
+                    delete this.equipMentSystem.noTunnelDevice[id];
+                }
+                let alls = Object.keys(this.equipMentSystem.noTunnelDevice[id]);
+                alls.forEach(key => {
+                    let child = this.equipMentSystem.noTunnelDevice[id][key];
+                    const { infos } = child;
+                    child.hasTunnel = true;
+                    this.equipMentSystem.deviceManger({ add: [],update: [infos],remove: [] });
+                    delete this.equipMentSystem.noTunnelDevice[id][key];
+                });
+            }
         });
         if (this.core.currentSystemName === "main") { // 当前就在地面场景
             this.addEvents();
