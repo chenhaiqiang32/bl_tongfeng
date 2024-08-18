@@ -8,6 +8,7 @@ export class DeviceManger {
         this.core = core;
         this.tweenControls = core.tweenControls;
         this.scene = core.scene;
+        this.closeObject = {}; // 被关闭的设备
         this.noTunnelDevice = {}; // 没有绑定巷道的设备
         this.cameraNear = 880; // 相机显示距离
         this.underGround = core;
@@ -275,7 +276,7 @@ export class DeviceManger {
             this.core.core.updateSubSystemInfo(info,statusName);
         }
     }
-    updateVisibilityByCamera = () => { // 根据相机位置，控制显示隐藏
+    updateVisibilityByCamera = (res) => { // 根据相机位置，控制显示隐藏
         let camera = this.core.camera;
         let clickEquipType = this.showObjectById.type;
         let clickEquipId = this.showObjectById.id;
@@ -293,6 +294,17 @@ export class DeviceManger {
                     sprite.visible = false;
                     dom.visible = false;
                     return false;
+                }
+                if (!res) { // 不是相机位置更新触发的
+                    if (this.closeObject[child.infos.type + "_" + child.infos.id]) {
+                        return false; // 关闭设备不去处理
+                    }
+                }
+                if (res) { // 相机触发
+                    let keys = Object.keys(this.closeObject);
+                    [...keys].forEach(child => {
+                        delete this.closeObject[child];
+                    });
                 }
 
                 if (this.showBoardDom.length !== 0) { // 切换了传感器或者设备
@@ -349,6 +361,7 @@ export class DeviceManger {
             let object3d = obj.object3d;
             let dom = object3d.children[0];
             dom.visible = false;
+            this.closeObject[type + "_" + id] = { id,type }; // 更新后不需要被计算相机位置的设备
         }
         if (this.showObjectById.type === type && this.showObjectById.id === id) { // 关闭了点击出来的弹窗
             this.showObjectById.type = null;
