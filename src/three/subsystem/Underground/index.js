@@ -182,7 +182,7 @@ export class UnderGround extends Subsystem {
             const { id,branchName,pList,direction,speed } = child;
             pList.forEach(child => {
                 const temp = child.y;
-                child.y = child.z;
+                child.y = child.z + Math.random() * 0.0001;
                 child.z = temp + Math.random() * 0.0001; // 防止两个点在同个直线
             });
             let points = pList.map(res => {
