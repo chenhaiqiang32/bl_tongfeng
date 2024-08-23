@@ -10,7 +10,7 @@ export class DeviceManger {
         this.scene = core.scene;
         this.closeObject = {}; // 被关闭的设备
         this.noTunnelDevice = {}; // 没有绑定巷道的设备
-        this.cameraNear = 880; // 相机显示距离
+        this.cameraNear = 480; // 相机显示距离
         this.underGround = core;
         this.showBoardDom = []; // 要显示弹窗的设备
         this.chooseShowObjectIcon = [201,202,203,204,205,206,207,101,102,103,104,105,106,107,108,109,110]; // 筛选显示的图标

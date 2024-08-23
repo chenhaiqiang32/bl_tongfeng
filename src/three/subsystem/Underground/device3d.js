@@ -77,6 +77,10 @@ export class Device3D {
                     this.changeDomObj(changeDom,value,type,key); //
                     domValue.domObjContent[key] = changeDom; // 存储dom
                 }
+                if (key === 'isAlarm') { // 传感器报警需要变色
+                    let changeDom = container.getElementsByClassName(domObj["data"])[0];
+                    this.changeDomAlarmStyle(changeDom,value);
+                }
                 if (key === "parts") { // 修改部件css3d展示dom数据
                     let domBgImg = container.getElementsByClassName("deviceImgDom");
                     let windowDomSecond = container.getElementsByClassName("secondWindowHas")[0]; // 单风窗只显示一个
@@ -158,7 +162,7 @@ export class Device3D {
         let iconCss2d = createCSS2DObject(dom);
         iconCss2d.scale.set(0.012,0.012,0.012);
         iconCss2d.center = new THREE.Vector2(0.5,1);
-        iconCss2d.renderOrder = -1;
+        iconCss2d.renderOrder = 1;
         iconCss2d.position.copy(startPosition);
         iconCss2d.category = "iconImg";
         iconCss2d.typeName = type;
@@ -185,6 +189,9 @@ export class Device3D {
             changeDom.innerText = statusShow[value + ""]; // 状态字段下显示的文字
             value ? this.changeColor('red','green',changeDom) : this.changeColor('green','red',changeDom); // 状态字段下，true显示绿色，false显示红色
         }
+    }
+    changeDomAlarmStyle(changeDom,value) {
+        !value ? this.changeColor('red','green',changeDom) : this.changeColor('green','red',changeDom); // 状态字段下，true显示绿色，false显示红色
     }
     changeColor(fromColor,toColor,changeDom) {
         if (!changeDom.classList.contains(toColor)) {
@@ -355,6 +362,10 @@ export class Device3D {
                         this.changeDomObj(doms.domObjContent[key],value,type,key);
                     if (value !== deviceInfo.status) // 修改图标
                         this.changeDomIcon(doms.domIcon,type,deviceInfo.status);
+
+                    if (key === 'isAlarm') { // 传感器报警需要变色
+                        this.changeDomAlarmStyle(doms.domObjContent['data'],value);
+                    }
                 }
             } else {
                 let currentImgUrl = this.getImgUrl(type,value);
