@@ -146,7 +146,7 @@ export class DeviceManger {
                 },
                 systemName: "airDoor",
                 domToValue: { "name": "doorName","status": "doorStatus",},
-                statusValue: { "true": "连接正常","false": "连接异常" },
+                statusValue: { 0: "通讯正常",1: "通讯异常",2: "检修" },
                 domToValueParts: [{ "name": "deviceFirstName","status": "deviceFirstStatus" },{ "name": "deviceSecondName","status": "deviceSecondStatus" }],
                 domEvent: { "定位": "changeToLocal","管控": "changeSystem" }
             },
@@ -158,7 +158,7 @@ export class DeviceManger {
                 },
                 systemName: "airWindow",
                 domToValue: { "name": "windowName","status": "windowStatus" },
-                statusValue: { "true": "连接正常","false": "连接异常" },
+                statusValue: { 0: "通讯正常",1: "通讯异常",2: "检修" },
                 domToValueParts: [{ "name": "deviceFirstName","angle": "windowFirstAngle" },{ "name": "deviceSecondName","angle": "windowSecondAngle" }],
                 domEvent: { "定位": "changeToLocal","管控": "changeSystem" }
             },

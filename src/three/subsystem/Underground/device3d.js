@@ -186,21 +186,36 @@ export class Device3D {
         changeDom.title = value;
         changeDom.innerText = value; // dom元素赋值
         if (key === "status") { // 修改dom颜色
-            changeDom.innerText = statusShow[value + ""]; // 状态字段下显示的文字
-            value ? this.changeColor('red','green',changeDom) : this.changeColor('green','red',changeDom); // 状态字段下，true显示绿色，false显示红色
+            if (type === 203 || type === 204) { // 风门风窗特殊逻辑
+                changeDom.innerText = statusShow[value]; // 状态字段下显示的文字
+                if (value === 0) {
+                    this.changeColor(['red','orange'],'green',changeDom);
+                }
+                if (value === 1) {
+                    this.changeColor(['green','orange'],'red',changeDom);
+                }
+                if (value === 2) {
+                    this.changeColor(['green','red'],'orange',changeDom);
+                }
+            } else {
+                changeDom.innerText = statusShow[value + ""]; // 状态字段下显示的文字
+                value ? this.changeColor(['red'],'green',changeDom) : this.changeColor(['green'],'red',changeDom); // 状态字段下，true显示绿色，false显示红色
+            }
         }
     }
     changeDomAlarmStyle(changeDom,value) {
-        !value ? this.changeColor('red','green',changeDom) : this.changeColor('green','red',changeDom); // 状态字段下，true显示绿色，false显示红色
+        !value ? this.changeColor(['red'],'green',changeDom) : this.changeColor(['green'],'red',changeDom); // 状态字段下，true显示绿色，false显示红色
     }
     changeColor(fromColor,toColor,changeDom) {
         if (!changeDom.classList.contains(toColor)) {
             changeDom.classList.add(toColor);
         }
-        if (changeDom.classList.contains(fromColor)) {
-            // 如果有，就移除'red'类
-            changeDom.classList.remove(fromColor);
-        }
+        fromColor.forEach(childColor => {
+            if (changeDom.classList.contains(childColor)) {
+                // 如果有，就移除'red'类
+                changeDom.classList.remove(childColor);
+            }
+        });
     }
     getImgUrl(type,value) {  // 获取图片地址
         const partsChangeBg = [201,202,203,204];
