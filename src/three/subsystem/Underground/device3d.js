@@ -74,7 +74,7 @@ export class Device3D {
                 let value = deviceInfo[key];
                 if (domObj[key]) { // 修改常规css3d展示dom数据
                     let changeDom = container.getElementsByClassName(domObj[key])[0];
-                    this.changeDomObj(changeDom,value,type,key); //
+                    this.changeDomObj(changeDom,value,type,key,deviceInfo); //
                     domValue.domObjContent[key] = changeDom; // 存储dom
                 }
                 if (key === 'isAlarm') { // 传感器报警需要变色
@@ -177,7 +177,7 @@ export class Device3D {
         this.singleGroup.add(object);
         return { obj3d: object,position: startPosition,doms: domValue,hasTunnel };
     }
-    changeDomObj(changeDom,value,type,key) { // 修改dom数组，并且根据状态更改颜色
+    changeDomObj(changeDom,value,type,key,deviceInfo) { // 修改dom数组，并且根据状态更改颜色
         // changeDom 当前要修改的dom元素
         // value 要修改成的结果
         // type 设备编码
@@ -196,6 +196,11 @@ export class Device3D {
                 }
                 if (value === 2) {
                     this.changeColor(['green','red'],'orange',changeDom);
+                }
+                if (type === 203 && value === 1) { // 风门检修状态.检修状态风门部件都要变成--
+                    deviceInfo['parts'].forEach(child => {
+                        child.status = 6;
+                    });
                 }
             } else {
                 changeDom.innerText = statusShow[value + ""]; // 状态字段下显示的文字
@@ -327,7 +332,7 @@ export class Device3D {
         changeDom.title = val;
         if (key === "status") { // 修改dom颜色
             if (type === 203) { // 风门
-                let typeToValue = { 0: "打开",1: "未开到位",2: "关闭",3: "未关到位",4: "打开中",5: "关闭中" };
+                let typeToValue = { 0: "打开",1: "未开到位",2: "关闭",3: "未关到位",4: "打开中",5: "关闭中",6: "--" };
                 changeDom.innerText = typeToValue[val];
                 // val == 2 ? changeDom.classList.add("green") : changeDom.classList.add("grey");
             } else {
@@ -374,7 +379,7 @@ export class Device3D {
             if (key !== "parts") { // 不是部件
                 if (value !== oldValue) { //  数据变了
                     if (doms.domObjContent[key])
-                        this.changeDomObj(doms.domObjContent[key],value,type,key);
+                        this.changeDomObj(doms.domObjContent[key],value,type,key,deviceInfo);
                     if (value !== deviceInfo.status) // 修改图标
                         this.changeDomIcon(doms.domIcon,type,deviceInfo.status);
 
