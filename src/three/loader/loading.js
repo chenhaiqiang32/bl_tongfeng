@@ -1,6 +1,6 @@
 const LoadingDOM = document.createElement("div");
 LoadingDOM.style.position = "fixed";
-LoadingDOM.style.zIndex = "9";
+LoadingDOM.style.zIndex = "9999";
 LoadingDOM.style.top = "0px";
 LoadingDOM.style.left = "0px";
 LoadingDOM.style.width = "100%";

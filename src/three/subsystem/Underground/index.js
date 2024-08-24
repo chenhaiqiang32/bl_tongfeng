@@ -15,6 +15,7 @@ import { FlowLight,FlowLight2 } from "../../../lib/blMeshes";
 import { getBoxAndSphere,getLengthFromVertices } from "../../../utils";
 import { DeviceManger } from "./device";
 import BoxModel from "../../../lib/boxModel";
+import { loadingInstance } from "../../loader/loading";
 
 export const ground = Symbol();
 
@@ -178,6 +179,12 @@ export class UnderGround extends Subsystem {
     */
     initialized(ars) { // 生成巷道
         this.dispose();
+        if (this.core.currentSystemName === "main" || !this.core.currentSystemName) {
+            loadingInstance.service(0);
+            if (ars.length === 0) {
+                loadingInstance.close();
+            }
+        }
         ars.forEach((child,index) => {
             const { id,branchName,pList,direction,speed } = child;
             pList.forEach(child => {
@@ -233,8 +240,11 @@ export class UnderGround extends Subsystem {
                     delete this.equipMentSystem.noTunnelDevice[id][key];
                 });
             }
+            if (this.core.currentSystemName === "main" || !this.core.currentSystemName) {
+                loadingInstance.service(((100 * index) / ars.length).toFixed(2));
+            }
         });
-        if (this.core.currentSystemName === "main") { // 当前就在地面场景
+        if (this.core.currentSystemName === "main" || !this.core.currentSystemName) { // 当前就在地面场景
             this.addEvents();
             this.limit();
         }
@@ -259,7 +269,10 @@ export class UnderGround extends Subsystem {
         const position = center.clone().add(vec);
 
         // 根据计算数据，设置动画
-        this.tweenControls && this.tweenControls.flyToDelay(position,center,1000);
+        this.tweenControls && this.tweenControls.flyToDelay(position,center,200);
+        setTimeout(() => {
+            loadingInstance.close();
+        },200);
         this.tweenControls.start();
 
     }
