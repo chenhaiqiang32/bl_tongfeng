@@ -305,7 +305,7 @@ export class AirWindow extends Subsystem {
                     fanner = this.fanner2;
                 }
                 fanner.name = name;
-                if (angle === "0") {
+                if (angle === "0" || angle === "--") {
                     fanner.actionName = fanner.falseName;
                 } else {
                     fanner.actionName = fanner.trueName;

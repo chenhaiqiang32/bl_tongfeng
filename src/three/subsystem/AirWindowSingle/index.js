@@ -256,7 +256,7 @@ string} name
                 const { name,angle } = child;
                 let fanner = this.fanner1;
                 fanner.name = name;
-                if (angle === "0") {
+                if (angle === "0" || angle === "--") {
                     fanner.actionName = fanner.falseName;
                 } else {
                     fanner.actionName = fanner.trueName;
