@@ -52,7 +52,7 @@ export class Core3D extends CoreExtensions {
             this.setClass();
             this.firstLoad = false;
         } else {
-            this.currentSystem.onEnter();
+            // this.currentSystem.onEnter();
         }
         this.setRenderState(true);
     }
