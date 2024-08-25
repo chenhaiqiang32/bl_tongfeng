@@ -289,7 +289,6 @@ export class PartFanSubsystem extends Subsystem {
         }
         processingAnimations(gltf,this);
         this.actions.forEach(action => {
-            console.log(action._clip.name);
             if (action._clip.name.includes("#1风机")) {
                 this.fanner1.actions.push(action);
             } else if (action._clip.name.includes("#2风机")) {

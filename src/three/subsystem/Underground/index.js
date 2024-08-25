@@ -179,7 +179,7 @@ export class UnderGround extends Subsystem {
     */
     initialized(ars) { // 生成巷道
         this.dispose();
-        if (this.core.currentSystemName === "main" || !this.core.currentSystemName) {
+        if (this.core.currentSystemName === "main") {
             loadingInstance.service(0);
             if (ars.length === 0) {
                 loadingInstance.close();
@@ -240,11 +240,11 @@ export class UnderGround extends Subsystem {
                     delete this.equipMentSystem.noTunnelDevice[id][key];
                 });
             }
-            if (this.core.currentSystemName === "main" || !this.core.currentSystemName) {
+            if (this.core.currentSystemName === "main") {
                 loadingInstance.service(((100 * index) / ars.length).toFixed(2));
             }
         });
-        if (this.core.currentSystemName === "main" || !this.core.currentSystemName) { // 当前就在地面场景
+        if (this.core.currentSystemName === "main") { // 当前就在地面场景
             this.addEvents();
             this.limit();
         }
@@ -574,7 +574,7 @@ export class UnderGround extends Subsystem {
     async onEnter() {
 
         if (this !== this.core.currentSystem) return;
-
+        loadingInstance.service(0);
         this.onLoaded();
     }
 

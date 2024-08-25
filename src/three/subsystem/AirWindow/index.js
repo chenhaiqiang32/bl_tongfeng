@@ -257,7 +257,6 @@ export class AirWindow extends Subsystem {
         processingAnimations(gltf,this);
 
         this.actions.forEach(action => {
-            console.log(action._clip.name);
             if (action._clip.name.includes("#1")) {
                 this.fanner1.actions.push(action);
             }
@@ -305,7 +304,7 @@ export class AirWindow extends Subsystem {
                     fanner = this.fanner2;
                 }
                 fanner.name = name;
-                if (angle === "0" || angle === "--") {
+                if (!Number(angle)) {
                     fanner.actionName = fanner.falseName;
                 } else {
                     fanner.actionName = fanner.trueName;
@@ -450,6 +449,9 @@ export class AirWindow extends Subsystem {
         }
         // 通风机正在关闭的过程中开启通风机
         if (this.tweenCode) TWEEN.remove(this.tweenCode);
+        if (!Number(type)) {
+            type = "0";
+        }
         if (type === "0") this.elapsedTime = 0;
 
         const actions = fanner.actions;
@@ -477,7 +479,7 @@ export class AirWindow extends Subsystem {
             .start();
         let startRotation = fanner.rotationX;
         new TWEEN.Tween({ rotationX: startRotation })
-            .to({ rotationX: 1.745329230955414 - (1.745329230955414 / 90) * type },1000)
+            .to({ rotationX: 1.745329230955414 - (1.745329230955414 / 90) * (Number(type).toFixed(0)) },1000)
             .onUpdate(function (e) {
                 // 每次动画更新时，都会调用这个函数
                 // 更新mesh的rotation.x属性
