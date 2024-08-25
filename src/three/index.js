@@ -185,6 +185,10 @@ export class Core3D extends CoreExtensions {
     switchTunnelStyle(config) {
         this.main.switchTunnelStyle(config);
     }
+
+    switchTunnelResistance(config) {
+        this.main.switchTunnelResistance(config);
+    }
     /**
      *
      * @param {string} config

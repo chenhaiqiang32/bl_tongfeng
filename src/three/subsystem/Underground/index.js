@@ -107,7 +107,7 @@ export class UnderGround extends Subsystem {
         let tunnelVertices = vertices;
         let color = new THREE.Color(0.0235,0.9647,0.9333);
         let color2 = new THREE.Color(0.0196,0.3373,0.4824);
-        if (direction === 2) { // 巷道没风
+        if (direction === 2 || direction === 3) { // 巷道没风/用风
 
             tunnelObj.traverse(res => {
                 if (res instanceof THREE.Mesh) {
@@ -121,7 +121,7 @@ export class UnderGround extends Subsystem {
 
             return false;
         }
-        if (direction === 1) {
+        if (direction === 1) { // 出风巷道
             color = new THREE.Color(0.1216,0.8784,0.0824);
             color2 = new THREE.Color(0.0196,0.2353,0.102);
         }
@@ -293,6 +293,18 @@ export class UnderGround extends Subsystem {
         let t = length / allLength;
         if (t > 1) t = 1;
         return curve.getPointAt(t);
+    }
+
+
+    switchTunnelResistance(config) { // 根据巷道阻力阈值切换不同风向的显示
+        this.disposeStyle();
+        const { code,color,threshold } = config;
+        this.tunnelData.forEach(child => {
+            const { direction,resistance,id } = child;
+            if (direction === code && resistance > threshold) {
+                this.changeTunnelColor(id,color);
+            }
+        });
     }
 
     /**

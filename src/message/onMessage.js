@@ -16,6 +16,10 @@ export const openMessage = Core3D => {
                     Core3D.switchTunnelStyle(event.data.param);
                     break;
                 }
+                case 'switchTunnelResistance': {
+                    Core3D.switchTunnelResistance(event.data.param);
+                    break;
+                }
                 case "updateWindSpeed": {
                     Core3D.updateTunnelConfig(event.data.param,"speed");
                     break;
