@@ -134,7 +134,7 @@ export class Core3D extends CoreExtensions {
     }
 
     onMessageChange(info) {
-        const { id,type,system } = info;
+        const { id,type,system,isSingleWindow } = info;
         let typeToName = { 201: "fanSubsystem",202: "partFanSubsystem",203: "airDoor",204: "airWindow",205: "airStation" };
         let toSystem = "main";
         let deviceInfo = null;
@@ -143,7 +143,7 @@ export class Core3D extends CoreExtensions {
         } else {
             toSystem = typeToName[type];
             deviceInfo = this.main.equipMentSystem.get(id,type) && this.main.equipMentSystem.get(id,type).infos.deviceInfo;
-            if (type === 204 && deviceInfo && deviceInfo.parts.length === 1) { // 单风窗的场景
+            if (type === 204 && isSingleWindow) { // 单风窗的场景
                 toSystem = "airWindowSingle";
             }
         }
