@@ -114,7 +114,8 @@ export class AirStation extends Subsystem {
 
     updateDataInfo(element,type) {
         let info = element.info; // 显示文字
-        this.stationDom.innerText = info;
+        var newStr = info.replace(/ /g,"&nbsp;");
+        this.stationDom.innerHTML = newStr;
     }
 
     initDom() {
