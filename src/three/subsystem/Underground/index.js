@@ -299,6 +299,7 @@ export class UnderGround extends Subsystem {
     switchTunnelResistance(config) { // 根据巷道阻力阈值切换不同风向的显示
         this.disposeStyle();
         const { code,color,threshold } = config;
+        if (code === -1) return false; // -1 清除巷道变色
         this.tunnelData.forEach(child => {
             const { direction,resistance,id,isDifficult } = child;
             if (direction === code && isDifficult) {
