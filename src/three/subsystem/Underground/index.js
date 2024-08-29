@@ -300,8 +300,8 @@ export class UnderGround extends Subsystem {
         this.disposeStyle();
         const { code,color,threshold } = config;
         this.tunnelData.forEach(child => {
-            const { direction,resistance,id } = child;
-            if (direction === code && resistance > threshold) {
+            const { direction,resistance,id,isDifficult } = child;
+            if (direction === code && isDifficult) {
                 this.changeTunnelColor(id,color);
             }
         });
