@@ -83,7 +83,7 @@ export class AirDoor extends Subsystem {
                 name: null,
                 status: null
             },
-            typeName: { 0: "#1开到位",1: "#1门开门",2: "#1门关到位",3: "#1门关门",4: "#1门开门",5: "#1门关门" },
+            typeName: { 0: "#1开到位",1: "#1门开门",2: "#1门关到位",3: "#1门关门",4: "#1门开门",5: "#1门关门",6: "#1门关门" },
             actionName: "#1门关到位"
         };
 
@@ -99,7 +99,7 @@ export class AirDoor extends Subsystem {
                 name: null,
                 status: null
             },
-            typeName: { 0: "#2开到位",1: "#2门开门",2: "#2门关到位",3: "#2门关门",4: "#2门开门",5: "#2门关门" },
+            typeName: { 0: "#2开到位",1: "#2门开门",2: "#2门关到位",3: "#2门关门",4: "#2门开门",5: "#2门关门",6: "#2门关门" },
             actionName: "#2门关到位"
         };
     }
