@@ -420,7 +420,13 @@ export class FanSubsystem extends Subsystem {
                 if (index === 1) {
                     fanner = this.fanner2;
                 }
-                if (fanner.state !== status) {
+                if (type === 'update') {
+                    if (fanner.state !== status) {
+                        this.setEquipmentState(status,index + 1,"toOut"); // 开启动画
+                        fanner.state = status;
+                    }
+                }
+                if (type === 'add') {
                     this.setEquipmentState(status,index + 1,"toOut"); // 开启动画
                     fanner.state = status;
                 }

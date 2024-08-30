@@ -351,7 +351,7 @@ export class AirDoor extends Subsystem {
     }
     updateDataInfo(element,type) {
         const { speed,parts } = element;
-        let statusToValue = { 0: "打开",1: "未开到位",2: "关闭",3: "未关到位",4: "打开中",5: "关闭中",6:"--" };
+        let statusToValue = { 0: "打开",1: "未开到位",2: "关闭",3: "未关到位",4: "打开中",5: "关闭中",6: "--" };
         if (type === "remove") { // 该风门删除了
             this.domSpeed = "暂无";
             if (this.fanner1.state !== 2) {
@@ -371,7 +371,13 @@ export class AirDoor extends Subsystem {
                 if (index === 1) {
                     fanner = this.fanner2;
                 }
-                if (status !== fanner.state) {
+                if (type === 'update') {
+                    if (status !== fanner.state) {
+                        this.setEquipmentState(index + 1,status); // 开启动画
+                        fanner.state = status;
+                    }
+                }
+                if (type === 'add') {
                     this.setEquipmentState(index + 1,status); // 开启动画
                     fanner.state = status;
                 }
@@ -380,7 +386,7 @@ export class AirDoor extends Subsystem {
                 fanner.dom.speed.innerText = speed;
                 fanner.dom.name.innerText = name;
                 fanner.dom.status.innerText = statusToValue[status];
-                if (status === 1 || status === 3 || status === 4 || status === 5) {
+                if (status === 1 || status === 3 || status === 4 || status === 5 || status === 6) {
                     fanner.dom.status.style.color = "red";
                 } else {
                     fanner.dom.status.style.color = "#50D887";
