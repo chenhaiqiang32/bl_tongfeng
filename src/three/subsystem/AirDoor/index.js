@@ -351,7 +351,7 @@ export class AirDoor extends Subsystem {
     }
     updateDataInfo(element,type) {
         const { speed,parts } = element;
-        let statusToValue = { 0: "打开",1: "未开到位",2: "关闭",3: "未关到位",4: "打开中",5: "关闭中" };
+        let statusToValue = { 0: "打开",1: "未开到位",2: "关闭",3: "未关到位",4: "打开中",5: "关闭中",6:"--" };
         if (type === "remove") { // 该风门删除了
             this.domSpeed = "暂无";
             if (this.fanner1.state !== 2) {
