@@ -143,6 +143,13 @@ export class Subsystem {
         this.mixers.forEach(mixer => mixer.update(delta));
     }
 
+    clearMixers() { // 清除动画
+        this.uncaches.forEach(fn => fn());
+        this.uncaches.length = 0;
+        this.actions.length = 0;
+        this.mixers.length = 0;
+    }
+
     add() {
         this.scene.add(...arguments);
     }

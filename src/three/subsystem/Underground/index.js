@@ -191,6 +191,7 @@ export class UnderGround extends Subsystem {
                 const temp = child.y;
                 child.y = child.z + Math.random() * 0.0001;
                 child.z = temp + Math.random() * 0.0001; // 防止两个点在同个直线
+                child.x = child.x * -1;
             });
             let points = pList.map(res => {
                 return new THREE.Vector3(res.x,res.y,res.z);
@@ -623,7 +624,7 @@ export class UnderGround extends Subsystem {
             // 更新t值以沿着曲线移动
             let { object3d,speed,direction,curve,id } = child;
             let addLength = 0;
-            let t = (speed * 0.01 + addLength) / curve.getLength();
+            let t = (Math.abs(speed) * 0.01 + addLength) / curve.getLength();
             child.time = child.time + t;
             if (child.time > 1) {
                 child.time = 0; // 当到达终点时重置t到起点(算上模型本身长度)
