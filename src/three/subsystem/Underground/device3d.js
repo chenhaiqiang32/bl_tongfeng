@@ -397,7 +397,7 @@ export class Device3D {
                 value.forEach((child,index) => {
                     for (let i in child) {
                         let val = child[i]; // 当前数值
-                        let oldVal = oldValue[index][i];
+                        let oldVal = oldValue[index] ? oldValue[index][i] : null;
                         let currentDom = doms.domParts[index][i];
                         if (val !== oldVal) {
                             this.changeDomParts(currentDom,val,type,i);

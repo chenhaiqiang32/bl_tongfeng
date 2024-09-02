@@ -108,7 +108,7 @@ export class Core3D extends CoreExtensions {
 
         // 当前系统执行进入事件，返回Promise。
         await targetSystem.onEnter();
-        if (!info.deviceInfo) { // 容错再次获取一边
+        if (!info.deviceInfo || info.type === 204) { // 容错再次获取一边 风窗可能会从单风窗变成多风窗再取一次
             info.deviceInfo = this.main.equipMentSystem.get(info.id,info.type) && this.main.equipMentSystem.get(info.id,info.type).infos.deviceInfo;
         }
         if (info && info.id !== null) {
