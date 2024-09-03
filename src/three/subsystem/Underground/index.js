@@ -349,6 +349,7 @@ export class UnderGround extends Subsystem {
             });
             if (hasConfig.includes(tunnelType)) { // 风量，风速，阻力显示巷道变色
                 let tunnelObj = this.filteredObjects(objectData,Math.abs(currentTunnelConfig))[0];
+                if (!tunnelObj) return false;
                 this.changeTunnelColor(child.id,tunnelObj.color);
             }
         });
