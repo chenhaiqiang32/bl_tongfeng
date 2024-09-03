@@ -67,6 +67,7 @@ export class Core3D extends CoreExtensions {
         this.airWindowSingle = new AirWindowSingle(this);
         this.partFanSubsystem = new PartFanSubsystem(this);
         this.onRenderQueue.set(timeUpdate,scope => updateTime(scope.delta));
+        // this.onMessageChange({ id: 4,type: 205,system: 'subSystem' }); // 切换进测风站
     }
 
     /**
