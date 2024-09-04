@@ -344,6 +344,9 @@ export class Device3D {
     }
     changeDomIcon(domSrc,type,status) { // 地图图标dom
         let spriteImg = `./icon/${type}_${status ? 'online' : 'outline'}.png`;
+        if (type === 203 || type === 204) { // 检修和通讯正常都是在线
+            spriteImg = `./icon/${type}_${status === 1 ? 'outline' : 'online'}.png`;
+        }
         domSrc.src = spriteImg;
     }
     vectorsEqual(v1,v2) {
