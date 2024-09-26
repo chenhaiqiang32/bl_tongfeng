@@ -114,9 +114,42 @@ export class AirStation extends Subsystem {
 
     updateDataInfo(element,type) {
         let info = element.info; // 显示文字
-        var newStr = info.replace(/ /g,"&nbsp;");
+        var { width,height } = this.getCharWidthDOM('汉','SimHei',14);
+        var newStr = info.replace(/ /g,function (match) {
+            // 对于每个匹配到的空格（或空格序列），返回一个或多个<span>标签
+            // 注意：这里使用<span>而不是<div>，因为<div>会导致布局问题
+            // 但如果你确实想要<div>，并且能接受它们作为块级元素的表现，可以直接返回'<div class="space-div"></div>'
+            return `<span style="width:${width / 2}px;height:${height}px;vertical-align: middle;"></span>`;
+        });; // dom元素赋值
         this.stationDom.innerHTML = newStr;
     }
+    getCharWidthDOM(char,fontFamily,fontSize) {
+        // 创建一个临时的span元素
+        var span = document.createElement('span');
+        span.style.visibility = 'hidden'; // 隐藏元素
+        span.style.letterSpacing = '2px';
+        span.style.lineHeight = 1.4;
+        span.style.position = 'absolute'; // 绝对定位，不影响其他元素布局
+        span.style.whiteSpace = 'nowrap'; // 防止文本换行
+        span.style.font = `${fontSize}px ${fontFamily}`;
+        span.textContent = char;
+
+        // 将span添加到body中（或者一个特定的容器元素中）
+        document.body.appendChild(span);
+
+        // 读取计算后的宽度
+        var width = window.getComputedStyle(span).width;
+        var height = window.getComputedStyle(span).height;
+        // 将宽度从字符串转换为数字（去掉'px'）
+        width = parseFloat(width);
+        height = parseFloat(height);
+
+        // 移除span元素
+        document.body.removeChild(span);
+
+        return { width,height };
+    }
+
 
     initDom() {
         let changeDom = document.getElementById("windStation").cloneNode(true);
@@ -149,7 +182,8 @@ export class AirStation extends Subsystem {
 
     /**
      * @param {import("three/examples/jsm/loaders/GLTFLoader").GLTF} gltf
-     * @param {string} name
+     * @param {import { uStyle } from './../../../shader/constant/index';
+string} name
      */
     onProgress = (gltf,name) => {
         if (this.core.scene !== this.scene) return;

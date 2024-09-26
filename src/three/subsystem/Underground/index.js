@@ -589,7 +589,7 @@ export class UnderGround extends Subsystem {
     async onEnter() {
 
         if (this !== this.core.currentSystem) return;
-        loadingInstance.service(0);
+        // loadingInstance.service(0);
         this.onLoaded();
     }
 
