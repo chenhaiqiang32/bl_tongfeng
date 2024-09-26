@@ -205,6 +205,7 @@ export class DeviceManger {
 
     /**是否存在id数据 */
     has(id,type) {
+        if (!this.device[type]) return null;
         return this.device[type].has(id);
     }
 
