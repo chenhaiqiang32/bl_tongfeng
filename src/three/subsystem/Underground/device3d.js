@@ -385,6 +385,11 @@ export class Device3D {
                         this.changeDomObj(doms.domObjContent[key],value,type,key,deviceInfo);
                     if (value !== deviceInfo.status) // 修改图标
                         this.changeDomIcon(doms.domIcon,type,deviceInfo.status);
+                    if (type === 207) { // 视频
+                        if (key === 'status') {
+                            this.changeDomIcon(doms.domIcon,type,deviceInfo.status);
+                        }
+                    }
 
                     if (key === 'isAlarm') { // 传感器报警需要变色
                         this.changeDomAlarmStyle(doms.domObjContent['data'],value);
