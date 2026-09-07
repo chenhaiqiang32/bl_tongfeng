@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>矿用井下通风</title>
+  <script type="module" crossorigin src="./assets/main-DWodFmwh.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-DYmViulo.css">
+</head>
+
+<body>
+    <canvas tabindex="0"></canvas>
+    <script src="./config.js"></script>
+    <div id="deviceFan" style="display: none;">
+        <div class="deviceDialog">
+            <div class="closeDialog"></div>
+            <div class="top ellipsis">
+                <span class="IdentifyDomName" title="">XXXX主风机名称sadfasdgfasdgsdgsddgasdgsd</span>
+
+                <div class="shadow"></div>
+            </div>
+            <div class="middle">
+                <div class="left"><img class="deviceImgDom" src="./assets/fan-BIGVlTdg.png" alt=""></div>
+                <div class="right">
+                    <div class="list">
+                        <img src="./device/arrow.png" alt="">
+                        <span>状态：</span>
+                        <span class="word IdentifyDomStatus">停止运行</span>
+                    </div>
+                    <div class="list">
+                        <img src="./device/arrow.png" alt="">
+                        <span>风量：</span>
+                        <span class="green IdentifyDomVolume ellipsis neiWidth">150.1测试名字长度测试名字长度</span>
+                        <span class="danwei">m³/min</span>
+                    </div>
+                    <div class="list">
+                        <img src="./device/arrow.png" alt="">
+                        <span>风压：</span>
+                        <span class="green IdentifyDomPressure ellipsis neiWidth">105.3测试名字长度测试名字长度</span>
+                        <span class="danwei">Pa</span>
+                    </div>
+
+                    <div class="button">
+                        <div class="buttonIcon gradient-border-radius changeToLocal"><img src="./device/cameraIcon.png"
+                                alt=""><span>定位</span></div>
+                        <div class="buttonIcon gradient-border-radius changeSystem"><img src="./device/guankong.png"
+                                alt=""><span>管控</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="lineImgCommon">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHoAAACCCAYAAACJmNyQAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAeqADAAQAAAABAAAAggAAAADeWo3VAAAMv0lEQVR4Ae2dC3AV1RnHzzl7c0PCMzEQCCBEUEAdWyt1qqNWBIHcxFdHrW21rZUKRFOSAIH4wAvyDghBIJGx6oyjnTra6ph7w8M2OkUdW1qrAoHyCO9EHiEqee7dc/rfm1yJMSQ3YXPvPs4yZPfunt093/+357Hn8S0lcumWAo/4qn9JOHlNEEEo/oWzhMLqa33Rzwvt038LgWtR7MNaX0Lb+rq9pSvh279Ce1eV+75VYGZJTYIqxB5O+KAQrOBBnY+uaDMngNLh6cCaTw1tt3A8H7bleOha5x+c716w7fltH4TQQxN6kJrv2vzX1fqH3A5PAVXwpVyIQRB6+4sZCbdg3YI2vPOjEYpF46ZWvue0kprrEP9HGaOBGEpmWgGyrrcE3YWnzisEE0QrFoIzpOGC4ozEnV04PapBJeguyH/CX/M4yt/xlLKj/d0JS7pwatSDtlQDoh4P00dg2nvnkklD417UdPsrinLPJk/C26aPdKsIyspYKzE63KxvLEQduj/CvG01yLpdMuvukG7zwWn+mtsA+efI/upjXEpOGKeYLogE3QkS7y7hJlpgo/5yLBh7pjgt4VAnp5jysMy6O8Fy7FB1PlLyGEJZOU1OWNtJcNMelim6AzTTttSkMi7m6U2NiuCZm8ZTtYPgpj4kU3QHeKiqrkeTVxyj9OXiO5Le7yCo6Q/JFH0BRDN8Z+5HsexBg3QNc8fOv0Awy+yWoNtBlVkm+miCr9YrYJSJucVT+p5sJ5ildknQ7eDS6s4sRhPnMHQ7/TPFk/RSO0Est0uCboNsZmn1Nah8PYayWVOYmOGllLcJYsmfEnQrbABMNS1QhE5kF4QpLPYM+rTVYUtvylp3K3wz/acfRbF8I7LsSjdjC1sdsvym7NRoQfho2ddJ7FwDRo2QSxhT7i1Ov+Qty9NtZYBM0S1i0LqG1ZyISzDsZ5vdIOsmyjIaImSWVt9EBH0IkBuxfqyFva1WjgftLRMurqmogHGKFrDFL9wxaJ+tCLcY43jQVXWn5qAp+2qMvNzvogML7AhZt8nRlbHMLWeGa6pajuy6t6KQKRs9yVvtCtrRlTHRFFgHsL2Rrb1uZ8j6w+vYrHu6r+outH7djUztGyWWzbVrSg7Z5UjQOR+JOLRlYxCBIBifnb9+8sATIUHsunYk6PqzJ71gPBIVsE8neAYW2xVua7scBzqz5PQ4tGXnoBbK0QI2835KtdaC2HXbcaAFwUA/IWJQNhdtSE/6xK5g29rlKNCZvsrfoofqVmTZJwmNfbqtGHb+7RjQ2WVnB2C8yAq94UBhJKcoY8BZO4Nta5tj3qObautXomEE85nJB+vTB7/eVgi7/3ZEis56t/J6QH4E7YAqoWKm3aG2Z5/tQb8hhKIxUgzIDLBXbMxIKW9PCLvvsz3o9/2VfyBcXAuQh5KHJC+zO9AL2adc6IAd9mdvPjUELijeRONILGXsoYJb++6yg13dscHWlTE1oK5DF2Q/VMDe2pA+uKQ7AtnlHNtm3Vn+LyfjnfletGXXunqRXLsA664dtgSd5RexXAtsCLpnImJB4e0pR7orkF3Os2XWLXjlkwA0Gln2zqT4IXqfs+MXvaHIVkvO5pOjVU3diVYwt2Dklo1pKdttZWA3jbFd1q2qgQ2Ci1jMa/6jhHz+qbAV6Czf8V9gMMFkDNutdveh+efNlFu2AZ3lP9MPtexVuh9MDNuds3pCymmJ97wCtgFNeMMSME5BF+THhZ6UV86bKLd0BWwBOst//FoM9INfThJQXK4ZVvHPGclH0PKgvfDPSTgvxkwLBZ0WawrTkj+PpIBWuZfl36NP+07MwIjO61EuH0vsHbPIKsJHOp6Wfo+es6VqUIOq7kG5nKAwds9aT4ql/HNGEralU3Sjqj6H1JwAwUol5I4fG8uW0Vn+yp+ilv0rVCcbXDTm8Y7NlEctCfqFHSKGCq0o6B6K0EVrMpIPSpQdK2DJrLu86ngeII9D2bw3ceRQ+AOTS2cKWK4yll1aOVILBDBSRMQrCpu41jPs750ZKY8TYrkULQKB5/FlqHjMtHhVQg7/EbZUGZ1dcvRngvAMyshXNM5t+6mu4WPsPKRlQOOdubegZG3zqBE2v3BS8pedmydDhBSwDGhVbVooOB+OiO9I9AzdFDJArsNTwBKg52w5cjU6LGahls1dxD7+OcNDZEwo04PW/XOqTaKIc+5iTKxfnTHi38aY7qyrmB50ru/Y7/AqdRNSdJXb3XeBs/AYZ62pQedsPpqIzwMuD5rLWPaK2xO/Ms50Z13J1O/RIqAVYEBBErzt/q3Qc+mfnYXGWGtNm6JzSw7diEaRhxklTQpVMo0123lXMyXooH9OSvROC7w202XPpQ/7n/PQGGuxKUHX1B7OxlTXa9AQf7BffEsZbazdjrua6To18vzHhqlcw2R10QfeCdLWpKdudhyVHjDYdCla5QFMdeV9APoNCdk44qYCPdt/KA2A70G5fI7EuRw/1dU4zCYa153z0dE4zsX6oHFCPLVm4vDjRhrq9GuZJ0VXq08BxmWoNHx2Q8bIZuBOp2Og/aYAnVd6cAwAz4FdginUMf45DeTY6aVMAVrldCNawNyAvWlV2siPO421DNBlBaIOek7J4QcxpeY2KsTpfi7XE122QJ4QlgJRBT1v24H+mtBW6S/zCqGzvVOHV4cVaxmoywpEFbTWyJZRKpLRafGPlRmpr3Y59vKEsBWIGug835HxGFQwXffPGeNSMOUVk2vk0mMKRAW0PtVVEyr8cwqGj/auXjF1hGM9+vUY2TYXjkp/dK2vQv8s4HUom48Qd+/FbeIkf/aAAno9KKLLXF/FYC74HmTb/fFNi7tXpae+E9EIOPRmEc+60WGxBloDMntHQo7cUxdR0HmlBybCa9ADqHbVoeY1K3JmyjtFDLR3l3BrGtmoS465UwtXp192WMofOQUiBvqbioPzAfgK/N89esgoPfuWSwQViAjouf4jozDILx8VMEKZK3P6eKpG0EZ5KygQmdcr0bQekHvBc9ArBZ7UD6TykVegx0HPLdl3H3yNTGWEnVVYPDwVyCUaCvRo1p23/VRf1K5RHutZtpi3zDPkVDSMlPfs6aFENTWL0CIzFNXsT5anjXpRCh49BXosRc979+APkJqzkJi1GCL9c0YPcfOdewQ0Kl6UU67PtIBDP7JuaXrqf6NtqNPv3yOg5/kO/B6fZ74BLWAnRP8BzzhdZDPYbzhob9kJzH7ky4K9JQqdtfKmgd+YwVCnx8Fw0HW151bhQ9yJAL1lpefyN50usFnsNxR0/ua9N2NY0K8xWqSBupj0z2kWyoiHYaB1/5xcpUVwkI4BnWTp8qmj95vITsdHxTDQFVX7cwUVV6Fvat8wRlc6XlmTCRCsM11snDBs91LSqJXDq188msAmr0y/YtvFXlOeb6wChqRo2hTAZwFFPKPsTxKysYCMutpFg84v3Xcnvhx3F7KGr5ninm1UxOR1jFXgokB7d5yIF1xbh7ZsvVr35NKpIyuNjZ68mlEKXFQ3ZUPVuQVozx6Bp+U/16ZdgSZPuZhVgW6n6Hz/vivRX5Gr++cUCp1xP6WaWY2U8bqI92gM2y0C5BgMESpenjbmX1JMcyvQrRSdX7r3N2gYuQVl80l3vFv/KLdcTK5Al0HPLzmcAB9gBUG7OMn1TkitMbmNMnpQoMugCalbjk6LgRjoV7b8jrGvSRWtoUCXQD/p3/0TdFigr1k0CReV/jmtwTgYy7BBvyGEgtmuwU4LyljBsilj9ljITsdHNWzQn5WWZ2GI0A9R065IGtB7ieOVs5gAYYH2bt2TwjldhCwb5oms3BuH11vMTsdHN6yWMXzTYi3mTPXFoIK/LE0f53O8ahYUoNMU/URp+RRO+H3oa66lrphsC9ooowwFOgTtLavohQbODXqfhULZM0umjD4qVbOmAh1m3Wp9HWZAklF4pfrCFTe20JomyljrClxwhMlTW3dfzlXyBcK4kZpvftYz9kMpmXUVuHDW3QTvBILHIsBLErJ1AYdi3i7op0t3P8CJmIRvl5yJj6XzQoHl2roKfA+017+vH+fkuWAFTCF5T0wad8a65smYhxT4HugAaVqMLHsIPDZ+uCjtypdDAeXa2gp8B7R38+4fEU4y8R3IACXSP6e10X439t+CDvrn1HgxxmYreJ1a+2z6OL3GLRebKPDte3SgdOd0vDP/GJCPKnFkoU3sk2a0KKDo6yXvHUzW1MBfsdmLKcrDC2+/6vOW43JlEwWCKbqhsXYV+qUGoGz2oQKmA5eLzRRgC0p2TkCW/SDsqne7YrJsZp80p0UBTJcid+rvzFgvfnrK2AqpjI0V8Pp2TfXu2uW2sYmON+3/yGbtV6qDQusAAAAASUVORK5CYII=" alt="">
+            </div>
+            <div class="bottom">
+                <div class="list">
+                    <span class="ellipsis diWidth deviceFirstName">1#风机测试名字长度测试名字长度</span><span>：</span>
+                    <span class="deviceFirstStatus">开</span>
+                </div>
+                <div class="list">
+                    <span class="ellipsis diWidth deviceSecondName">2#风机测试名字长度测试名字长度</span><span>：</span>
+                    <span class="deviceSecondStatus">关</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="deviceWindStation" style="display: none;">
+        <div class="deviceDialog">
+            <div class="closeDialog"></div>
+            <div class="top ellipsis">
+                <span class="measureName">XXXX测风名称测试名字长度测试名字长度测试名字长度测试名字长度</span>
+                <div class="shadow"></div>
+            </div>
+            <div class="lineImgCommon">
+                <img src="data:image/png;base64,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" alt="">
+            </div>
+            <div class="middle">
+                <div class="left"><img class="deviceImgDom" src="./assets/ce-D9XlXADP.png" alt=""></div>
+                <div class="right">
+                    <div class="list">
+                        <img src="./device/arrow.png" alt="">
+                        <span>状态：</span>
+                        <span class="word measureStatus">运行正常</span>
+                    </div>
+                    <div class="list">
+                        <img src="./device/arrow.png" alt="">
+                        <span>风速：</span>
+                        <span class="green measureSpeed  ellipsis neiWidth">150.1测试名字长度测试名字长度</span>
+                        <span class="danwei">m/s</span>
+                    </div>
+                    <div class="list">
+                        <img src="./device/arrow.png" alt="">
+                        <span>甲烷：</span>
+                        <span class="green measureCh4  ellipsis neiWidth">105.3测试名字长度测试名字长度</span>
+                        <span class="danwei">%CH4</span>
+                    </div>
+                    <div class="list">
+                        <img src="./device/arrow.png" alt="">
+                        <span>一氧化碳：</span>
+                        <span class="green measureCo  ellipsis neiWidth">105.3测试名字长度测试名字长度</span>
+                        <span class="danwei">ppm</span>
+                    </div>
+
+                    <div class="button">
+                        <div class="buttonIcon gradient-border-radius changeToLocal"><img src="./device/cameraIcon.png"
+                                alt=""><span>定位</span></div>
+                        <div class="buttonIcon gradient-border-radius changeSystem"><img src="./device/guankong.png"
+                                alt=""><span>管控</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="deviceWindWindow" style="display: none;">
+        <div class="deviceDialog">
+            <div class="closeDialog"></div>
+            <div class="top ellipsis ">
+                <span class="windowName">XXXX风窗名称测试名字长度测试名字长度</span>
+                <div class="shadow"></div>
+            </div>
+            <div class="lineImgCommon">
+                <img src="data:image/png;base64,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" alt="">
+            </div>
+            <div class="middle">
+                <div class="left"><img class="deviceImgDom" src="./assets/window-C8cmASsZ.png" alt=""></div>
+                <div class="right">
+                    <div class="list">
+                        <img src="./device/arrow.png" alt="">
+                        <span>状态：</span>
+                        <span class="word windowStatus">停止运行</span>
+                    </div>
+
+                    <div class="button">
+                        <div class="buttonIcon gradient-border-radius changeToLocal"><img src="./device/cameraIcon.png"
+                                alt=""><span>定位</span></div>
+                        <div class="buttonIcon gradient-border-radius changeSystem"><img src="./device/guankong.png"
+                                alt=""><span>管控</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom">
+                <div class="list">
+                    <span class="ellipsis diWidth deviceFirstName">A窗测试名字长度测试名字长度</span><span>：</span><span
+                        class="green windowFirstAngle">0°</span>
+                </div>
+                <div class="list secondWindowHas">
+                    <span class="ellipsis diWidth deviceSecondName">B窗测试名字长度测试名字长度</span><span>：</span><span
+                        class="green windowSecondAngle">90°</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="deviceWindDoor" style="display: none;">
+        <div class="deviceDialog">
+            <div class="closeDialog"></div>
+            <div class="top ellipsis">
+                <span class="doorName">XXXX风门名称测试名字长度测试名字长度测试名字长度测试名字长度</span>
+                <div class="shadow"></div>
+            </div>
+            <div class="lineImgCommon">
+                <img src="data:image/png;base64,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" alt="">
+            </div>
+            <div class="middle">
+                <div class="left"><img class="deviceImgDom" src="./assets/door-CQ5HAPHJ.png" alt=""></div>
+                <div class="right">
+                    <div class="list">
+                        <img src="./device/arrow.png" alt="">
+                        <span>状态：</span>
+                        <span class="word doorStatus">连接正常</span>
+                    </div>
+
+                    <div class="button">
+                        <div class="buttonIcon gradient-border-radius changeToLocal"><img src="./device/cameraIcon.png"
+                                alt=""><span>定位</span></div>
+                        <div class="buttonIcon gradient-border-radius changeSystem"><img src="./device/guankong.png"
+                                alt=""><span>管控</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom">
+                <div class="list"><span
+                        class="deviceFirstName ellipsis diWidth  deviceFirstName">A门测试名字长度测试名字长度</span>：<span
+                        class="deviceFirstStatus">开</span>
+                </div>
+                <div class="list"><span
+                        class="deviceSecondName ellipsis diWidth  deviceFirstName">B门测试名字长度测试名字长度</span>：<span
+                        class="deviceSecondStatus">关</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="deviceTunnel" style="display: none;">
+        <div class="deviceDialog">
+            <div class="top ellipsis">
+                <span class="tunnelName">巷道名称sadfasdgfasdgsdgsddgasdgsd</span>
+                <div class="shadow"></div>
+            </div>
+            <div class="middle">
+                <div class="list">
+                    <img src="./device/arrow.png" alt="">
+                    <span>风量：</span>
+                    <span class="green volume ellipsis sensorWidth">150.1测试名字长度测试名字长度</span>
+                    <span class="danwei">m³/min</span>
+                </div>
+                <div class="list">
+                    <img src="./device/arrow.png" alt="">
+                    <span>风速：</span>
+                    <span class="green speed ellipsis sensorWidth">150.1测试名字长度测试名字长度</span>
+                    <span class="danwei">m/s</span>
+                </div>
+                <div class="list">
+                    <img src="./device/arrow.png" alt="">
+                    <span>阻力：</span>
+                    <span class="green resistance ellipsis sensorWidth">150.1测试名字长度测试名字长度</span>
+                    <span class="danwei">Pa</span>
+                </div>
+                <div class="list">
+                    <img src="./device/arrow.png" alt="">
+                    <span>长度：</span>
+                    <span class="green length ellipsis sensorWidth">150.1测试名字长度测试名字长度</span>
+                    <span class="danwei">m</span>
+                </div>
+                <div class="list">
+                    <img src="./device/arrow.png" alt="">
+                    <span>断面积：</span>
+                    <span class="green crossSectional ellipsis sensorWidth">105.3测试名字长度测试名字长度</span>
+                    <span class="danwei">㎡</span>
+                </div>
+            </div>
+            <div class="lineImgCommon">
+                <img src="data:image/png;base64,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" alt="">
+            </div>
+        </div>
+    </div>
+
+    <div id="sensor" style="display: none;">
+        <div class="deviceDialog">
+            <div class="closeDialog"></div>
+            <div class="top ellipsis">
+                <span class="tunnelName sensorName">传感器的名称测试名字长度测试名字长度测试名字长度测试名字长度</span>
+                <div class="shadow"></div>
+            </div>
+            <div class="lineImgCommon">
+                <img src="data:image/png;base64,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" alt="">
+            </div>
+            <div class="middle">
+                <div class="list">
+                    <img src="./device/arrow.png" alt="">
+                    <span>点号：</span>
+                    <span class="green sensorPoint  ellipsis sensorWidth">XXXX测试名字长度测试名字长度</span>
+                </div>
+                <div class="list">
+                    <img src="./device/arrow.png" alt="">
+                    <span>HID：</span>
+                    <span class="green HID  ellipsis sensorWidth">XXXXX测试名字长度测试名字长度</span>
+                </div>
+                <div class="list">
+                    <img src="./device/arrow.png" alt="">
+                    <span>类型：</span>
+                    <span class="green deviceCategory  ellipsis sensorWidth">XXXXX测试名字长度测试名字长度</span>
+                </div>
+                <div class="list">
+                    <img src="./device/arrow.png" alt="">
+                    <span>位置：</span>
+                    <span class="green devicePosition  ellipsis sensorWidth">XXXXXX测试名字长度测试名字长度</span>
+                </div>
+                <div class="list">
+                    <img src="./device/arrow.png" alt="">
+                    <span>测值：</span>
+                    <span class="green measureValue  ellipsis sensorWidth">XXXXX测试名字长度测试名字长度</span>
+                    <!-- <span class="danwei">m/s</span> -->
+                </div>
+            </div>
+            <div class="bottom">
+                <div class="button" style="display: none;">
+                    <div class="buttonIcon gradient-border-radius changeToLocal"><img src="./device/cameraIcon.png"
+                            alt=""><span>定位</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="station" style="display: none;">
+        <div class="deviceDialog">
+            <div class="closeDialog"></div>
+            <div class="top ellipsis">
+                <span class="tunnelName stationName">控制器名称测试名字长度测试名字长度测试名字长度测试名字长度</span>
+                <div class="shadow"></div>
+            </div>
+            <div class="lineImgCommon">
+                <img src="data:image/png;base64,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" alt="">
+            </div>
+            <div class="middle">
+                <div class="list">
+                    <img src="./device/arrow.png" alt="">
+                    <span>状态：</span>
+                    <span class="stationStatus ellipsis sensorWidth">XXXXX测试名字长度测试名字长度</span>
+                </div>
+                <div class="list">
+                    <img src="./device/arrow.png" alt="">
+                    <span>点号：</span>
+                    <span class="green stationPoint  ellipsis sensorWidth">XXXX测试名字长度测试名字长度</span>
+                </div>
+                <div class="list">
+                    <img src="./device/arrow.png" alt="">
+                    <span>HID：</span>
+                    <span class="green hid  ellipsis sensorWidth">XXXXX测试名字长度测试名字长度</span>
+                </div>
+                <div class="list">
+                    <img src="./device/arrow.png" alt="">
+                    <span>IP：</span>
+                    <span class="green ip  ellipsis sensorWidth">XXXXX测试名字长度测试名字长度</span>
+                </div>
+                <div class="list">
+                    <img src="./device/arrow.png" alt="">
+                    <span>位置：</span>
+                    <span class="green stationLocal  ellipsis sensorWidth">XXXXXX测试名字长度测试名字长度</span>
+                </div>
+            </div>
+            <div class="bottom" style="display: none;">
+                <div class="button">
+                    <div class="buttonIcon gradient-border-radius changeToLocal"><img src="./device/cameraIcon.png"
+                            alt=""><span>定位</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="windStation" style="display: none;">
+        <span class="windStationWord">暂无</span>
+    </div>
+    <div id="speedBoard" style="display: none;">
+        风速：<span class="speedBoardInfo" style="color: #1AE3FF;">暂无</span><span style="font-weight: 400;">m/s</span>
+    </div>
+    <div id="nameBoard" style="display: none;">
+        暂无
+    </div>
+    <div id="statusBoard" style="display: none;">
+        暂无
+    </div>
+    <div id="serviceImg" style="display: none;">
+        <img class="serviceImgUrl" src="./icon/101_online.png" alt="">
+    </div>
+    <div id="partFan" style="display: none;">
+        <div class="deviceDialog">
+            <div class="closeDialog"></div>
+            <div class="top ellipsis">
+                <span class="partName">XXXX局扇名称sadfasdgfasdgsdgsddgasdgsd测试名字长度测试名字长度</span>
+                <div class="shadow"></div>
+            </div>
+            <div class="lineImgCommon">
+                <img src="data:image/png;base64,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" alt="">
+            </div>
+            <div class="middle">
+                <div class="left"><img class="deviceImgDom" src="./assets/part-BRKRmcE6.png" alt=""></div>
+                <div class="right">
+                    <div class="list">
+                        <img src="./device/arrow.png" alt="">
+                        <span>状态：</span>
+                        <span class="word partStatus">运行正常</span>
+                    </div>
+                    <div class="list">
+                        <img src="./device/arrow.png" alt="">
+                        <span>电流：</span>
+                        <span class="green electricValue ellipsis neiWidth">150.1测试名字长度测试名字长度</span>
+                        <span class="danwei">A</span>
+                    </div>
+                    <div class="list">
+                        <img src="./device/arrow.png" alt="">
+                        <span>电压：</span>
+                        <span class="green voltageValue ellipsis neiWidth">105.3测试名字长度测试名字长度</span>
+                        <span class="danwei">V</span>
+                    </div>
+
+                    <div class="button">
+                        <div class="buttonIcon gradient-border-radius changeToLocal">
+                            <img src="./device/cameraIcon.png" alt="">
+                            <span>定位</span>
+                        </div>
+                        <div class="buttonIcon gradient-border-radius  changeSystem">
+                            <img src="./device/guankong.png" alt="">
+                            <span>管控</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom">
+                <div class="list">
+                    <span
+                        class="deviceFirstName ellipsis diWidth  deviceFirstName">1#风机测试名字长度测试名字长度</span><span>：</span>
+                    <span class="deviceFirstStatus">开</span>
+                </div>
+                <div class="list">
+                    <span
+                        class="deviceSecondName ellipsis diWidth  deviceFirstName">2#风机测试名字长度测试名字长度</span><span>：</span>
+                    <span class="deviceSecondStatus">关</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<style>
+    #serviceImg {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+
+        & img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    #speedBoard {
+        position: absolute;
+        width: 233px;
+        height: 59px;
+        color: #ffffff;
+        background: url('./device/speed.png') no-repeat center center;
+        background-size: cover;
+
+        font-family: SourceHanSansCN;
+        font-weight: bold;
+        font-size: 16px;
+        color: #A8CCEA;
+        line-height: 59px;
+        text-align: left;
+        font-style: normal;
+        text-align: center;
+
+        .speedBoardInfo {
+            margin-right: 8px
+        }
+    }
+
+    #statusBoard {
+        position: absolute;
+        width: 167px;
+        height: 60px;
+        background: url('./device/doorBg.png') no-repeat center center;
+        background-size: cover;
+        font-family: SourceHanSansCN;
+        font-weight: bold;
+        font-size: 20px;
+        text-align: center;
+        line-height: 60px;
+        color: #50D887;
+    }
+
+    #nameBoard {
+        position: absolute;
+        width: 189px;
+        height: 48px;
+        background: url('./device/doorName.png') no-repeat center center;
+        background-size: cover;
+        text-align: center;
+        line-height: 48px;
+
+        font-weight: bold;
+        font-size: 24px;
+        color: #FFFFFF;
+        text-align: center;
+        font-style: normal;
+    }
+
+    #windStation {
+        width: 192px;
+        height: 68px;
+
+        & span {
+            color: #e01414;
+            font-size: 14px;
+            /* letter-spacing: 2px; */
+            font-family: SIMHEI;
+            line-height: 1.2;
+            margin: 0;
+            padding: 0;
+            display: inline-block;
+            /* float: left; */
+            width: 100%;
+            height: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+
+        }
+    }
+
+    #deviceFan {
+        position: absolute;
+
+        .deviceDialog {
+            background: url('./device/bg.png') no-repeat center center;
+            background-size: contain;
+            width: 406px;
+            height: 232px;
+            display: flex;
+            flex-direction: column;
+            padding-top: 28px;
+            padding-left: 36px;
+            box-sizing: border-box;
+
+            .top {
+                width: 300px;
+                height: auto;
+                font-family: SourceHanSansCN;
+                font-weight: bold;
+                font-size: 18px;
+                color: #C9C9C9;
+                line-height: 27px;
+                text-align: left;
+                font-style: normal;
+                position: relative;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 8px;
+                background-image: linear-gradient(180deg, #ffffff 30%, #10c4f0 100%);
+
+                .shadow {
+                    position: absolute;
+                    left: 0;
+                    bottom: 2px;
+                    width: 187px;
+                    height: 4px;
+                    background: linear-gradient(270deg, rgba(55, 114, 196, 0) 0%, #318CC3 100%);
+                }
+
+            }
+
+            .middle {
+                display: flex;
+                flex-direction: row;
+
+                .left {
+                    width: 160px;
+                    height: 108px;
+                    margin-right: 16px;
+
+                    & img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+
+                .right {
+                    width: auto;
+                    height: 108px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+
+                    .list {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+
+                        .danwei {
+                            font-size: 12px;
+                            text-align: left;
+                            font-style: normal;
+                            margin-left: 4px;
+                        }
+
+                        & img {
+                            width: 9px;
+                            height: 12px;
+                            margin-right: 2px;
+                        }
+
+                        & span {
+                            width: auto;
+                            font-family: SourceHanSansCN;
+                            font-weight: 400;
+                            font-size: 14px;
+                            color: #98C7DF;
+                            line-height: 21px;
+                            text-align: left;
+                            font-style: normal;
+
+                            &.red {
+                                color: #FF5959;
+                                font-family: "AlibabaPuHuiTi";
+
+                            }
+
+                            &.green {
+                                color: #50D887 !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+
+                            &.grey {
+                                color: #98BCCE !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+                        }
+                    }
+
+                    .button {
+                        display: flex;
+                        flex-direction: row;
+
+                        .buttonIcon {
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: center;
+                            align-items: center;
+                            margin-right: 8px;
+                            width: 63px;
+                            height: 28px;
+                            background: linear-gradient(180deg, #3399FF 0%, #215A9D 100%);
+                            border-radius: 4px;
+                            --border-color: linear-gradient(180deg, rgba(146, 209, 251, 1), rgba(50, 129, 167, 1));
+
+                            &:hover {
+                                background: linear-gradient(180deg, #6BB4FB 0%, #4E7CB3 100%);
+                                cursor: pointer;
+                            }
+
+                            &:active {
+                                background: linear-gradient(180deg, #2877C7 0%, #1B4980 100%);
+                                cursor: pointer;
+                            }
+
+                            & img {
+                                width: 16px;
+                                height: 16px;
+                            }
+
+                            & span {
+                                font-family: SourceHanSansCN;
+                                font-weight: 400;
+                                font-size: 12px;
+                                color: #FFFFFF;
+                                line-height: 28px;
+                                text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+                                text-align: left;
+                                font-style: normal;
+                            }
+                        }
+
+                    }
+                }
+
+            }
+
+            .bottom {
+                display: flex;
+                flex-direction: row;
+                width: auto;
+                font-family: SourceHanSansCN;
+                font-weight: 400;
+                font-size: 14px;
+                color: #98C7DF;
+                line-height: 21px;
+                text-align: left;
+                font-style: normal;
+                margin-top: 12px;
+
+                .list {
+                    margin-right: 32px;
+
+                    & span {
+                        display: block;
+                        float: left;
+                    }
+
+                    .green {
+                        color: #50D887 !important;
+                        font-family: "AlibabaPuHuiTi";
+                    }
+                }
+            }
+        }
+    }
+
+    #partFan {
+        position: absolute;
+
+        .deviceDialog {
+            background: url('./device/bg.png') no-repeat center center;
+            background-size: contain;
+            width: 406px;
+            height: 232px;
+            display: flex;
+            flex-direction: column;
+            padding-top: 28px;
+            padding-left: 36px;
+            box-sizing: border-box;
+
+            .top {
+                width: 300px;
+                height: auto;
+                font-family: SourceHanSansCN;
+                font-weight: bold;
+                font-size: 18px;
+                color: #C9C9C9;
+                line-height: 27px;
+                text-align: left;
+                font-style: normal;
+                position: relative;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 8px;
+                background-image: linear-gradient(180deg, #ffffff 30%, #10c4f0 100%);
+
+                .shadow {
+                    position: absolute;
+                    left: 0;
+                    bottom: 2px;
+                    width: 187px;
+                    height: 4px;
+                    background: linear-gradient(270deg, rgba(55, 114, 196, 0) 0%, #318CC3 100%);
+                }
+
+            }
+
+            .middle {
+                display: flex;
+                flex-direction: row;
+
+                .left {
+                    width: 160px;
+                    height: 108px;
+                    margin-right: 16px;
+
+                    & img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+
+                .right {
+                    width: auto;
+                    height: 108px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+
+                    .list {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+
+                        .danwei {
+                            font-size: 12px;
+                            text-align: left;
+                            font-style: normal;
+                            margin-left: 4px;
+                        }
+
+                        & img {
+                            width: 9px;
+                            height: 12px;
+                            margin-right: 2px;
+                        }
+
+                        & span {
+                            width: auto;
+                            font-family: SourceHanSansCN;
+                            font-weight: 400;
+                            font-size: 14px;
+                            color: #98C7DF;
+                            line-height: 21px;
+                            text-align: left;
+                            font-style: normal;
+
+                            &.red {
+                                color: #FF5959;
+                                font-family: "AlibabaPuHuiTi";
+
+                            }
+
+                            &.green {
+                                color: #50D887 !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+
+                            &.grey {
+                                color: #98BCCE !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+                        }
+                    }
+
+                    .button {
+                        display: flex;
+                        flex-direction: row;
+
+                        .buttonIcon {
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: center;
+                            align-items: center;
+                            margin-right: 8px;
+                            width: 63px;
+                            height: 28px;
+                            background: linear-gradient(180deg, #3399FF 0%, #215A9D 100%);
+                            border-radius: 4px;
+                            --border-color: linear-gradient(180deg, rgba(146, 209, 251, 1), rgba(50, 129, 167, 1));
+
+                            &:hover {
+                                background: linear-gradient(180deg, #6BB4FB 0%, #4E7CB3 100%);
+                                cursor: pointer;
+                            }
+
+                            &:active {
+                                background: linear-gradient(180deg, #2877C7 0%, #1B4980 100%);
+                                cursor: pointer;
+                            }
+
+                            & img {
+                                width: 16px;
+                                height: 16px;
+                            }
+
+                            & span {
+                                font-family: SourceHanSansCN;
+                                font-weight: 400;
+                                font-size: 12px;
+                                color: #FFFFFF;
+                                line-height: 28px;
+                                text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+                                text-align: left;
+                                font-style: normal;
+                            }
+                        }
+
+                    }
+                }
+
+            }
+
+            .bottom {
+                display: flex;
+                flex-direction: row;
+                width: auto;
+                font-family: SourceHanSansCN;
+                font-weight: 400;
+                font-size: 14px;
+                color: #98C7DF;
+                line-height: 21px;
+                text-align: left;
+                font-style: normal;
+                margin-top: 12px;
+
+                .list {
+                    margin-right: 32px;
+
+                    & span {
+                        display: block;
+                        float: left;
+                    }
+
+                    .green {
+                        color: #50D887 !important;
+                        font-family: "AlibabaPuHuiTi";
+                    }
+                }
+            }
+        }
+    }
+
+    #deviceWindStation {
+        position: absolute;
+
+        .deviceDialog {
+            background: url('./device/bg.png') no-repeat center center;
+            background-size: contain;
+            width: 406px;
+            height: 232px;
+            display: flex;
+            flex-direction: column;
+            padding-top: 28px;
+            padding-left: 36px;
+            box-sizing: border-box;
+
+            .top {
+                width: 300px;
+                height: auto;
+                font-family: SourceHanSansCN;
+                font-weight: bold;
+                font-size: 18px;
+                color: #C9C9C9;
+                line-height: 27px;
+                text-align: left;
+                font-style: normal;
+                position: relative;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 8px;
+                background-image: linear-gradient(180deg, #ffffff 30%, #10c4f0 100%);
+
+                .shadow {
+                    position: absolute;
+                    left: 0;
+                    bottom: 2px;
+                    width: 187px;
+                    height: 4px;
+                    background: linear-gradient(270deg, rgba(55, 114, 196, 0) 0%, #318CC3 100%);
+                }
+
+            }
+
+            .middle {
+                display: flex;
+                flex-direction: row;
+
+                .left {
+                    width: 160px;
+                    height: 108px;
+                    margin-right: 16px;
+
+                    & img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+
+                .right {
+                    width: auto;
+                    height: 132px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+
+                    .list {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+
+                        .danwei {
+                            font-size: 12px;
+                            text-align: left;
+                            font-style: normal;
+                            margin-left: 4px;
+                        }
+
+                        & img {
+                            width: 9px;
+                            height: 12px;
+                            margin-right: 2px;
+                        }
+
+                        & span {
+                            width: auto;
+                            font-family: SourceHanSansCN;
+                            font-weight: 400;
+                            font-size: 14px;
+                            color: #98C7DF;
+                            line-height: 21px;
+                            text-align: left;
+                            font-style: normal;
+
+                            &.red {
+                                color: #FF5959;
+                                font-family: "AlibabaPuHuiTi";
+
+                            }
+
+                            &.green {
+                                color: #50D887 !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+
+                            &.grey {
+                                color: #98BCCE !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+                        }
+                    }
+
+                    .button {
+                        display: flex;
+                        flex-direction: row;
+
+                        .buttonIcon {
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: center;
+                            align-items: center;
+                            margin-right: 8px;
+                            width: 63px;
+                            height: 28px;
+                            background: linear-gradient(180deg, #3399FF 0%, #215A9D 100%);
+                            border-radius: 4px;
+                            --border-color: linear-gradient(180deg, rgba(146, 209, 251, 1), rgba(50, 129, 167, 1));
+
+                            &:hover {
+                                background: linear-gradient(180deg, #6BB4FB 0%, #4E7CB3 100%);
+                                cursor: pointer;
+                            }
+
+                            &:active {
+                                background: linear-gradient(180deg, #2877C7 0%, #1B4980 100%);
+                                cursor: pointer;
+                            }
+
+                            & img {
+                                width: 16px;
+                                height: 16px;
+                            }
+
+                            & span {
+                                font-family: SourceHanSansCN;
+                                font-weight: 400;
+                                font-size: 12px;
+                                color: #FFFFFF;
+                                line-height: 28px;
+                                text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+                                text-align: left;
+                                font-style: normal;
+                            }
+                        }
+
+                    }
+                }
+
+            }
+        }
+    }
+
+    #deviceWindWindow {
+        position: absolute;
+
+        .deviceDialog {
+            background: url('./device/bg.png') no-repeat center center;
+            background-size: contain;
+            width: 406px;
+            height: 232px;
+            display: flex;
+            flex-direction: column;
+            padding-top: 28px;
+            padding-left: 36px;
+            box-sizing: border-box;
+
+            .top {
+                width: 300px;
+                height: auto;
+                font-family: SourceHanSansCN;
+                font-weight: bold;
+                font-size: 18px;
+                color: #C9C9C9;
+                line-height: 27px;
+                text-align: left;
+                font-style: normal;
+                position: relative;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 8px;
+                background-image: linear-gradient(180deg, #ffffff 30%, #10c4f0 100%);
+
+                .shadow {
+                    position: absolute;
+                    left: 0;
+                    bottom: 2px;
+                    width: 187px;
+                    height: 4px;
+                    background: linear-gradient(270deg, rgba(55, 114, 196, 0) 0%, #318CC3 100%);
+                }
+
+            }
+
+            .middle {
+                display: flex;
+                flex-direction: row;
+
+                .left {
+                    width: 160px;
+                    height: 108px;
+                    margin-right: 16px;
+
+                    & img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+
+                .right {
+                    width: auto;
+                    height: 108px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-around;
+
+                    .list {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+
+                        .danwei {
+                            font-size: 12px;
+                            text-align: left;
+                            font-style: normal;
+                            margin-left: 4px;
+                        }
+
+                        & img {
+                            width: 9px;
+                            height: 12px;
+                            margin-right: 2px;
+                        }
+
+                        & span {
+                            width: auto;
+                            font-family: SourceHanSansCN;
+                            font-weight: 400;
+                            font-size: 14px;
+                            color: #98C7DF;
+                            line-height: 21px;
+                            text-align: left;
+                            font-style: normal;
+
+                            &.red {
+                                color: #FF5959;
+                                font-family: "AlibabaPuHuiTi";
+
+                            }
+
+                            &.green {
+                                color: #50D887 !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+
+                            &.orange {
+                                color: #e96812 !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+
+                            &.grey {
+                                color: #98BCCE !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+                        }
+                    }
+
+                    .button {
+                        display: flex;
+                        flex-direction: row;
+
+                        .buttonIcon {
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: center;
+                            align-items: center;
+                            margin-right: 8px;
+                            width: 63px;
+                            height: 28px;
+                            background: linear-gradient(180deg, #3399FF 0%, #215A9D 100%);
+                            border-radius: 4px;
+                            --border-color: linear-gradient(180deg, rgba(146, 209, 251, 1), rgba(50, 129, 167, 1));
+
+                            &:hover {
+                                background: linear-gradient(180deg, #6BB4FB 0%, #4E7CB3 100%);
+                                cursor: pointer;
+                            }
+
+                            &:active {
+                                background: linear-gradient(180deg, #2877C7 0%, #1B4980 100%);
+                                cursor: pointer;
+                            }
+
+                            & img {
+                                width: 16px;
+                                height: 16px;
+                            }
+
+                            & span {
+                                font-family: SourceHanSansCN;
+                                font-weight: 400;
+                                font-size: 12px;
+                                color: #FFFFFF;
+                                line-height: 28px;
+                                text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+                                text-align: left;
+                                font-style: normal;
+                            }
+                        }
+
+                    }
+                }
+
+            }
+
+            .bottom {
+                display: flex;
+                flex-direction: row;
+                width: auto;
+                font-family: SourceHanSansCN;
+                font-weight: 400;
+                font-size: 14px;
+                color: #98C7DF;
+                line-height: 21px;
+                text-align: left;
+                font-style: normal;
+                margin-top: 12px;
+
+                .list {
+                    margin-right: 32px;
+
+                    & span {
+                        display: block;
+                        float: left;
+                    }
+
+                    .green {
+                        color: #50D887 !important;
+                        font-family: "AlibabaPuHuiTi";
+                    }
+                }
+            }
+        }
+    }
+
+    #deviceWindDoor {
+        position: absolute;
+
+        .deviceDialog {
+            background: url('./device/bg.png') no-repeat center center;
+            background-size: contain;
+            width: 406px;
+            height: 232px;
+            display: flex;
+            flex-direction: column;
+            padding-top: 28px;
+            padding-left: 36px;
+            box-sizing: border-box;
+
+            .top {
+                width: 300px;
+                height: auto;
+                font-family: SourceHanSansCN;
+                font-weight: bold;
+                font-size: 18px;
+                color: #C9C9C9;
+                line-height: 27px;
+                text-align: left;
+                font-style: normal;
+                position: relative;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 8px;
+                background-image: linear-gradient(180deg, #ffffff 30%, #10c4f0 100%);
+
+                .shadow {
+                    position: absolute;
+                    left: 0;
+                    bottom: 2px;
+                    width: 187px;
+                    height: 4px;
+                    background: linear-gradient(270deg, rgba(55, 114, 196, 0) 0%, #318CC3 100%);
+                }
+
+            }
+
+            .middle {
+                display: flex;
+                flex-direction: row;
+
+                .left {
+                    width: 160px;
+                    height: 108px;
+                    margin-right: 16px;
+
+                    & img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+
+                .right {
+                    width: auto;
+                    height: 108px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-around;
+
+                    .list {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+
+                        .danwei {
+                            font-size: 12px;
+                            text-align: left;
+                            font-style: normal;
+                            margin-left: 4px;
+                        }
+
+                        & img {
+                            width: 9px;
+                            height: 12px;
+                            margin-right: 2px;
+                        }
+
+                        & span {
+                            width: auto;
+                            font-family: SourceHanSansCN;
+                            font-weight: 400;
+                            font-size: 14px;
+                            color: #98C7DF;
+                            line-height: 21px;
+                            text-align: left;
+                            font-style: normal;
+
+                            &.red {
+                                color: #FF5959;
+                                font-family: "AlibabaPuHuiTi";
+
+                            }
+
+                            &.green {
+                                color: #50D887 !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+
+                            &.grey {
+                                color: #98BCCE !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+
+                            &.orange {
+                                color: #e96812 !important;
+                                font-family: "AlibabaPuHuiTi";
+                            }
+                        }
+                    }
+
+                    .button {
+                        display: flex;
+                        flex-direction: row;
+
+                        .buttonIcon {
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: center;
+                            align-items: center;
+                            margin-right: 8px;
+                            width: 63px;
+                            height: 28px;
+                            background: linear-gradient(180deg, #3399FF 0%, #215A9D 100%);
+                            border-radius: 4px;
+                            --border-color: linear-gradient(180deg, rgba(146, 209, 251, 1), rgba(50, 129, 167, 1));
+
+                            &:hover {
+                                background: linear-gradient(180deg, #6BB4FB 0%, #4E7CB3 100%);
+                                cursor: pointer;
+                            }
+
+                            &:active {
+                                background: linear-gradient(180deg, #2877C7 0%, #1B4980 100%);
+                                cursor: pointer;
+                            }
+
+                            & img {
+                                width: 16px;
+                                height: 16px;
+                            }
+
+                            & span {
+                                font-family: SourceHanSansCN;
+                                font-weight: 400;
+                                font-size: 12px;
+                                color: #FFFFFF;
+                                line-height: 28px;
+                                text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+                                text-align: left;
+                                font-style: normal;
+                            }
+                        }
+
+                    }
+                }
+
+            }
+
+            .bottom {
+                display: flex;
+                flex-direction: row;
+                width: auto;
+                font-family: SourceHanSansCN;
+                font-weight: 400;
+                font-size: 14px;
+                color: #98C7DF;
+                line-height: 21px;
+                text-align: left;
+                font-style: normal;
+                margin-top: 12px;
+
+                .list {
+                    margin-right: 32px;
+
+                    .green {
+                        color: #50D887 !important;
+                        font-family: "AlibabaPuHuiTi";
+                    }
+                }
+            }
+        }
+    }
+
+    #deviceTunnel {
+        position: absolute;
+
+        .deviceDialog {
+            background: url('./device/deviceIconTunnel.png') no-repeat center center;
+            background-size: contain;
+            width: 387px;
+            height: 184px;
+            display: flex;
+            flex-direction: column;
+            padding-top: 28px;
+            padding-left: 36px;
+            padding-bottom: 28px;
+            box-sizing: border-box;
+            justify-content: space-between;
+
+            .top {
+                width: 300px;
+                height: auto;
+                font-family: SourceHanSansCN;
+                font-weight: bold;
+                font-size: 18px;
+                color: #C9C9C9;
+                line-height: 27px;
+                text-align: left;
+                font-style: normal;
+                position: relative;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 8px;
+                background-image: linear-gradient(180deg, #ffffff 30%, #10c4f0 100%);
+
+                .shadow {
+                    position: absolute;
+                    left: 0;
+                    bottom: 2px;
+                    width: 187px;
+                    height: 4px;
+                    background: linear-gradient(270deg, rgba(55, 114, 196, 0) 0%, #318CC3 100%);
+                }
+
+            }
+
+            .middle {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+
+                .list {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    width: 50%;
+                    margin-bottom: 8px;
+
+                    .danwei {
+                        font-size: 12px;
+                        text-align: left;
+                        font-style: normal;
+                        margin-left: 4px;
+                    }
+
+                    & img {
+                        width: 9px;
+                        height: 12px;
+                        margin-right: 2px;
+                    }
+
+                    & span {
+                        width: auto;
+                        font-family: SourceHanSansCN;
+                        font-weight: 400;
+                        font-size: 14px;
+                        color: #98C7DF;
+                        line-height: 21px;
+                        text-align: left;
+                        font-style: normal;
+
+                        &.red {
+                            color: #FF5959;
+                            font-family: "AlibabaPuHuiTi";
+
+                        }
+
+                        &.green {
+                            color: #50D887 !important;
+                            font-family: "AlibabaPuHuiTi";
+                        }
+
+                        &.grey {
+                            color: #98BCCE !important;
+                            font-family: "AlibabaPuHuiTi";
+                        }
+                    }
+                }
+
+            }
+
+            .bottom {
+                display: flex;
+                flex-direction: row-reverse;
+
+                .buttonIcon {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    margin-right: 8px;
+                    width: 63px;
+                    height: 28px;
+                    background: linear-gradient(180deg, #3399FF 0%, #215A9D 100%);
+                    border-radius: 4px;
+                    --border-color: linear-gradient(180deg, rgba(146, 209, 251, 1), rgba(50, 129, 167, 1));
+
+                    &:hover {
+                        background: linear-gradient(180deg, #6BB4FB 0%, #4E7CB3 100%);
+                        cursor: pointer;
+                    }
+
+                    &:active {
+                        background: linear-gradient(180deg, #2877C7 0%, #1B4980 100%);
+                        cursor: pointer;
+                    }
+
+                    & img {
+                        width: 16px;
+                        height: 16px;
+                    }
+
+                    & span {
+                        font-family: SourceHanSansCN;
+                        font-weight: 400;
+                        font-size: 12px;
+                        color: #FFFFFF;
+                        line-height: 28px;
+                        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+                        text-align: left;
+                        font-style: normal;
+                    }
+                }
+            }
+        }
+    }
+
+    #sensor {
+        position: absolute;
+
+        .deviceDialog {
+            background: url('./device/deviceIconTunnel.png') no-repeat center center;
+            background-size: contain;
+            width: 387px;
+            height: 184px;
+            display: flex;
+            flex-direction: column;
+            padding-top: 28px;
+            padding-left: 36px;
+            padding-bottom: 28px;
+            box-sizing: border-box;
+            justify-content: space-between;
+
+            .top {
+                width: 300px;
+                height: auto;
+                font-family: SourceHanSansCN;
+                font-weight: bold;
+                font-size: 18px;
+                color: #C9C9C9;
+                line-height: 27px;
+                text-align: left;
+                font-style: normal;
+                position: relative;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 8px;
+                background-image: linear-gradient(180deg, #ffffff 30%, #10c4f0 100%);
+
+                .shadow {
+                    position: absolute;
+                    left: 0;
+                    bottom: 2px;
+                    width: 187px;
+                    height: 4px;
+                    background: linear-gradient(270deg, rgba(55, 114, 196, 0) 0%, #318CC3 100%);
+                }
+
+            }
+
+            .middle {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+
+                .list {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    width: 50%;
+                    margin-bottom: 8px;
+
+                    .danwei {
+                        font-size: 12px;
+                        text-align: left;
+                        font-style: normal;
+                        margin-left: 4px;
+                    }
+
+                    & img {
+                        width: 9px;
+                        height: 12px;
+                        margin-right: 2px;
+                    }
+
+                    & span {
+                        width: auto;
+                        font-family: SourceHanSansCN;
+                        font-weight: 400;
+                        font-size: 14px;
+                        color: #98C7DF;
+                        line-height: 21px;
+                        text-align: left;
+                        font-style: normal;
+
+                        &.red {
+                            color: #FF5959;
+                            font-family: "AlibabaPuHuiTi";
+
+                        }
+
+                        &.green {
+                            color: #50D887 !important;
+                            font-family: "AlibabaPuHuiTi";
+                        }
+
+                        &.grey {
+                            color: #98BCCE !important;
+                            font-family: "AlibabaPuHuiTi";
+                        }
+                    }
+                }
+
+            }
+
+            .bottom {
+                display: flex;
+                flex-direction: row-reverse;
+
+                .buttonIcon {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    margin-right: 8px;
+                    width: 63px;
+                    height: 28px;
+                    background: linear-gradient(180deg, #3399FF 0%, #215A9D 100%);
+                    border-radius: 4px;
+                    --border-color: linear-gradient(180deg, rgba(146, 209, 251, 1), rgba(50, 129, 167, 1));
+
+                    &:hover {
+                        background: linear-gradient(180deg, #6BB4FB 0%, #4E7CB3 100%);
+                        cursor: pointer;
+                    }
+
+                    &:active {
+                        background: linear-gradient(180deg, #2877C7 0%, #1B4980 100%);
+                        cursor: pointer;
+                    }
+
+                    & img {
+                        width: 16px;
+                        height: 16px;
+                    }
+
+                    & span {
+                        font-family: SourceHanSansCN;
+                        font-weight: 400;
+                        font-size: 12px;
+                        color: #FFFFFF;
+                        line-height: 28px;
+                        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+                        text-align: left;
+                        font-style: normal;
+                    }
+                }
+            }
+        }
+    }
+
+    #station {
+        position: absolute;
+
+        .deviceDialog {
+            background: url('./device/deviceIconTunnel.png') no-repeat center center;
+            background-size: contain;
+            width: 387px;
+            height: 184px;
+            display: flex;
+            flex-direction: column;
+            padding-top: 28px;
+            padding-left: 36px;
+            padding-bottom: 28px;
+            box-sizing: border-box;
+            justify-content: space-between;
+
+            .top {
+                width: 300px;
+                height: auto;
+                font-family: SourceHanSansCN;
+                font-weight: bold;
+                font-size: 18px;
+                color: #C9C9C9;
+                line-height: 27px;
+                text-align: left;
+                font-style: normal;
+                position: relative;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 8px;
+                background-image: linear-gradient(180deg, #ffffff 30%, #10c4f0 100%);
+
+                .shadow {
+                    position: absolute;
+                    left: 0;
+                    bottom: 2px;
+                    width: 187px;
+                    height: 4px;
+                    background: linear-gradient(270deg, rgba(55, 114, 196, 0) 0%, #318CC3 100%);
+                }
+
+            }
+
+            .middle {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+
+                .list {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    width: 50%;
+                    margin-bottom: 8px;
+
+                    .danwei {
+                        font-size: 12px;
+                        text-align: left;
+                        font-style: normal;
+                        margin-left: 4px;
+                    }
+
+                    & img {
+                        width: 9px;
+                        height: 12px;
+                        margin-right: 2px;
+                    }
+
+                    & span {
+                        width: auto;
+                        font-family: SourceHanSansCN;
+                        font-weight: 400;
+                        font-size: 14px;
+                        color: #98C7DF;
+                        line-height: 21px;
+                        text-align: left;
+                        font-style: normal;
+
+                        &.red {
+                            color: #FF5959;
+                            font-family: "AlibabaPuHuiTi";
+
+                        }
+
+                        &.green {
+                            color: #50D887 !important;
+                            font-family: "AlibabaPuHuiTi";
+                        }
+
+                        &.grey {
+                            color: #98BCCE !important;
+                            font-family: "AlibabaPuHuiTi";
+                        }
+                    }
+                }
+
+            }
+
+            .bottom {
+                display: flex;
+                flex-direction: row-reverse;
+
+                .buttonIcon {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    margin-right: 8px;
+                    width: 63px;
+                    height: 28px;
+                    background: linear-gradient(180deg, #3399FF 0%, #215A9D 100%);
+                    border-radius: 4px;
+                    --border-color: linear-gradient(180deg, rgba(146, 209, 251, 1), rgba(50, 129, 167, 1));
+
+                    &:hover {
+                        background: linear-gradient(180deg, #6BB4FB 0%, #4E7CB3 100%);
+                        cursor: pointer;
+                    }
+
+                    &:active {
+                        background: linear-gradient(180deg, #2877C7 0%, #1B4980 100%);
+                        cursor: pointer;
+                    }
+
+                    & img {
+                        width: 16px;
+                        height: 16px;
+                    }
+
+                    & span {
+                        font-family: SourceHanSansCN;
+                        font-weight: 400;
+                        font-size: 12px;
+                        color: #FFFFFF;
+                        line-height: 28px;
+                        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+                        text-align: left;
+                        font-style: normal;
+                    }
+                }
+            }
+        }
+    }
+
+    .lineImgCommon {
+        width: 112px;
+        height: 128px;
+        position: fixed;
+        left: -108px;
+        top: 50%;
+
+        img {
+            width: 100%;
+            height: 100%;
+
+        }
+    }
+
+    .neiWidth {
+        max-width: 56px !important;
+    }
+
+    .sensorWidth {
+        max-width: 108px !important;
+    }
+
+    .diWidth {
+        float: left;
+        max-width: 100px !important;
+    }
+
+    .closeDialog {
+        width: 24px;
+        height: 24px;
+        background: url('./dom/closeBlue.png') no-repeat center center;
+        background-size: contain;
+        position: absolute;
+        top: 28px;
+        right: 22px;
+
+        &:hover {
+            background: url('./dom/closeHover.png') no-repeat center center;
+            width: 24px;
+            height: 24px;
+            background-size: contain;
+            position: absolute;
+            top: 28px;
+            right: 22px;
+            cursor: pointer;
+        }
+
+        &:active {
+            background: url('./dom/closeOn.png') no-repeat center center;
+            width: 24px;
+            height: 24px;
+            background-size: contain;
+            position: absolute;
+            top: 28px;
+            right: 22px;
+            cursor: pointer;
+        }
+    }
+</style>
