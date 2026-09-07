@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>通风三维 Demo</title>
+  <link rel="stylesheet" href="https://unpkg.com/element-plus@2.4.1/dist/index.css" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    #app {
+      width: 100%;
+      height: 100%;
+    }
+
+#iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+
+
+.contentTop {
+  display: block;
+  position: fixed;
+  z-index: 1;
+  right: 20%;
+  top: 20%;
+  width: auto;
+  height: auto;
+  padding: 20px;
+  background: linear-gradient(
+    180deg,
+    rgba(38, 98, 166, 0.4) 0%,
+    rgba(15, 46, 94, 0.4) 100%
+  );
+  box-shadow: 0px 9px 17px 4px rgba(0, 0, 0, 0.5);
+  border: 1px solid;
+  border-image: linear-gradient(
+      270deg,
+      rgba(69, 83, 100, 1),
+      rgba(174, 201, 233, 1),
+      rgba(69, 83, 100, 1)
+    )
+    1 1;
+  backdrop-filter: blur(20px);
+}
+.contentNei {
+  color: #fff;
+  margin-bottom: 12px;
+}
+.contentNei span {
+  width: 64px;
+  height: 16px;
+  font-size: 16px;
+  font-family: SourceHanSansCN, SourceHanSansCN;
+  font-weight: 400;
+  color: #c0ddef;
+  line-height: 24px;
+}
+.contentNei em {
+  width: 38px;
+  height: 22px;
+  font-size: 16px;
+  font-family: AlibabaPuHuiTiM;
+  color: #19e7ff;
+  line-height: 22px;
+}
+
+  </style>
+</head>
+<body>
+  <div id="app">
+<!-- <div class="test">
+
+  </div> -->
+  <div style="position: absolute; z-index: 20">
+    <el-dropdown placement="bottom">
+      <el-button> 主通风机修改</el-button>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item></el-dropdown-item>
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changeFanStatus(true, false, {}, {}))
+            "
+            >主通风机一开二关</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changeFanStatus(false, true, {}, {}))
+            "
+            >主通风机一关二开</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changeFanStatus(true, true, {}, {}))
+            "
+            >主通风机一开二开</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changeFanStatus(false, false, {}, {}))
+            "
+            >主通风机一关二关</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changeFanStatus(
+                  true,
+                  true,
+                  {
+                    commonName: 'fanCommonName变',
+                    commonVolume: 'fanCommonVolume变',
+                    commonPressure: 'fanCommonPressure变',
+                    commonStatus: true,
+                    part1Name: 'fanPart1Name变',
+                  },
+                  {}
+                )
+              )
+            "
+            >主通风机上线外加修改配置</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changeFanStatus(
+                  true,
+                  true,
+                  {
+                    commonName: 'fanCommonName变2',
+                    commonVolume: 'fanCommonVolume变2',
+                    commonPressure: 'fanCommonPressure变2',
+                    commonStatus: false,
+                    part1Name: 'fanPart1Name变2',
+                  },
+                  {}
+                )
+              )
+            "
+            >主通风机下线外加修改配置</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changeFanStatus(true, true, {}, { tunnelId: 672, distance: 10 })
+              )
+            "
+            >主通风机修改位置</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+
+    <el-dropdown placement="bottom">
+      <el-button> 局部风机修改</el-button>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item></el-dropdown-item>
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changePartFanStatus(true, false, {}, {}))
+            "
+            >局部风机一开二关</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changePartFanStatus(false, true, {}, {}))
+            "
+            >局部风机一关二开</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changePartFanStatus(true, true, {}, {}))
+            "
+            >局部风机一开二开</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changePartFanStatus(false, false, {}, {}))
+            "
+            >局部风机一关二关</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changePartFanStatus(
+                  false,
+                  false,
+                  {
+                    commonName: 'partFanCommonName变',
+                    commonStatus: true,
+                    commonElectric: 'partFanCommonElectric变',
+                    commonVoltage: 'partFanCommonVoltage变',
+                    part1Name: 'part1Name变',
+                  },
+                  {}
+                )
+              )
+            "
+            >局部风机上线外加修改配置</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changePartFanStatus(
+                  false,
+                  false,
+                  {
+                    commonName: 'partFanCommonName变2',
+                    commonStatus: false,
+                    commonElectric: 'partFanCommonElectric变2',
+                    commonVoltage: 'partFanCommonVoltage变2',
+                    part1Name: 'part1Name变2',
+                  },
+                  {}
+                )
+              )
+            "
+            >局部风机下线外加修改配置</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changePartFanStatus(
+                  false,
+                  false,
+                  {},
+                  { tunnelId: 673, distance: 40 }
+                )
+              )
+            "
+            >局部风机修改位置</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+
+    <el-dropdown placement="bottom">
+      <el-button> 风门修改</el-button>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item></el-dropdown-item>
+          <el-dropdown-item
+            @click="testCmd('deviceManage', changeDoorStatus(0, 2, {}, {}))"
+            >风门一开二关</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="testCmd('deviceManage', changeDoorStatus(2, 0, {}, {}))"
+            >风门一关二开</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="testCmd('deviceManage', changeDoorStatus(0, 0, {}, {}))"
+            >风门一开二开</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="testCmd('deviceManage', changeDoorStatus(2, 2, {}, {}))"
+            >风门一关二关</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="testCmd('deviceManage', changeDoorStatus(1, 3, {}, {}))"
+            >风门一未开到位，二未关到位</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="testCmd('deviceManage', changeDoorStatus(4, 5, {}, {}))"
+            >风门一打开中，二关闭中</el-dropdown-item
+          >
+
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changeDoorStatus(
+                  4,
+                  5,
+                  {
+                    commonName: 'doorCommonName变',
+                    commonStatus: 0,
+                    commonSpeed: 36,
+                    part1Name: `doorPart1Name变`,
+                  },
+                  {}
+                )
+              )
+            "
+            >风门上线外加修改配置</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changeDoorStatus(
+                  4,
+                  5,
+                  {
+                    commonName: 'doorCommonName变2',
+                    commonStatus: 1,
+                    commonSpeed: 48,
+                    part1Name: `doorPart1Name变2`,
+                  },
+                  {}
+                )
+              )
+            "
+            >风门下线外加修改配置</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changeDoorStatus(4, 5, {}, { tunnelId: 676, distance: 40 })
+              )
+            "
+            >风门修改位置</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+
+    <el-dropdown placement="bottom">
+      <el-button> 风窗修改</el-button>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item></el-dropdown-item>
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changeWindowStatus('90', '0', {}, {}))
+            "
+            >风窗一开二关</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changeWindowStatus('0', '90', {}, {}))
+            "
+            >风窗一关二开</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changeWindowStatus('90', '90', {}, {}))
+            "
+            >风窗一开二开</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changeWindowStatus('0', '0', {}, {}))
+            "
+            >风窗一关二关</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changeWindowStatus('70', '40', {}, {}))
+            "
+            >风窗一70度,二40度</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changeWindowStatus('20', '40', {}, {}))
+            "
+            >风窗一20度,二40度</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changeWindowStatus(
+                  '70',
+                  '40',
+                  {
+                    commonName: 'windowCommonName变',
+                    commonStatus: 0,
+                    commonSpeed: 22,
+                    part1Name: 'windowPart1Nam变',
+                  },
+                  {}
+                )
+              )
+            "
+            >风窗上线外加修改配置</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changeWindowStatus(
+                  '70',
+                  '40',
+                  {
+                    commonName: 'windowCommonName变2',
+                    commonStatus: 1,
+                    commonSpeed: 62,
+                    part1Name: 'windowPart1Nam变2',
+                  },
+                  {}
+                )
+              )
+            "
+            >风窗下线外加修改配置</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changeWindowStatus(
+                  '70',
+                  '40',
+                  {},
+                  { tunnelId: 676, distance: 88 }
+                )
+              )
+            "
+            >风窗修改位置</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+    <el-dropdown placement="bottom">
+      <el-button> 单风窗修改</el-button>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item></el-dropdown-item>
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changeSingleWindowStatus('90', {}, {}))
+            "
+            >风窗一开</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changeSingleWindowStatus('0', {}, {}))
+            "
+            >风窗一关</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', changeSingleWindowStatus('70', {}, {}))
+            "
+            >风窗一70度</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changeSingleWindowStatus(
+                  '70',
+                  {
+                    commonName: 'windowCommonName变',
+                    commonStatus: 2,
+                    commonSpeed: 22,
+                    part1Name: 'windowPart1Nam变',
+                  },
+                  {}
+                )
+              )
+            "
+            >风窗上线外加修改配置</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changeSingleWindowStatus(
+                  '70',
+                  {
+                    commonName: 'windowCommonName变2',
+                    commonStatus: 1,
+                    commonSpeed: 62,
+                    part1Name: 'windowPart1Nam变2',
+                  },
+                  {}
+                )
+              )
+            "
+            >风窗下线外加修改配置</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changeSingleWindowStatus(
+                  '70',
+                  {},
+                  { tunnelId: 676, distance: 80 }
+                )
+              )
+            "
+            >风窗修改位置</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+    <el-dropdown placement="bottom">
+      <el-button> 测风站的修改</el-button>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item></el-dropdown-item>
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changeWindStation(
+                  '     内容1撒旦飞洒地方    ',
+                  {
+                    commonName: 'stationCommonName变',
+                    commonStatus: true,
+                    commonSpeed: 'stationCommonSpeed变',
+                    commonMethane: 'stationCommonMethane变',
+                    commonCo: 'stationCommonCo变',
+                  },
+                  {}
+                )
+              )
+            "
+            >测风站上线内容修改成“内容1”</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changeWindStation(
+                  '内容1撒',
+                  {
+                    commonName: 'stationCommonName变2',
+                    commonStatus: false,
+                    commonSpeed: 'stationCommonSpeed变2',
+                    commonMethane: 'stationCommonMethane变2',
+                    commonCo: 'stationCommonCo变2',
+                  },
+                  {}
+                )
+              )
+            "
+            >测风站下线内容修改成“内容2”</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd(
+                'deviceManage',
+                changeWindStation(
+                  '内容1撒',
+                  {},
+                  { tunnelId: 676, distance: 40 }
+                )
+              )
+            "
+            >测风站改位置”</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+    <el-dropdown placement="bottom">
+      <el-button> 传感器的修改</el-button>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item></el-dropdown-item>
+          <el-dropdown-item
+            @click="testCmd('deviceManage', changeSensor(false))"
+            >修改测值状态正常</el-dropdown-item
+          >
+          <el-dropdown-item @click="testCmd('deviceManage', changeSensor(true))"
+            >修改测值状态报警</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+
+    <el-dropdown placement="bottom">
+      <el-button> 视频修改</el-button>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item></el-dropdown-item>
+          <el-dropdown-item
+            @click="testCmd('deviceManage', changeVideoStatus(true))"
+            >修改测值状态正常</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="testCmd('deviceManage', changeVideoStatus(false))"
+            >修改测值状态报警</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+
+    <el-dropdown placement="bottom">
+      <el-button> 切换场景</el-button>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item
+            @click="
+              testCmd('changeScene', { id: 0, type: 201, system: 'subSystem' })
+            "
+            >切换到主风机场景</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('changeScene', { id: 1, type: 202, system: 'subSystem' })
+            "
+            >切换到局部风机场景</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('changeScene', { id: 2, type: 203, system: 'subSystem' })
+            "
+            >切换到风门场景</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('changeScene', { id: 3, type: 204, system: 'subSystem' })
+            "
+            >切换到风窗场景</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('changeScene', {
+                id: 6,
+                type: 204,
+                system: 'subSystem',
+                isSingleWindow: true,
+              })
+            "
+            >切换到单风窗场景</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('changeScene', { id: 4, type: 205, system: 'subSystem' })
+            "
+            >切换到测风站</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('changeScene', { id: null, type: null, system: 'main' })
+            "
+            >切换进入巷道场景</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+
+    <el-dropdown placement="bottom">
+      <el-button> 巷道场景</el-button>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item></el-dropdown-item>
+          <el-dropdown-item @click="testCmd('initialized', tunnelData)"
+            >初始化巷道</el-dropdown-item
+          >
+          <el-dropdown-item @click="testCmd('initialized', updateTunnel)"
+            >更新巷道</el-dropdown-item
+          >
+          <el-dropdown-item @click="testCmd('deviceManage', initDeviceData)"
+            >初始化巷道设备</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('changeScene', { id: 3, type: 204, system: 'subSystem' })
+            "
+            >切换到风窗场景</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('changeScene', { id: 4, type: 205, system: 'subSystem' })
+            "
+            >切换到测风站</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('changeScene', { id: null, type: null, system: 'main' })
+            "
+            >切换进入巷道场景</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+
+    <el-dropdown placement="bottom">
+      <el-button> 删除设备</el-button>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item></el-dropdown-item>
+          <el-dropdown-item @click="testCmd('deviceManage', removeDevice)"
+            >删除设备主风机:201,id:0
+          </el-dropdown-item>
+          <el-dropdown-item
+            @click="testCmd('deviceManage', removeDevicePartFan)"
+            >删除设备局部风机:202,id:1</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', {
+                add: [],
+                update: [],
+                remove: [{ id: 2, type: 203 }],
+              })
+            "
+            >删除风门</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', {
+                add: [],
+                update: [],
+                remove: [{ id: 3, type: 204 }],
+              })
+            "
+            >删除风窗</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('deviceManage', {
+                add: [],
+                update: [],
+                remove: [{ id: 4, type: 205 }],
+              })
+            "
+            >删除测风站</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+
+    <el-dropdown placement="bottom">
+      <el-button> 巷道风格管理</el-button>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item></el-dropdown-item>
+          <el-dropdown-item
+            @click="
+              testCmd('switchTunnelStyle', {
+                objectData: null,
+                typeName: 'default',
+              })
+            "
+            >巷道风格切换默认</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('switchTunnelStyle', {
+                objectData: [
+                  { code: 0, color: '#864DFA', range: [0, 10] },
+                  { code: 1, color: '#4D4DFA', range: [10, 20] },
+                  { code: 2, color: '#4DBAFA', range: [20, 30] },
+                  { code: 3, color: '#BE4DFA', range: [30, 1000] },
+                ],
+                typeName: 'volume',
+              })
+            "
+            >巷道切换显示风量</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('switchTunnelStyle', {
+                objectData: [
+                  { code: 0, color: '#864DFA', range: [0, 10] },
+                  { code: 1, color: '#4D4DFA', range: [10, 20] },
+                  { code: 2, color: '#4DBAFA', range: [20, 30] },
+                  { code: 3, color: '#BE4DFA', range: [30, 1000] },
+                ],
+                typeName: 'speed',
+              })
+            "
+            >巷道切换显示风速</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('switchTunnelStyle', {
+                objectData: [
+                  { code: 0, color: '#864DFA', range: [0, 10] },
+                  { code: 1, color: '#4D4DFA', range: [10, 20] },
+                  { code: 2, color: '#4DBAFA', range: [20, 30] },
+                  { code: 3, color: '#BE4DFA', range: [30, 9999] },
+                ],
+                typeName: 'resistance',
+              })
+            "
+            >巷道切换显示阻力</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('switchTunnelStyle', {
+                objectData: null,
+                typeName: 'direction',
+              })
+            "
+            >巷道切换显示风向</el-dropdown-item
+          >
+
+          <el-dropdown-item
+            @click="
+              testCmd('updateResistance', [
+                { id: 672, data: 12 },
+                { id: 652, data: 32 },
+              ])
+            "
+            >更新巷道阻力</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('updateWindSpeed', [
+                { id: 672, data: 4 },
+                { id: 652, data: 44 },
+              ])
+            "
+            >更新巷道风速</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('updateVolume', [
+                { id: 672, data: 2 },
+                { id: 652, data: 28 },
+              ])
+            "
+            >更新巷道风量</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('updateWindDirection', [
+                { id: 672, data: 0 },
+                { id: 652, data: 1 },
+              ])
+            "
+            >更新巷道风向</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="testCmd('updateWindDirection', [{ id: 1001011, data: 2 }])"
+            >更新巷道风向 巷道2</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="testCmd('updateResistance', [{ id: 1001011, data: 48 }])"
+            >更新巷道阻力 巷道2</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="testCmd('updateWindSpeed', [{ id: 1001011, data: 32 }])"
+            >更新巷道风速 巷道2</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="testCmd('updateVolume', [{ id: 1001011, data: 1 }])"
+            >更新巷道风量 巷道2</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('updateTunnelName', [{ id: 1001011, data: '蔚蓝' }])
+            "
+            >更新巷道1001011名字变成 蔚蓝</el-dropdown-item
+          >
+
+          <el-dropdown-item
+            @click="
+              testCmd('switchTunnelResistance', {
+                code: 0,
+                color: 'rgba(51, 230, 214, 1)',
+              })
+            "
+            >切换进风阻力</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('switchTunnelResistance', {
+                code: 1,
+                color: 'rgba(24, 145, 218, 1)',
+              })
+            "
+            >切换回风阻力</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('switchTunnelResistance', {
+                code: 2,
+                color: 'rgba(36, 229, 110, 1)',
+              })
+            "
+            >切换用风阻力</el-dropdown-item
+          >
+          <el-dropdown-item
+            @click="
+              testCmd('switchTunnelResistance', { code: -1, color: '#ffffff' })
+            "
+            >清除阻力</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+
+    <el-button size="small" @click="testCmd('switchFacility', [201, 202])"
+      >设备设施切换显示主扇和局扇</el-button
+    >
+    <el-button size="small" @click="testCmd('switchFacility', [203])"
+      >设备设施切换显示风门风窗</el-button
+    >
+    <el-button size="small" @click="testCmd('switchFacility', [])"
+      >设备/传感器切换之后恢复默认</el-button
+    >
+    <el-button size="small" @click="testCmd('switchFacility', [101])"
+      >环境监测切换显示一氧化碳</el-button
+    >
+    <el-button size="small" @click="testCmd('setTypeVisibleEx', [201])"
+      >筛选只显示主风机设备</el-button
+    >
+    <el-button size="small" @click="testCmd('setTypeVisibleEx', [])"
+      >筛选都不显示</el-button
+    >
+    <el-button
+      size="small"
+      @click="
+        testCmd(
+          'setTypeVisibleEx',
+          [
+            201, 202, 203, 204, 205, 206, 207, 101, 102, 103, 104, 105, 106,
+            107, 108, 109, 110,
+          ]
+        )
+      "
+      >筛选显示所有</el-button
+    >
+    <el-button size="small" @click="testCmd('spotDevice', { id: 0, type: 201 })"
+      >拉近视角到主扇(id:0)</el-button
+    >
+    <el-button size="small" @click="testCmd('spotDevice', { id: 6, type: 101 })"
+      >拉近视角到一氧化碳(id:0)</el-button
+    >
+    <el-button size="small" @click="testCmd('spotTunnel', 656)"
+      >拉近到巷道656</el-button
+    >
+    <el-button size="small" @click="testCmd('resetCamera', null)"
+      >恢复视角</el-button
+    >
+    <el-button size="small" @click="testCmd('close', null)">关闭三维</el-button>
+    <el-button size="small" @click="testCmd('open', null)">开启三维</el-button>
+  </div>
+  <iframe :src="src" id="iframe" ref="iframe"></iframe>
+  </div>
+<script src="https://unpkg.com/vue@3.3.4/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/element-plus@2.4.1/dist/index.full.min.js"></script>
+<script>
+    const { createApp, ref, onMounted } = Vue;
+
+    /** 随机中文（来自 test/src/views/index.js） */
+    const getRandomChineseChar = () => {
+      var chineseCharCodeRange = [0x4E00, 0x9FFF];
+      var randomCharCode =
+        Math.floor(
+          Math.random() * (chineseCharCodeRange[1] - chineseCharCodeRange[0] + 1)
+        ) + chineseCharCodeRange[0];
+      return String.fromCharCode(randomCharCode);
+    };
+
+    createApp({
+      setup() {
+
+
+const src = "./index.html";
+
+const iframe = ref(null);
+const tunnelData = ref([]);
+
+const enrichTunnelData = (list) => {
+  list.forEach((child) => {
+    child.direction = Math.floor(Math.random() * 4);
+    child.length = Math.floor(Math.random() * 21);
+    child.crossSectional = Math.floor(Math.random() * 31);
+    child.speed = Math.floor(Math.random() * 31);
+    child.resistance = Math.floor(Math.random() * 31);
+    child.volume = Math.floor(Math.random() * 31);
+    child.branchName = "dsafeasdgaedgwsdgfwqe4r5t3245235rt5234grsdageaed";
+  });
+  return list;
+};
+
+onMounted(async () => {
+  const res = await fetch("./demo-data.json");
+  const data = await res.json();
+  tunnelData.value = enrichTunnelData(data);
+});
+
+const testCmd = (cmd, param) => {
+  iframe.value.contentWindow.postMessage({ cmd, param }, "*");
+};
+let initializedData = [];
+let oldInitialize = {
+  1001011: {
+    id: 1001011,
+    branchName: "我是巷道1001011(进风巷道)",
+    direction: 0,
+    pList: [
+      { x: -32.492720746586414, y: 2.177897395813603, z: 10.500115978431717 },
+      { x: -5.374838649214795, y: 2.0100050561101064, z: 10.555524477666818 },
+      { x: -4.759318092636842, y: 1.6361312419838134, z: 10.48915029013766 },
+      { x: 6.08170197272273, y: 1.6311847547715286, z: -13.658168568422557 },
+      { x: 6.431722543941558, y: 1.0501176624090947, z: -14.530691805718014 },
+      { x: 24.49600662364376, y: -1.203378941799631, z: -14.185015991440238 },
+      { x: 3.0682717742049985, y: -12.286487773485455, z: -32.27920108294224 },
+      { x: -3.5562983421373557, y: -4.682043643046677, z: -29.7948097195828 },
+    ],
+    length: 1011,
+    crossSectional: 1011 * 2,
+    speed: 11 * 1,
+    resistance: 11 * 2,
+    volume: 11 * 3,
+    isDifficult: true,
+  },
+  1001012: {
+    id: 1001012,
+    branchName: "我是巷道1001012(出风巷道)",
+    direction: 1,
+    pList: [
+      { x: -61.77603496685432, y: -6.922057728818171, z: 20.32667580503771 },
+      { x: -27.274338218156654, y: -15.475518386016676, z: -8.410050022507393 },
+      { x: -65.50546229558952, y: -10.931943100552111, z: -17.627070832563575 },
+      { x: -57.75313271041912, y: -13.446157882463163, z: -35.42699101434801 },
+      { x: -56.40618251774672, y: -16.915641195121744, z: -47.40857189517659 },
+      { x: -43.79407271001105, y: -13.818269072098442, z: -52.19544526765876 },
+      { x: -18.227301726687184, y: -11.120283603383053, z: -50.02293836420057 },
+      { x: -4.760887622089047, y: -14.670130368023207, z: -57.23304450378773 },
+    ],
+    length: 1012,
+    crossSectional: 1012 * 2,
+    speed: 12 * 1,
+    resistance: 12 * 2,
+    volume: 12 * 3,
+    isDifficult: false,
+  },
+  1001013: {
+    id: 1001013,
+    branchName: "我是巷道1001013(无风巷道)",
+    direction: 2,
+    pList: [
+      { x: -238.23741469213383, y: -40.73621312722488, z: -9.584029053900338 },
+      { x: -249.0976302067235, y: -33.8632571509319, z: -77.76550503038548 },
+      { x: -185.338381953621, y: -54.67292071758325, z: -165.78616619224914 },
+      { x: -178.13834208056568, y: -32.8994096898935, z: -69.07787444205086 },
+      { x: -197.62430448237345, y: -36.493565305458624, z: 20.070368342174245 },
+      { x: -235.13789938400114, y: -44.7578514301038, z: 47.409707812804626 },
+    ],
+    length: 1013,
+    crossSectional: 1013 * 2,
+    speed: 13 * 1,
+    resistance: 13 * 2,
+    volume: 13 * 3,
+    isDifficult: true,
+  },
+};
+Object.values(oldInitialize).forEach((child) => {
+  initializedData.push(child);
+});
+let updateTunnel = [];
+Object.values(oldInitialize).forEach((child, index) => {
+  child.pList.forEach((res) => {
+    [res.y, res.z] = [res.z, res.y];
+  });
+  updateTunnel.push(child);
+});
+
+let doms = {
+  fan: {
+    id: 0,
+    code: "34234",
+    type: 201,
+    tunnelId: 671,
+    distance: 0,
+    deviceInfo: {
+      name: "风机测试名字,风机测试名字,风机测试名字",
+      status: false,
+      volume: 353425234523452345234523453245,
+      pressure: 353425234523452345234523453245,
+      parts: [
+        {
+          name: "1#风机",
+          status: true,
+          frequency: "43534",
+          angle: "er",
+          alarm: 0,
+        },
+        {
+          name: "2#风机",
+          status: true,
+          frequency: "453534",
+          angle: "5435",
+          alarm: 1,
+        },
+      ],
+    },
+  },
+  partFan: {
+    id: 1,
+    code: "设备",
+    type: 202,
+    tunnelId: 672,
+    distance: 10,
+    deviceInfo: {
+      name: "局扇(true)",
+      status: true,
+      electric: "电流",
+      voltage: "电压",
+      parts: [
+        {
+          name: "1#局扇风机",
+          status: true,
+          frequency: "43534",
+          alarm: 0,
+        },
+        {
+          name: "2#局扇风机",
+          status: false,
+          frequency: "453534",
+          alarm: 1,
+        },
+      ],
+    },
+  },
+  door: {
+    id: 2,
+    code: "设备",
+    type: 203,
+    tunnelId: 673,
+    distance: 20,
+    deviceInfo: {
+      name: "风门设备(false)",
+      status: 0,
+      speed: 12,
+      parts: [
+        {
+          name: "测试1",
+          status: 0,
+        },
+        {
+          name: "测试2",
+          status: 3,
+        },
+      ],
+    },
+  },
+  window: {
+    id: 3,
+    code: "设备",
+    type: 204,
+    tunnelId: 673,
+    distance: 30,
+    deviceInfo: {
+      name: "风窗设备(true)",
+      status: 1,
+      speed: "风窗速度",
+      parts: [
+        {
+          name: "风窗测试1",
+          angle: "10",
+        },
+        {
+          name: "风窗测试2",
+          angle: "80",
+        },
+      ],
+    },
+  },
+  singleWindow: {
+    id: 6,
+    code: "设备",
+    type: 204,
+    tunnelId: 673,
+    distance: 80,
+    deviceInfo: {
+      name: "风窗设备(true)",
+      status: 2,
+      speed: "风窗速度",
+      parts: [
+        {
+          name: "风窗测试1",
+          angle: "10",
+        },
+      ],
+    },
+  },
+  airStation: {
+    id: 4,
+    code: "设备",
+    type: 205,
+    tunnelId: 675,
+    distance: 40,
+    deviceInfo: {
+      name: "测风站(false)",
+      status: false,
+      speed: "测风速度",
+      methane: "ch4",
+      co: "一氧化碳",
+      info: "测风站的数据,       天空天气",
+    },
+  },
+  station: {
+    id: 5,
+    code: "设备",
+    type: 206,
+    tunnelId: 676,
+    distance: 50,
+    deviceInfo: {
+      name: "基站(true)",
+      status: true,
+      point: "point",
+      hid: "hid",
+      ip: "ip",
+      local: "local",
+    },
+  },
+  sensor: {
+    id: 6,
+    code: "设备",
+    type: 101,
+    tunnelId: 677,
+    distance: 60,
+    deviceInfo: {
+      name: "一氧化碳(true)",
+      status: true,
+      point: "point",
+      hid: "hid",
+      category: "category",
+      local: "local",
+      data: "data",
+      isAlarm: true,
+    },
+  },
+  video: {
+    id: 6,
+    code: "设备",
+    type: 207,
+    tunnelId: 678,
+    distance: 50,
+    deviceInfo: {
+      name: "视频(true)",
+      status: true,
+    },
+  },
+};
+let initDeviceData = { add: [], update: [], remove: [] };
+Object.values(doms).forEach((child) => {
+  initDeviceData.add.push(child);
+});
+const changeFanStatus = (
+  state1,
+  state2,
+  {
+    commonName = "commonName默认",
+    commonVolume = "commonVolume默认",
+    commonPressure = "commonPressure默认",
+    commonStatus = false,
+    part1Name = "part1Name默认",
+  },
+  { tunnelId = 671, distance = 0 }
+) => {
+  return {
+    add: [],
+    update: [
+      {
+        id: 0,
+        code: "34234",
+        type: 201,
+        tunnelId,
+        distance,
+        deviceInfo: {
+          name: commonName,
+          status: commonStatus,
+          volume: commonVolume,
+          pressure: commonPressure,
+          parts: [
+            {
+              name: part1Name,
+              status: state1,
+              frequency: "43534",
+              angle: "er",
+              alarm: 0,
+            },
+            {
+              name: "2#风机",
+              status: state2,
+              frequency: "453534",
+              angle: "5435",
+              alarm: 1,
+            },
+          ],
+        },
+      },
+    ],
+    remove: [],
+  };
+};
+const changePartFanStatus = (
+  state1,
+  state2,
+  {
+    commonName = "partFanCommonName默认",
+    commonStatus = false,
+    commonElectric = "partFanCommonElectric默认",
+    commonVoltage = "partFanCommonVoltage默认",
+    part1Name = "part1Name默认",
+  },
+  { tunnelId = 671, distance = 20 }
+) => {
+  return {
+    add: [],
+    update: [
+      {
+        id: 1,
+        code: "设备",
+        type: 202,
+        tunnelId,
+        distance,
+        deviceInfo: {
+          name: commonName,
+          status: commonStatus,
+          electric: commonElectric,
+          voltage: commonVoltage,
+          parts: [
+            {
+              name: part1Name,
+              status: state1,
+              frequency: "43534",
+              alarm: 0,
+            },
+            {
+              name: "2#局扇风机(true)",
+              status: state2,
+              frequency: "453534",
+              alarm: 1,
+            },
+          ],
+        },
+      },
+    ],
+    remove: [],
+  };
+};
+const changeDoorStatus = (
+  state1,
+  state2,
+  {
+    commonName = "doorCommonName默认",
+    commonStatus = 0,
+    commonSpeed = 12,
+    part1Name = "doorPart1Name默认",
+  },
+  { tunnelId = 673, distance = 20 }
+) => {
+  return {
+    add: [],
+    update: [
+      {
+        id: 2,
+        code: "设备",
+        type: 203,
+        tunnelId,
+        distance,
+        deviceInfo: {
+          name: commonName,
+          status: commonStatus,
+          speed: commonSpeed,
+          parts: [
+            {
+              name: part1Name,
+              status: state1,
+            },
+            {
+              name: "测试2",
+              status: state2,
+            },
+          ],
+        },
+      },
+    ],
+    remove: [],
+  };
+};
+
+const changeWindowStatus = (
+  state1,
+  state2,
+  {
+    commonName = "windowCommonName默认",
+    commonStatus = 1,
+    commonSpeed = 12,
+    part1Name = "windowPart1Name默认",
+  },
+  { tunnelId = 673, distance = 48 }
+) => {
+  return {
+    add: [],
+    update: [
+      {
+        id: 3,
+        code: "设备",
+        type: 204,
+        tunnelId,
+        distance,
+        deviceInfo: {
+          name: commonName,
+          status: commonStatus,
+          speed: commonSpeed,
+          parts: [
+            {
+              name: part1Name,
+              angle: state1,
+            },
+            {
+              name: "风窗测试2",
+              angle: state2,
+            },
+          ],
+        },
+      },
+    ],
+    remove: [],
+  };
+};
+
+const changeSingleWindowStatus = (
+  state1,
+  {
+    commonName = "windowCommonName默认",
+    commonStatus = 2,
+    commonSpeed = 12,
+    part1Name = "windowPart1Name默认",
+  },
+  { tunnelId = 673, distance = 20 }
+) => {
+  return {
+    add: [],
+    update: [
+      {
+        id: 6,
+        code: "设备",
+        type: 204,
+        tunnelId,
+        distance,
+        deviceInfo: {
+          name: commonName,
+          status: commonStatus,
+          speed: commonSpeed,
+          parts: [
+            {
+              name: part1Name,
+              angle: state1,
+            },
+          ],
+        },
+      },
+    ],
+    remove: [],
+  };
+};
+
+const changeVideoStatus = (state) => {
+  return {
+    add: [],
+    update: [
+      {
+        id: 6,
+        code: "设备",
+        type: 207,
+        tunnelId: 678,
+        distance: 50,
+        deviceInfo: {
+          name: "视频(true)",
+          status: state,
+        },
+      },
+    ],
+    remove: [],
+  };
+};
+
+const changeWindStation = (
+  info,
+  {
+    commonName = "stationCommonName默认",
+    commonStatus = false,
+    commonSpeed = "stationCommonSpeed默认",
+    commonMethane = "stationCommonMethane",
+    commonCo = "stationCommonCo",
+  },
+  { tunnelId = 673, distance = 48 }
+) => {
+  // 修改测风站的数据
+  return {
+    add: [],
+    update: [
+      {
+        id: 4,
+        code: "设备",
+        type: 205,
+        tunnelId,
+        distance,
+        deviceInfo: {
+          name: commonName,
+          status: commonStatus,
+          speed: commonSpeed,
+          methane: commonMethane,
+          co: commonCo,
+          info,
+        },
+      },
+    ],
+    remove: [],
+  };
+};
+const changeSensor = (alarmStatus) => {
+  // 修改测风站的数据
+  return {
+    add: [],
+    update: [
+      {
+        id: 6,
+        code: "设备",
+        type: 101,
+        tunnelId: 677,
+        distance: 60,
+        deviceInfo: {
+          name: "一氧化碳(true)",
+          status: true,
+          point: "point",
+          hid: "hid",
+          category: "category",
+          local: "local",
+          data: "data",
+          isAlarm: alarmStatus,
+        },
+      },
+    ],
+    remove: [],
+  };
+};
+let removeDevice = { add: [], update: [], remove: [{ id: 0, type: 201 }] };
+let removeDevicePartFan = {
+  add: [],
+  update: [],
+  remove: [{ id: 1, type: 202 }],
+};
+
+
+        return {
+          iframe,
+          src,
+          tunnelData,
+          updateTunnel,
+          initDeviceData,
+          removeDevice,
+          removeDevicePartFan,
+          testCmd,
+          changeFanStatus,
+          changePartFanStatus,
+          changeDoorStatus,
+          changeWindowStatus,
+          changeSingleWindowStatus,
+          changeVideoStatus,
+          changeWindStation,
+          changeSensor,
+          getRandomChineseChar,
+        };
+      },
+    })
+      .use(ElementPlus)
+      .mount("#app");
+</script>
+</body>
+</html>
