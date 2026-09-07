@@ -1,10 +1,7 @@
 import { CoreExtensions } from "./core/CoreExtensions";
-import {
-    Subsystem,
-    UnderGround,
-} from "./subsystem";
+import { Subsystem, UnderGround } from "./subsystem";
 
-import { updateStyle,updateTime } from "../shader/constant";
+import { updateStyle, updateTime } from "../shader/constant";
 import { openMessage } from "../message/onMessage";
 import { onLoaded } from "../message/postMessage";
 import { getData } from "./data/format";
@@ -29,7 +26,7 @@ export class Core3D extends CoreExtensions {
         this.currentSystemInfo = {
             type: null,
             id: null,
-            deviceInfo: null
+            deviceInfo: null,
         };
         this.firstLoad = true;
     }
@@ -66,20 +63,20 @@ export class Core3D extends CoreExtensions {
         this.airStation = new AirStation(this);
         this.airWindowSingle = new AirWindowSingle(this);
         this.partFanSubsystem = new PartFanSubsystem(this);
-        this.onRenderQueue.set(timeUpdate,scope => updateTime(scope.delta));
-        // this.onMessageChange({ id: 4,type: 205,system: 'subSystem' }); // 切换进测风站
+        this.onRenderQueue.set(timeUpdate, scope => updateTime(scope.delta));
+        this.onMessageChange({ id: 4, type: 201, system: "subSystem" }); // 切换进测风站
     }
 
     /**
      * @description 各个系统模块切换
      * @param {string} systemType 系统标识符
      */
-    async changeSystem(systemType,info) {
+    async changeSystem(systemType, info) {
         /**@type {Subsystem} 目标系统 */
         this.currentSystemInfo = {
             type: null,
             id: null,
-            deviceInfo: null
+            deviceInfo: null,
         };
         const targetSystem = this[systemType];
 
@@ -109,19 +106,21 @@ export class Core3D extends CoreExtensions {
 
         // 当前系统执行进入事件，返回Promise。
         await targetSystem.onEnter();
-        if (!info.deviceInfo || info.type === 204) { // 容错再次获取一边 风窗可能会从单风窗变成多风窗再取一次
-            info.deviceInfo = this.main.equipMentSystem.get(info.id,info.type) && this.main.equipMentSystem.get(info.id,info.type).infos.deviceInfo;
+        if (!info.deviceInfo || info.type === 204) {
+            // 容错再次获取一边 风窗可能会从单风窗变成多风窗再取一次
+            info.deviceInfo =
+                this.main.equipMentSystem.get(info.id, info.type) &&
+                this.main.equipMentSystem.get(info.id, info.type).infos.deviceInfo;
         }
         if (info && info.id !== null) {
             this.currentSystemInfo = {
                 type: info.type,
                 id: info.id,
-                deviceInfo: info.deviceInfo
+                deviceInfo: info.deviceInfo,
             };
             if (info.deviceInfo) {
-                targetSystem.updateDataInfo(info.deviceInfo,"add");
+                targetSystem.updateDataInfo(info.deviceInfo, "add");
             }
-
         }
 
         // openMessage(this);
@@ -135,25 +134,33 @@ export class Core3D extends CoreExtensions {
     }
 
     onMessageChange(info) {
-        const { id,type,system,isSingleWindow } = info;
-        let typeToName = { 201: "fanSubsystem",202: "partFanSubsystem",203: "airDoor",204: "airWindow",205: "airStation" };
+        const { id, type, system, isSingleWindow } = info;
+        let typeToName = {
+            201: "fanSubsystem",
+            202: "partFanSubsystem",
+            203: "airDoor",
+            204: "airWindow",
+            205: "airStation",
+        };
         let toSystem = "main";
         let deviceInfo = null;
         if (system === "main") {
             toSystem = "main";
         } else {
             toSystem = typeToName[type];
-            deviceInfo = this.main.equipMentSystem.get(id,type) && this.main.equipMentSystem.get(id,type).infos.deviceInfo;
-            if (type === 204 && isSingleWindow) { // 单风窗的场景
+            deviceInfo =
+                this.main.equipMentSystem.get(id, type) && this.main.equipMentSystem.get(id, type).infos.deviceInfo;
+            if (type === 204 && isSingleWindow) {
+                // 单风窗的场景
                 toSystem = "airWindowSingle";
             }
         }
-        this.changeSystem(toSystem,{ type,id,deviceInfo });
+        this.changeSystem(toSystem, { type, id, deviceInfo });
     }
     /**
      * 处理用户数组的函数
      * @param {initialized[]} ars - 初始化巷道/更新巷道
-    */
+     */
     initialized(ars) {
         this.main.initialized(ars);
     }
@@ -161,7 +168,7 @@ export class Core3D extends CoreExtensions {
     /**
      * 处理用户数组的函数
      * @param {deviceManage[]} ars - 设备管理
-    */
+     */
     deviceManage(ars) {
         this.main.deviceManage(ars);
     }
@@ -169,7 +176,8 @@ export class Core3D extends CoreExtensions {
     spotDevice(obj) {
         this.main.spotDevice(obj);
     }
-    spotTunnel(id) { // 拉近巷道距离
+    spotTunnel(id) {
+        // 拉近巷道距离
         this.main.spotTunnel(id);
     }
 
@@ -182,7 +190,7 @@ export class Core3D extends CoreExtensions {
      * volume：风量
      * speed：风速
      * resistance：阻力
-    */
+     */
     switchTunnelStyle(config) {
         this.main.switchTunnelStyle(config);
     }
@@ -197,20 +205,21 @@ export class Core3D extends CoreExtensions {
      * updateWindSpeed:更新巷道风速
      * updateResistance：更新巷道阻力
      * updateVolume：更新巷道风量
-    */
-    updateTunnelConfig(data,config) {
-        this.main.updateTunnelConfig(data,config);
+     */
+    updateTunnelConfig(data, config) {
+        this.main.updateTunnelConfig(data, config);
     }
 
     switchFacility(config) {
         this.main.switchFacility(config);
     }
 
-    updateSubSystemInfo(info,status) { // 当前子系统的展示 主扇/局扇/风门/风窗/测风
+    updateSubSystemInfo(info, status) {
+        // 当前子系统的展示 主扇/局扇/风门/风窗/测风
         if (status === "remove") {
-            this.currentSystem.updateDataInfo(info,status); // 更新当前子系统的数据
+            this.currentSystem.updateDataInfo(info, status); // 更新当前子系统的数据
         } else {
-            this.currentSystem.updateDataInfo(info.deviceInfo,status); // 更新当前子系统的数据
+            this.currentSystem.updateDataInfo(info.deviceInfo, status); // 更新当前子系统的数据
         }
     }
 

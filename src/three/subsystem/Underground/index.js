@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { Subsystem } from "../Subsystem";
 import { Core3D } from "../..";
-import { Weather,DAY,NIGHT,SCIENCE } from "../../components/weather";
-import { HDGeometry } from './../../../lib/HDGeometry';
+import { Weather, DAY, NIGHT, SCIENCE } from "../../components/weather";
+import { HDGeometry } from "./../../../lib/HDGeometry";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { TweenControls } from "../../../lib/tweenControls";
@@ -11,20 +11,20 @@ import DEFAULT from "../../../config/index.json";
 import { LabelManager } from "../../components/label";
 import { TunnelCard } from "./utils";
 import MemoryManager from "../../../lib/memoryManager";
-import { FlowLight,FlowLight2 } from "../../../lib/blMeshes";
-import { getBoxAndSphere,getLengthFromVertices } from "../../../utils";
+import { FlowLight, FlowLight2 } from "../../../lib/blMeshes";
+import { getBoxAndSphere, getLengthFromVertices } from "../../../utils";
 import { DeviceManger } from "./device";
 import BoxModel from "../../../lib/boxModel";
 import { loadingInstance } from "../../loader/loading";
 
 export const ground = Symbol();
 
-const position = new THREE.Vector3(-370.885379032486,260.94104592491357,257.39776480151085);
+const position = new THREE.Vector3(-370.885379032486, 260.94104592491357, 257.39776480151085);
 const target = new THREE.Vector3(...DEFAULT.controls.target);
 
 // camera limit SPHERE
-let SPHERE_CAMERA = new THREE.Sphere(new THREE.Vector3(),2000);
-let SPHERE_CONTROLS = new THREE.Sphere(new THREE.Vector3(),1900);
+let SPHERE_CAMERA = new THREE.Sphere(new THREE.Vector3(), 2000);
+let SPHERE_CONTROLS = new THREE.Sphere(new THREE.Vector3(), 1900);
 
 /**@type {OrbitControls} */
 const controlsParameters = {};
@@ -41,7 +41,7 @@ export class UnderGround extends Subsystem {
          */
         this.currentTunnelStyleData = {
             styleName: "",
-            styleData: null
+            styleData: null,
         };
         this.postprocessing = core.postprocessing;
         this.meshGroup = new THREE.Group();
@@ -66,7 +66,7 @@ export class UnderGround extends Subsystem {
 
         /**
          * @property {Object} - 巷道样条曲线集合
-        */
+         */
         this.tunnelCure = {};
         this.tunnelData = new Map(); // 巷道数据
         this.clearOutLine = null;
@@ -76,12 +76,12 @@ export class UnderGround extends Subsystem {
         this.createLine = null;
     }
     /**
-   * 设置id数据
-   * @param {string} id
-   * @param {T2} value
-   */
-    set(id,value) {
-        this.tunnelData.set(Number(id),value);
+     * 设置id数据
+     * @param {string} id
+     * @param {T2} value
+     */
+    set(id, value) {
+        this.tunnelData.set(Number(id), value);
     }
 
     /**是否存在id数据 */
@@ -102,12 +102,14 @@ export class UnderGround extends Subsystem {
         this.tunnelData.delete(Number(id));
     }
 
-    onOBJProgress = (vertices,direction,tunnelObj,speed) => { // 流光
+    onOBJProgress = (vertices, direction, tunnelObj, speed) => {
+        // 流光
 
         let tunnelVertices = vertices;
-        let color = new THREE.Color(0.0235,0.9647,0.9333);
-        let color2 = new THREE.Color(0.0196,0.3373,0.4824);
-        if (direction === 2 || direction === 3) { // 巷道没风/用风
+        let color = new THREE.Color(0.0235, 0.9647, 0.9333);
+        let color2 = new THREE.Color(0.0196, 0.3373, 0.4824);
+        if (direction === 2 || direction === 3) {
+            // 巷道没风/用风
 
             tunnelObj.traverse(res => {
                 if (res instanceof THREE.Mesh) {
@@ -115,24 +117,25 @@ export class UnderGround extends Subsystem {
                     res.material.alphaTest = 0.8;
                     res.material.transparent = false;
                     res.renderOrder = 0;
-                    res.material.color = new THREE.Color(0.4745,0.6667,0.902);
+                    res.material.color = new THREE.Color(0.4745, 0.6667, 0.902);
                 }
             });
 
             return false;
         }
-        if (direction === 1) { // 出风巷道
-            color = new THREE.Color(0.1216,0.8784,0.0824);
-            color2 = new THREE.Color(0.0196,0.2353,0.102);
+        if (direction === 1) {
+            // 出风巷道
+            color = new THREE.Color(0.1216, 0.8784, 0.0824);
+            color2 = new THREE.Color(0.0196, 0.2353, 0.102);
         }
-        const flowLight = new FlowLight2(tunnelVertices,{
+        const flowLight = new FlowLight2(tunnelVertices, {
             type: "tube",
             radius: 4.8,
             segments: getLengthFromVertices(tunnelVertices) / 200,
             color1: color,
             color2: color2,
             speed: speed || 0,
-            opacity: 1.0
+            opacity: 1.0,
         });
         tunnelObj.traverse(res => {
             if (res instanceof THREE.Mesh) {
@@ -155,7 +158,7 @@ export class UnderGround extends Subsystem {
         this.initLight();
         // this.weather = new Weather(this);
     }
-    loadTexture(loader,url) {
+    loadTexture(loader, url) {
         const texture = loader.load(url);
         texture.mapping = THREE.EquirectangularReflectionMapping;
         texture.colorSpace = THREE.SRGBColorSpace;
@@ -168,7 +171,7 @@ export class UnderGround extends Subsystem {
         texture.colorSpace = THREE.SRGBColorSpace;
 
         texture.wrapS = texture.wrapT = THREE.MirroredRepeatWrapping;
-        texture.repeat.set(4,4);
+        texture.repeat.set(4, 4);
 
         // texture.repeat.set(0.008,0.008);
         return texture;
@@ -176,8 +179,9 @@ export class UnderGround extends Subsystem {
     /**
      * 处理用户数组的函数
      * @param {initialized[]} ars - 初始化巷道/更新巷道
-    */
-    initialized(ars) { // 生成巷道
+     */
+    initialized(ars) {
+        // 生成巷道
         this.dispose();
         if (this.core.currentSystemName === "main") {
             loadingInstance.service(0);
@@ -185,8 +189,8 @@ export class UnderGround extends Subsystem {
                 loadingInstance.close();
             }
         }
-        ars.forEach((child,index) => {
-            const { id,branchName,pList,direction,speed } = child;
+        ars.forEach((child, index) => {
+            const { id, branchName, pList, direction, speed } = child;
             pList.forEach(child => {
                 const temp = child.y;
                 child.y = child.z + Math.random() * 0.0001;
@@ -194,15 +198,15 @@ export class UnderGround extends Subsystem {
                 child.x = child.x * -1;
             });
             let points = pList.map(res => {
-                return new THREE.Vector3(res.x,res.y,res.z);
+                return new THREE.Vector3(res.x, res.y, res.z);
             });
-            this.initCurve(points,id,direction,speed);
+            this.initCurve(points, id, direction, speed);
             child.points = points;
 
-            let geometry = new HDGeometry({ points },index);
+            let geometry = new HDGeometry({ points }, index);
 
             this.material = new THREE.MeshStandardMaterial({
-                color: new THREE.Color(0.1,0.4,0.6),
+                color: new THREE.Color(0.1, 0.4, 0.6),
                 side: THREE.DoubleSide,
                 transparent: true,
                 opacity: 0.8,
@@ -219,13 +223,13 @@ export class UnderGround extends Subsystem {
                 );
             };
             const object = new THREE.Object3D();
-            const mesh = new THREE.Mesh(geometry,this.material); // 巷道模型
+            const mesh = new THREE.Mesh(geometry, this.material); // 巷道模型
             mesh.typeId = id;
             let labelPosition = this.getCurve(id).getPointAt(0.5);
             child.position = labelPosition;
             object.add(mesh);
             child.object3d = object;
-            this.set(id,child);
+            this.set(id, child);
             this.eventsArray.push(mesh);
             this.meshGroup.add(object);
             if (this.equipMentSystem.noTunnelDevice[id]) {
@@ -237,7 +241,7 @@ export class UnderGround extends Subsystem {
                     let child = this.equipMentSystem.noTunnelDevice[id][key];
                     const { infos } = child;
                     child.hasTunnel = true;
-                    this.equipMentSystem.deviceManger({ add: [],update: [infos],remove: [] });
+                    this.equipMentSystem.deviceManger({ add: [], update: [infos], remove: [] });
                     delete this.equipMentSystem.noTunnelDevice[id][key];
                 });
             }
@@ -245,46 +249,45 @@ export class UnderGround extends Subsystem {
                 loadingInstance.service(((100 * index) / ars.length).toFixed(2));
             }
         });
-        if (this.core.currentSystemName === "main") { // 当前就在地面场景
+        if (this.core.currentSystemName === "main") {
+            // 当前就在地面场景
             this.addEvents();
             this.limit();
         }
     }
 
     limit() {
-        const { center,radius } = getBoxAndSphere(this.meshGroup).sphere;
+        const { center, radius } = getBoxAndSphere(this.meshGroup).sphere;
         const { min } = getBoxAndSphere(this.meshGroup).box;
-        this.boxModelObj.initModel(new THREE.Vector3(center.x,min.y,center.z),radius);
+        this.boxModelObj.initModel(new THREE.Vector3(center.x, min.y, center.z), radius);
 
         this.resetCamera();
         // 限制相机和控制器范围
         this.controls.maxPolarAngle = Math.PI / 2;
 
-        SPHERE_CAMERA = new THREE.Sphere(center,radius * 2.4);
-        SPHERE_CONTROLS = new THREE.Sphere(center,radius * 2.4);
+        SPHERE_CAMERA = new THREE.Sphere(center, radius * 2.4);
+        SPHERE_CONTROLS = new THREE.Sphere(center, radius * 2.4);
         this.handleControls();
     }
     resetCamera() {
-        const { center,radius } = getBoxAndSphere(this.meshGroup).sphere;
-        const vec = new THREE.Vector3(radius,radius,radius).multiplyScalar(1);
+        const { center, radius } = getBoxAndSphere(this.meshGroup).sphere;
+        const vec = new THREE.Vector3(radius, radius, radius).multiplyScalar(1);
         const position = center.clone().add(vec);
 
         // 根据计算数据，设置动画
-        this.tweenControls && this.tweenControls.flyToDelay(position,center,200);
+        this.tweenControls && this.tweenControls.flyToDelay(position, center, 200);
         setTimeout(() => {
             loadingInstance.close();
-        },200);
+        }, 200);
         this.tweenControls.start();
-
     }
 
-
-
-    getCurve(id) { // 获取样条曲线
+    getCurve(id) {
+        // 获取样条曲线
         return this.tunnelCure[id];
     }
 
-    getPosition(id,length) {
+    getPosition(id, length) {
         let curve = this.getCurve(id);
         if (!curve) {
             console.log(`巷道线${id}不存在`);
@@ -296,15 +299,15 @@ export class UnderGround extends Subsystem {
         return curve.getPointAt(t);
     }
 
-
-    switchTunnelResistance(config) { // 根据巷道阻力阈值切换不同风向的显示
+    switchTunnelResistance(config) {
+        // 根据巷道阻力阈值切换不同风向的显示
         this.disposeStyle();
-        const { code,color,threshold } = config;
+        const { code, color, threshold } = config;
         if (code === -1) return false; // -1 清除巷道变色
         this.tunnelData.forEach(child => {
-            const { direction,resistance,id,isDifficult } = child;
+            const { direction, resistance, id, isDifficult } = child;
             if (direction === code && isDifficult) {
-                this.changeTunnelColor(id,color);
+                this.changeTunnelColor(id, color);
             }
         });
     }
@@ -318,11 +321,12 @@ export class UnderGround extends Subsystem {
      * volume：风量
      * speed：风速
      * resistance：阻力
-    */
-    switchTunnelStyle(config) { // 切换巷道风格
-        const { objectData,typeName } = config;
-        const typeToWei = { volume: " m³/min",speed: " m/s",resistance: "Pa" };
-        const type = { default: "巷道名称",direction: "风向",volume: "风量",speed: "风速",resistance: "阻力" };
+     */
+    switchTunnelStyle(config) {
+        // 切换巷道风格
+        const { objectData, typeName } = config;
+        const typeToWei = { volume: " m³/min", speed: " m/s", resistance: "Pa" };
+        const type = { default: "巷道名称", direction: "风向", volume: "风量", speed: "风速", resistance: "阻力" };
 
         this.disposeStyle();
         let tunnelType = typeName === "default" ? "branchName" : typeName;
@@ -330,27 +334,27 @@ export class UnderGround extends Subsystem {
         this.currentTunnelStyleData.styleData = objectData;
         if (typeName === "direction") {
             this.tunnelData.forEach(child => {
-                this.onOBJProgress(child.points,child.direction,child.object3d,child.speed);
+                this.onOBJProgress(child.points, child.direction, child.object3d, child.speed);
             });
             return false;
         }
 
-
-
-        const hasConfig = ['volume','speed','resistance'];
+        const hasConfig = ["volume", "speed", "resistance"];
         this.tunnelData.forEach(child => {
             let currentTunnelConfig = child[tunnelType]; // 当前巷道上的对应配置数据
-            if (tunnelType === "branchName" && !currentTunnelConfig) { // 没有巷道名字
+            if (tunnelType === "branchName" && !currentTunnelConfig) {
+                // 没有巷道名字
                 return false;
             }
             this.labelData.push({
                 name: type[typeName] + ":" + currentTunnelConfig + (typeToWei[typeName] || ""),
-                position: new THREE.Vector3(child.position.x,child.position.y + 4.8,child.position.z)
+                position: new THREE.Vector3(child.position.x, child.position.y + 4.8, child.position.z),
             });
-            if (hasConfig.includes(tunnelType)) { // 风量，风速，阻力显示巷道变色
-                let tunnelObj = this.filteredObjects(objectData,Math.abs(currentTunnelConfig))[0];
+            if (hasConfig.includes(tunnelType)) {
+                // 风量，风速，阻力显示巷道变色
+                let tunnelObj = this.filteredObjects(objectData, Math.abs(currentTunnelConfig))[0];
                 if (!tunnelObj) return false;
-                this.changeTunnelColor(child.id,tunnelObj.color);
+                this.changeTunnelColor(child.id, tunnelObj.color);
             }
         });
         this.labelManager.init(this.labelData);
@@ -358,18 +362,19 @@ export class UnderGround extends Subsystem {
         this.updateVisibilityByCamera();
     }
 
-    filteredObjects(k,b) { // 筛选出满足条件的对象
+    filteredObjects(k, b) {
+        // 筛选出满足条件的对象
         let result = k.filter(obj => {
-            const [min,max] = obj.range;
+            const [min, max] = obj.range;
             return b >= min && b <= max;
         });
         return result;
     }
-    changeTunnelColor(id,color) { // 修改巷道颜色
+    changeTunnelColor(id, color) {
+        // 修改巷道颜色
         let tunnelObject3d = this.get(id).object3d;
         tunnelObject3d.children[0].material.oldColor = tunnelObject3d.children[0].material.color.clone();
         tunnelObject3d.children[0].material.color.set(color);
-
     }
     resetTunnelColor(id) {
         let tunnelObject3d = this.get(id).object3d;
@@ -384,30 +389,35 @@ export class UnderGround extends Subsystem {
             tunnelObject3d.children[0].material.oldColor = null;
         }
     }
-    updateTunnelConfig(object,config) {
+    updateTunnelConfig(object, config) {
         object.forEach(child => {
-            const { id,data } = child;
+            const { id, data } = child;
             let tunnel = this.get(id);
             tunnel[config] = data;
         });
-        if (config === this.currentTunnelStyleData.styleName && this.core.currentSystemName === "main") { // 当前就在风格场景
-            this.switchTunnelStyle({ objectData: this.currentTunnelStyleData.styleData,typeName: config === "branchName" ? "default" : config });
-
+        if (config === this.currentTunnelStyleData.styleName && this.core.currentSystemName === "main") {
+            // 当前就在风格场景
+            this.switchTunnelStyle({
+                objectData: this.currentTunnelStyleData.styleData,
+                typeName: config === "branchName" ? "default" : config,
+            });
         }
     }
 
-    initCurve(points,id,direction,speed) { // 生成样条曲线
+    initCurve(points, id, direction, speed) {
+        // 生成样条曲线
         let tunnelPoints = points;
-        if (direction === 1) { // 逆风
+        if (direction === 1) {
+            // 逆风
             tunnelPoints = points.reverse();
         }
         const curve = new THREE.CatmullRomCurve3(tunnelPoints);
         curve.curveType = "catmullrom";
         curve.tension = 0;
         this.tunnelCure[id] = curve;
-        this.setTunnelFollow(id,curve,speed,direction);
+        this.setTunnelFollow(id, curve, speed, direction);
     }
-    setTunnelFollow(id,curve,speed,direction) {
+    setTunnelFollow(id, curve, speed, direction) {
         if (direction !== 2) {
             let Object3D = this.tunnelFlowBox.front.clone();
             if (direction === 1) {
@@ -419,7 +429,7 @@ export class UnderGround extends Subsystem {
                 speed,
                 direction,
                 curve,
-                id: id
+                id: id,
             };
             this.add(Object3D);
         }
@@ -428,10 +438,10 @@ export class UnderGround extends Subsystem {
     initTunnelFlowBox() {
         let frontUrl = "./tunnelTexture/front/"; // 进风
         let backUrl = "./tunnelTexture/back/"; // 回风
-        let arr = [frontUrl,backUrl];
-        let obj = { front: null,back: null };
-        arr.forEach((child,index) => {
-            const geometry = new THREE.BoxGeometry(6.4,7.2,6.4);
+        let arr = [frontUrl, backUrl];
+        let obj = { front: null, back: null };
+        arr.forEach((child, index) => {
+            const geometry = new THREE.BoxGeometry(6.4, 7.2, 6.4);
             const materialRight = new THREE.MeshBasicMaterial({
                 map: new THREE.TextureLoader().load(`${child}right.png`),
                 transparent: true,
@@ -450,8 +460,8 @@ export class UnderGround extends Subsystem {
                 opacity: 1.0,
                 side: THREE.DoubleSide,
             });
-            const materialOther = new THREE.MeshBasicMaterial({ transparent: true,opacity: 0.0 });
-            let tunnelFlowBox = new THREE.Mesh(geometry,[
+            const materialOther = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.0 });
+            let tunnelFlowBox = new THREE.Mesh(geometry, [
                 materialLeft,
                 materialRight,
                 materialTop,
@@ -475,32 +485,38 @@ export class UnderGround extends Subsystem {
     /**
      * 处理用户数组的函数
      * @param {deviceManage[]} ars - 初始化巷道/更新巷道
-    */
-    deviceManage(ars) { // 设备管理
+     */
+    deviceManage(ars) {
+        // 设备管理
         this.equipMentSystem.deviceManger(ars);
     }
-    spotDevice(obj) { // 设备管理
+    spotDevice(obj) {
+        // 设备管理
         this.equipMentSystem.spotDevice(obj);
     }
     spotTunnel(id) {
         let device = this.get(id);
         if (device) {
             let position = device.position;
-            this.tweenControls && this.tweenControls.flyToDelay({ x: position.x + 48,y: position.y + 48,z: position.z + 48 },position,1000);
+            this.tweenControls &&
+                this.tweenControls.flyToDelay(
+                    { x: position.x + 48, y: position.y + 48, z: position.z + 48 },
+                    position,
+                    1000,
+                );
             this.tweenControls.start();
-            this.openTunnelBoard(id,position);
+            this.openTunnelBoard(id, position);
         }
     }
 
     addEvents() {
-        const { clear: moveClear } = this.core.raycast("mousemove",this.eventsArray,intersection => {
+        const { clear: moveClear } = this.core.raycast("mousemove", this.eventsArray, intersection => {
             if (intersection.length > 0) {
                 const point = intersection[0].point;
-                if (this.clearOutLine)
-                    this.core.postprocessing.clearOutline(this.clearOutLine);
-                this.core.postprocessing.addOutline(intersection[0].object,1);
+                if (this.clearOutLine) this.core.postprocessing.clearOutline(this.clearOutLine);
+                this.core.postprocessing.addOutline(intersection[0].object, 1);
                 this.clearOutLine = intersection[0].object;
-                this.openTunnelBoard(intersection[0].object.typeId,point);
+                this.openTunnelBoard(intersection[0].object.typeId, point);
             } else {
                 this.closeTunnelBoard();
                 if (this.clearOutLine) this.core.postprocessing.clearOutline(this.clearOutLine);
@@ -511,14 +527,15 @@ export class UnderGround extends Subsystem {
         this.addEventControlChange();
     }
     addEventControlChange() {
-        this.controls.addEventListener('change',this.updateVisibilityByCamera);
+        this.controls.addEventListener("change", this.updateVisibilityByCamera);
     }
 
     removeControlChange() {
-        this.controls.removeEventListener('change',this.updateVisibilityByCamera);
+        this.controls.removeEventListener("change", this.updateVisibilityByCamera);
     }
 
-    updateVisibilityByCamera = () => { // 根据相机位置，控制显示隐藏
+    updateVisibilityByCamera = () => {
+        // 根据相机位置，控制显示隐藏
         let camera = this.camera;
         let canShowObj = [];
         this.labelManager.dispose();
@@ -536,7 +553,7 @@ export class UnderGround extends Subsystem {
     };
 
     /** 显示巷道弹窗 */
-    openTunnelBoard(id,position) {
+    openTunnelBoard(id, position) {
         MemoryManager.dispose(this.createLine);
         const item = this.get(id);
         const label = new TunnelCard(item);
@@ -547,7 +564,7 @@ export class UnderGround extends Subsystem {
         item.object3d.add(label);
         let endPosition = position.clone();
         label.position.copy(endPosition);
-        label.center = new THREE.Vector2(-0.28,1.12);
+        label.center = new THREE.Vector2(-0.28, 1.12);
     }
 
     /** 关闭巷道弹窗 */
@@ -563,7 +580,7 @@ export class UnderGround extends Subsystem {
     }
 
     handleControls() {
-        this.controls.addEventListener("change",this.limitInSphere);
+        this.controls.addEventListener("change", this.limitInSphere);
 
         Reflect.ownKeys(controlsParameters).forEach(key => {
             this.controls.data[key] = this.controls[key];
@@ -572,7 +589,7 @@ export class UnderGround extends Subsystem {
     }
 
     resetControls() {
-        this.controls.removeEventListener("change",this.limitInSphere);
+        this.controls.removeEventListener("change", this.limitInSphere);
 
         Reflect.ownKeys(controlsParameters).forEach(key => {
             this.controls[key] = this.controls.data[key];
@@ -587,7 +604,6 @@ export class UnderGround extends Subsystem {
         target.y = target.y < 0 ? 0 : target.y;
     };
     async onEnter() {
-
         if (this !== this.core.currentSystem) return;
         // loadingInstance.service(0);
         this.onLoaded();
@@ -615,7 +631,7 @@ export class UnderGround extends Subsystem {
             this.addEvents();
         }
         this.postprocessing.addBloom(this.flowLights);
-        this.onRenderQueue.set(ground,this.update);
+        this.onRenderQueue.set(ground, this.update);
         if (this.equipMentSystem) {
             this.equipMentSystem.onLoadedReset();
         }
@@ -623,7 +639,7 @@ export class UnderGround extends Subsystem {
     tunnelFollowUpdate = () => {
         Object.values(this.tunnelFollowPicture).forEach(child => {
             // 更新t值以沿着曲线移动
-            let { object3d,speed,direction,curve,id } = child;
+            let { object3d, speed, direction, curve, id } = child;
             let addLength = 0;
             let t = (Math.abs(speed) * 0.01 + addLength) / curve.getLength();
             child.time = child.time + t;
@@ -679,7 +695,7 @@ export class UnderGround extends Subsystem {
         directionalLight.shadow.radius = DEFAULT_SHADOW.radius;
         directionalLight.shadow.bias = -0.0006;
 
-        directionalLight.position.set(30,390,600);
+        directionalLight.position.set(30, 390, 600);
         directionalLight.castShadow = DEFAULT_DIRECTIONAL_LIGHT.castShadow;
 
         this.ambientLight = ambientLight;
@@ -694,15 +710,16 @@ export class UnderGround extends Subsystem {
             MemoryManager.dispose(child);
         });
         this.flowLights = [];
-        this.currentTunnelStyleData = { // 清除记录的巷道风格信息
+        this.currentTunnelStyleData = {
+            // 清除记录的巷道风格信息
             styleName: "",
-            styleData: null
+            styleData: null,
         };
         // 清除巷道牌子
         this.labelManager.dispose();
         this.labelData = [];
 
-        this.tunnelData.forEach((child,id) => {
+        this.tunnelData.forEach((child, id) => {
             this.resetTunnelColor(id);
         });
     }
@@ -726,7 +743,8 @@ export class UnderGround extends Subsystem {
         this.tunnelFollowPicture = {}; // 流动箭头
         this.commonDispose();
     }
-    commonDispose() { // 离开页面和更新巷道都需要执行的方法
+    commonDispose() {
+        // 离开页面和更新巷道都需要执行的方法
         this.disposeStyle(); // 重置风格样式
         this.removeEvents(); // 移除事件
         this.closeTunnelBoard();

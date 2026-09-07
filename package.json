@@ -5,7 +5,7 @@
     "type": "commonjs",
     "scripts": {
         "dev": "vite --host",
-        "build": "vite build",
+        "build": "vite build --outDir docs",
         "preview": "vite preview",
         "file": "node ./node/readFile.js",
         "create": "node ./node/create.js name:Template"
